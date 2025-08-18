@@ -14,7 +14,7 @@ namespace MMDeploy
 
     /// <summary>
     /// Single detection result of a bbox.
-    /// A picture may contains multiple reuslts.
+    /// A picture may contains multiple results.
     /// </summary>
     public struct PoseDetect
     {

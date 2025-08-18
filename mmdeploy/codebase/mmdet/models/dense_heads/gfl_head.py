@@ -111,12 +111,12 @@ def gfl_head__predict_by_feat(self,
                                                              -1).sigmoid()
             score_factors = score_factors.unsqueeze(2)
 
-        def _batched_integral(intergral, x):
+        def _batched_integral(integral, x):
             batch_size = x.size(0)
             x = F.softmax(
-                x.reshape(batch_size, -1, intergral.reg_max + 1), dim=2)
+                x.reshape(batch_size, -1, integral.reg_max + 1), dim=2)
             x = F.linear(x,
-                         intergral.project.type_as(x).unsqueeze(0)).reshape(
+                         integral.project.type_as(x).unsqueeze(0)).reshape(
                              batch_size, -1, 4)
             return x
 

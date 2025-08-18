@@ -93,7 +93,7 @@ int ScaledDotProductAttentionTRT::enqueue(const nvinfer1::PluginTensorDesc *inpu
   int B = inputDesc[0].dims.d[0];  // batch * heads
   int Nt = inputDesc[0].dims.d[1];
   int Ns = inputDesc[1].dims.d[1];
-  int E = inputDesc[0].dims.d[2];  // embeding size
+  int E = inputDesc[0].dims.d[2];  // embedding size
 
   const void *query = inputs[0];
   const void *key = inputs[1];

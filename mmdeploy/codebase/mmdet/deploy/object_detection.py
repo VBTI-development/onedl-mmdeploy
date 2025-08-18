@@ -25,14 +25,14 @@ class MMDetection(MMCodebase):
 
     @classmethod
     def register_deploy_modules(cls):
-        """register all rewriters for mmdet."""
+        """Register all rewriters for mmdet."""
         import mmdeploy.codebase.mmdet.models  # noqa: F401
         import mmdeploy.codebase.mmdet.ops
         import mmdeploy.codebase.mmdet.structures  # noqa: F401
 
     @classmethod
     def register_all_modules(cls):
-        """register all related modules and rewriters for mmdet."""
+        """Register all related modules and rewriters for mmdet."""
         from mmdet.utils.setup_env import register_all_modules
 
         cls.register_deploy_modules()
@@ -174,7 +174,7 @@ class ObjectDetection(BaseTask):
         """Create input for detector.
 
         Args:
-            imgs (str|np.ndarray): Input image(s), accpeted data type are
+            imgs (str|np.ndarray): Input image(s), accepted data type are
                 `str`, `np.ndarray`.
             input_shape (list[int]): A list of two integer in (width, height)
                 format specifying input shape. Defaults to `None`.

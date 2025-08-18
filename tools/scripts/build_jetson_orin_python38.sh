@@ -114,7 +114,7 @@ install_mmcv_pycuda() {
 
 install_pplcv() {
     if [ ! -e "ppl.cv" ];then
-        git clone https://github.com/openppl-public/ppl.cv.git --depth=1 --recursive
+        git clone https://github.com/VBTI-development/ppl.cv.git --depth=1 --recursive
     fi
     cd ppl.cv
     ./build.sh cuda

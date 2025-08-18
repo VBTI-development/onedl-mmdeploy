@@ -23,7 +23,7 @@ MMDEPLOY_DIR=${WORKING_DIR}
 
 #####
 # Versions
-PPLCV_VER="0.7.0"
+PPLCV_VER="0.8.0"
 CMAKE_VER="3.23.0"
 
 #####
@@ -323,7 +323,7 @@ pplcv() {
   if [ -d "${PPLCV_DIR}" ]; then
       echo "Already exists! Checking out the requested version..."
   else
-      git clone https://github.com/openppl-public/ppl.cv.git ${PPLCV_DIR}
+      git clone https://github.com/VBTI-development/ppl.cv.git ${PPLCV_DIR}
   fi
   cd ${PPLCV_DIR}
   git pull

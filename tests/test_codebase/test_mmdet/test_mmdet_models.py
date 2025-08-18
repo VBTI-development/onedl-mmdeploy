@@ -1143,7 +1143,7 @@ def test_cascade_roi_head_with_mask(backend_type: Backend):
 
 
 def get_yolov3_head_model():
-    """yolov3 Head Config."""
+    """Yolov3 Head Config."""
     test_cfg = Config(
         dict(
             nms_pre=1000,
@@ -2254,7 +2254,7 @@ def test_rtmdet_head_predict_by_feat_ncnn():
 
 
 def get_solov2_head_model():
-    """solov2 Head Config."""
+    """Solov2 Head Config."""
     test_cfg = Config(
         dict(
             nms_pre=500,
@@ -2367,7 +2367,7 @@ def test_solov2_head_predict_by_feat(backend_type):
 
 
 def get_condinst_bbox_head():
-    """condinst Bbox Head Config."""
+    """Condinst Bbox Head Config."""
     test_cfg = Config(
         dict(
             mask_thr=0.5,
@@ -2491,7 +2491,7 @@ def test_condinst_bbox_head_predict_by_feat(backend_type):
 
 
 def get_condinst_mask_head():
-    """condinst Mask Head Config."""
+    """Condinst Mask Head Config."""
     test_cfg = Config(
         dict(
             mask_thr=0.5,

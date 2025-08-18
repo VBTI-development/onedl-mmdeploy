@@ -11,6 +11,7 @@ def from_onnx(onnx_model: str,
               input_shapes: Optional[Sequence[Sequence[int]]] = None,
               **kwargs):
     """Convert ONNX to PPLNN.
+
     PPLNN is capable of optimizing onnx model. The optimized algorithm is saved
     into `algo_file` in json format. Note that `input_shapes` actually require
     multiple shapes of inputs in its original design. But in the pipeline of

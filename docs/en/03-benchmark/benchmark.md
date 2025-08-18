@@ -662,7 +662,7 @@ Users can directly test the performance through [how_to_evaluate_a_model.md](../
     <th align="center" colspan="3">TensorRT</th>
     <th align="center">PPLNN</th>
     <th align="center">Ascend</th>
-    <th algin="center">OpenVINO</th>
+    <th align="center">OpenVINO</th>
   </tr>
 </thead>
 <tbody>

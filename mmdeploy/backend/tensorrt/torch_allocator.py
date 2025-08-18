@@ -22,7 +22,7 @@ class TorchAllocator(trt.IGpuAllocator):
 
     def allocate(self: trt.IGpuAllocator, size: int, alignment: int,
                  flags: int) -> int:
-        """allocate gpu memory.
+        """Allocate gpu memory.
 
         Args:
             self (trt.IGpuAllocator): gpu allocator
@@ -45,7 +45,7 @@ class TorchAllocator(trt.IGpuAllocator):
         return mem
 
     def deallocate(self: trt.IGpuAllocator, memory: int) -> bool:
-        """deallocate memory.
+        """Deallocate memory.
 
         Args:
             self (trt.IGpuAllocator): gpu allocator

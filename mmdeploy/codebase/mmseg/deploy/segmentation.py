@@ -102,17 +102,17 @@ MMSEG_TASK = Registry('mmseg_tasks')
 
 @CODEBASE.register_module(Codebase.MMSEG.value)
 class MMSegmentation(MMCodebase):
-    """mmsegmentation codebase class."""
+    """Mmsegmentation codebase class."""
     task_registry = MMSEG_TASK
 
     @classmethod
     def register_deploy_modules(cls):
-        """register deploy modules."""
+        """Register deploy modules."""
         import mmdeploy.codebase.mmseg.models  # noqa: F401
 
     @classmethod
     def register_all_modules(cls):
-        """register all modules."""
+        """Register all modules."""
         from mmseg.utils.set_env import register_all_modules
 
         cls.register_deploy_modules()
@@ -298,7 +298,7 @@ class Segmentation(BaseTask):
         """Get the postprocess information for SDK.
 
         Return:
-            dict: Nonthing for super resolution.
+            dict: Nothing for super resolution.
         """
         params = self.model_cfg.model.decode_head
         if isinstance(params, list):

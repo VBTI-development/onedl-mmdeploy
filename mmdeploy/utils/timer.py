@@ -34,7 +34,7 @@ class TimeCounter:
 
         def _register(func):
             assert warmup >= 1
-            assert name not in cls.names,\
+            assert name not in cls.names, \
                 'The registered function name cannot be repeated!'
             # When adding on multiple functions, we need to ensure that the
             # data does not interfere with each other
@@ -143,7 +143,7 @@ class TimeCounter:
 
     @classmethod
     def print_stats(cls, name: str):
-        """print statistics results of timer.
+        """Print statistics results of timer.
 
         Args:
             name (str): The name registered with `count_time`.

@@ -26,7 +26,7 @@ class Error(Exception):
 
 
 def _check(code: int, msg: str):
-    """check the error code.
+    """Check the error code.
 
     Args:
         code (int): The error code.

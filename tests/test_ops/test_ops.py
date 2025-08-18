@@ -165,10 +165,10 @@ def test_bicubic_interpolate(backend,
 
 
 @pytest.mark.parametrize('backend', [TEST_TENSORRT, TEST_ONNXRT])
-@pytest.mark.parametrize('in_channels,out_channels,stride,padding,'
-                         'dilation,groups,deform_groups,kernel_size',
-                         [(3, 64, 1, 0, 1, 1, 1, 3),
-                          (1, 32, 3, 2, 1, 1, 1, 3)])
+@pytest.mark.parametrize(
+    'in_channels,out_channels,stride,padding,'
+    'dilation,groups,deform_groups,kernel_size', [(3, 64, 1, 0, 1, 1, 1, 3),
+                                                  (1, 32, 3, 2, 1, 1, 1, 3)])
 @pytest.mark.parametrize('bias', [True, False])
 def test_modulated_deform_conv(backend,
                                in_channels,
@@ -217,9 +217,9 @@ def test_modulated_deform_conv(backend,
             save_dir=save_dir)
 
 
-@pytest.mark.parametrize('in_channels,out_channels,stride,padding,'
-                         'dilation,groups,deform_groups,kernel_size',
-                         [(1, 32, 3, 2, 1, 1, 1, 3)])
+@pytest.mark.parametrize(
+    'in_channels,out_channels,stride,padding,'
+    'dilation,groups,deform_groups,kernel_size', [(1, 32, 3, 2, 1, 1, 1, 3)])
 def test_deform_conv(in_channels, out_channels, stride, padding, dilation,
                      groups, deform_groups, kernel_size):
 
@@ -303,9 +303,9 @@ def test_instance_norm(backend,
 
 
 @pytest.mark.parametrize('backend', [TEST_TENSORRT])
-@pytest.mark.parametrize('num_classes,pre_topk,after_topk,iou_threshold,'
-                         'score_threshold,background_label_id',
-                         [(5, 6, 3, 0.7, 0.1, -1)])
+@pytest.mark.parametrize(
+    'num_classes,pre_topk,after_topk,iou_threshold,'
+    'score_threshold,background_label_id', [(5, 6, 3, 0.7, 0.1, -1)])
 def test_batched_nms(backend,
                      num_classes,
                      pre_topk,
@@ -376,9 +376,9 @@ def test_batched_nms(backend,
 
 
 @pytest.mark.parametrize('backend', [TEST_TENSORRT])
-@pytest.mark.parametrize('num_classes,pre_topk,after_topk,iou_threshold,'
-                         'score_threshold,background_label_id',
-                         [(5, 6, 3, 0.7, 0.1, -1)])
+@pytest.mark.parametrize(
+    'num_classes,pre_topk,after_topk,iou_threshold,'
+    'score_threshold,background_label_id', [(5, 6, 3, 0.7, 0.1, -1)])
 def test_batched_rotated_nms(backend,
                              num_classes,
                              pre_topk,

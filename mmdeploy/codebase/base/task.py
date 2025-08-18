@@ -78,7 +78,7 @@ class BaseTask(metaclass=ABCMeta):
         pass
 
     def build_data_preprocessor(self):
-        """build data preprocessor.
+        """Build data preprocessor.
 
         Returns:
             BaseDataPreprocessor:
@@ -217,7 +217,7 @@ class BaseTask(metaclass=ABCMeta):
         if dataloader is None:
             dataloader = model_cfg.test_dataloader
         if not isinstance(dataloader, DataLoader):
-            if type(dataloader) == list:
+            if type(dataloader) == list:  # noqa: E721
                 dataloader = [self.build_dataloader(dl) for dl in dataloader]
             else:
                 dataloader = self.build_dataloader(dataloader)

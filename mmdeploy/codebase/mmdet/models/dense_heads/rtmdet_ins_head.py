@@ -115,6 +115,7 @@ def _nms_with_mask_static(self,
                           keep_top_k: int = -1,
                           mask_thr_binary: float = 0.5):
     """Wrapper for `multiclass_nms` with ONNXRuntime.
+
     Args:
         ctx (ContextCaller): The context with additional information.
         bboxes (Tensor): The bounding boxes of shape [N, num_boxes, 4].
@@ -158,7 +159,7 @@ def _nms_with_mask_static(self,
 
 
 def _mask_predict_by_feat_single(self, mask_feat, kernels, priors):
-    """decode mask with dynamic conv."""
+    """Decode mask with dynamic conv."""
     num_inst = priors.shape[1]
     batch_size = priors.shape[0]
     hw = mask_feat.size()[-2:]
@@ -193,7 +194,7 @@ def _mask_predict_by_feat_single(self, mask_feat, kernels, priors):
 
 
 def _parse_dynamic_params(self, flatten_kernels):
-    """split kernel head prediction to conv weight and bias."""
+    """Split kernel head prediction to conv weight and bias."""
     batch_size = flatten_kernels.shape[0]
     n_inst = flatten_kernels.shape[1]
     n_layers = len(self.weight_nums)

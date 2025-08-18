@@ -7,7 +7,7 @@ from coremltools.converters.mil.frontend.torch.torch_op_registry import \
 
 @register_torch_op(torch_alias=['mmdeploy::coreml_nms'])
 def coreml_nms(context, node):
-    """bind CoreML NMS op."""
+    """Bind CoreML NMS op."""
     inputs = _get_inputs(context, node)
     boxes = inputs[0]
     scores = inputs[1]
@@ -46,7 +46,7 @@ def stack(context, node):
 
 @register_torch_op(torch_alias=['torchvision::roi_align'])
 def roi_align(context, node):
-    """roi align."""
+    """Roi align."""
     inputs = _get_inputs(context, node)
 
     x = context[node.inputs[0]]

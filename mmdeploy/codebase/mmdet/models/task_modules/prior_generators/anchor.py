@@ -99,7 +99,7 @@ def anchorgenerator__single_level_grid_priors__trt(
     """
     ctx = FUNCTION_REWRITER.get_context()
     from mmdet.models.task_modules.prior_generators import AnchorGenerator
-    if type(self) != AnchorGenerator:
+    if not isinstance(self, AnchorGenerator):
         # only use custom node on default generator.
         return ctx.origin_func(
             self,

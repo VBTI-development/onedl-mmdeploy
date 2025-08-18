@@ -85,7 +85,7 @@ def run(args):
 
 
 def main():
-    """test `onnx2ncnn.cpp`
+    """Test `onnx2ncnn.cpp`
 
     First generate onnx model then convert it with `mmdeploy_onnx2ncnn`.
     """

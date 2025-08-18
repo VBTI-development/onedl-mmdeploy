@@ -25,7 +25,7 @@ def generic_rnn__ncnn(g,
                       bidirectional,
                       batch_first=None,
                       batch_sizes=None):
-    """rewrite of _generic_rnn for ncnn.
+    """Rewrite of _generic_rnn for ncnn.
 
     `g.op` will add some nodes for h0 and c0 in LSTM. which is not supported in
     ncnn. So we add a custom domain to avoid it.

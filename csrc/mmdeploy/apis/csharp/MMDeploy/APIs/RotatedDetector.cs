@@ -5,7 +5,7 @@ namespace MMDeploy
 {
     /// <summary>
     /// Single detection result of a picture.
-    /// A picture may contains multiple reuslts.
+    /// A picture may contains multiple results.
     /// </summary>
     public struct RDetect
     {

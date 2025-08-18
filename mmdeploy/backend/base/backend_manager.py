@@ -99,13 +99,13 @@ class BaseBackendManager(metaclass=ABCMeta):
 
 
 class BackendManagerRegistry:
-    """backend manager registry."""
+    """Backend manager registry."""
 
     def __init__(self):
         self._module_dict = {}
 
     def register(self, name: str, enum_name: Optional[str] = None):
-        """register backend manager.
+        """Register backend manager.
 
         Args:
             name (str): name of the backend

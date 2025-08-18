@@ -183,7 +183,7 @@ class VoxelDetectionModel(BaseBackendModel):
         """
 
         assert (data_instances_2d is not None) or \
-               (data_instances_3d is not None),\
+               (data_instances_3d is not None), \
                'please pass at least one type of data_samples'
 
         if data_instances_2d is None:
@@ -203,11 +203,11 @@ class VoxelDetectionModel(BaseBackendModel):
     @staticmethod
     def postprocess(model_cfg: Union[str, Config],
                     deploy_cfg: Union[str, Config], outs: Dict, metas: Dict):
-        """postprocess outputs to datasamples.
+        """Postprocess outputs to datasamples.
 
         Args:
             model_cfg (Union[str, Config]): The model config from
-                trainning repo
+                training repo
             deploy_cfg (Union[str, Config]): The deploy config to specify
                 backend and input shape
             outs (Dict): output bbox, cls and score

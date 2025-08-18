@@ -18,7 +18,7 @@ class ScaledDotProductAttentionTRT(torch.autograd.Function):
                 k: Tensor,
                 v: Tensor,
                 attn_mask: Optional[Tensor] = None):
-        """forward function."""
+        """Forward function."""
         B, Nt, E = q.shape
         q = q / math.sqrt(E)
         # (B, Nt, E) x (B, E, Ns) -> (B, Nt, Ns)

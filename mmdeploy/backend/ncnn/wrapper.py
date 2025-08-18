@@ -13,7 +13,7 @@ from ..base import BACKEND_WRAPPER, BaseWrapper
 
 @BACKEND_WRAPPER.register_module(Backend.NCNN.value)
 class NCNNWrapper(BaseWrapper):
-    """ncnn wrapper class for inference.
+    """Ncnn wrapper class for inference.
 
     Args:
         param_file (str): Path of a parameter file.
