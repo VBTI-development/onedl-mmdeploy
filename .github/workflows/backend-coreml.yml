@@ -6,7 +6,6 @@ on:
       - "csrc/**"
       - "demo/csrc/**"
       - "CMakeLists.txt"
-      - "docs/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
