@@ -6,6 +6,9 @@ on:
       - "tools/**"
       - "docs/**"
 
+env:
+  PIP_PRE: 1
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
