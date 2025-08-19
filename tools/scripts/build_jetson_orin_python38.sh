@@ -129,7 +129,7 @@ install_mmdeploy() {
     python3 -m pip install versioned-hdf5
 
     # build and install mmdeploy
-    cd ../mmdeploy
+    cd ../onedl-mmdeploy
     git submodule init
     git submodule update
 

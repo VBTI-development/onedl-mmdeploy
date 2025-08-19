@@ -37,7 +37,7 @@ jobs:
           uv pip install onedl-mim
           mim install onedl-mmcv
           uv export --only-group codebases > codebases.txt && mim install -r codebases.txt
-          uv pip install -r pyproject.toml --group test --group build --extra backends
+          uv pip install -r pyproject.toml --group tests--group build --extra backends
       # - name: Install mmyolo
       #   run: |
       #     git clone -b dev --depth 1 https://github.com/open-mmlab/mmyolo.git /home/runner/work/mmyolo
@@ -72,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build_cpu_sdk:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -154,7 +154,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install PyTorch
         run: |
-          uv pip install torch==${{ matrix.torch }} torchvision
+          uv pip install torch==2.5.1 torchvision
       - name: Check disk space
         continue-on-error: true
         run: |
@@ -171,7 +171,7 @@ jobs:
           uv pip install onedl-mim
           mim install onedl-mmcv
           uv export --only-group codebases > codebases.txt && mim install -r codebases.txt
-          uv pip install -r pyproject.toml --group test --group build --extra backends
+          uv pip install -r pyproject.toml --group tests --group build --extra backends
       - name: Build and install
         run: |
           rm -rf .eggs && python -m pip install -e .

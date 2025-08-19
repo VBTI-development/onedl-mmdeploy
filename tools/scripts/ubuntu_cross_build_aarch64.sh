@@ -102,6 +102,6 @@ install_tools
 build_ocv
 build_ncnn
 
-cd ../mmdeploy
+cd ../onedl-mmdeploy
 build_mmdeploy
 print_success

@@ -154,19 +154,19 @@ case "$device_model" in
   RK1808|RK1806|RV1109|RV1126)
     install_rknpu_toolchain
     build_ocv_arm_gnueabi
-    cd ../mmdeploy
+    cd ../onedl-mmdeploy
     build_mmdeploy_with_rknpu
     ;;
   RK3566|RK3568)
     install_rknpu2_toolchain
     build_ocv_aarch64
-    cd ../mmdeploy
+    cd ../onedl-mmdeploy
     build_mmdeploy_with_rknpu2 "RK356X"
     ;;
   RK3588|RV1106)
     install_rknpu2_toolchain
     build_ocv_aarch64
-    cd ../mmdeploy
+    cd ../onedl-mmdeploy
     build_mmdeploy_with_rknpu2 "$device_model"
     ;;
   *)
