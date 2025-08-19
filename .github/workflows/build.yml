@@ -58,7 +58,7 @@ jobs:
       #     python -m pip install xdoctest
       #     cd /home/runner/work/mmyolo
       #     pytest tests/test_deploy
-      # - name: create badge
+      - name: create badge
         if: always()
         uses: RubbaBoy/BYOB@v1.2.1
         with:
