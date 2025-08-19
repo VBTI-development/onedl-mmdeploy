@@ -13,6 +13,12 @@ from mmdeploy.codebase import import_codebase
 from mmdeploy.utils import Codebase, load_config
 from mmdeploy.utils.test import SwitchBackendWrapper
 
+try:
+    import_codebase(Codebase.MMAGIC)
+except ImportError:
+    pytest.skip(
+        f'{Codebase.MMAGIC} is not installed.', allow_module_level=True)
+
 model_cfg_path = 'tests/test_codebase/test_mmocr/data/dbnet.py'
 model_cfg = load_config(model_cfg_path)[0]
 deploy_cfg = mmengine.Config(
@@ -36,11 +42,6 @@ img = np.random.rand(*img_shape, 3).astype(np.uint8)
 
 @pytest.fixture(autouse=True)
 def init_task_processor():
-    try:
-        import_codebase(Codebase.MMOCR)
-    except ImportError:
-        pytest.skip(
-            f'{Codebase.MMOCR} is not installed.', allow_module_level=True)
     global task_processor
     task_processor = build_task_processor(model_cfg, deploy_cfg, 'cpu')
 

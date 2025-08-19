@@ -1,13 +1,6 @@
 name: build
 
 on:
-  push:
-    paths-ignore:
-      - ".github/scripts/**"
-      - "demo/**"
-      - "docker/**"
-      - "tools/**"
-
   pull_request:
     paths-ignore:
       - ".github/scripts/**"
@@ -22,54 +15,50 @@ concurrency:
 
 jobs:
   build_cpu_model_convert:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        torch: [1.9.0]
-        include:
-          - torch: 1.9.0
-            torchvision: 0.10.0
+        torch: [2.5.1]
+        python-version: ["3.10"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Install PyTorch
         run: |
-          python -m pip install --upgrade pip
-          python -V
-          python -m pip show pip
-          python -m pip install torch==${{matrix.torch}}+cpu torchvision==${{matrix.torchvision}}+cpu -f https://download.pytorch.org/whl/torch_stable.html
-      - name: Install unittest dependencies
+          uv pip install torch==${{ matrix.torch }} torchvision
+      - name: Install unit tests dependencies
         run: |
-          python -m pip install openmim
-          python -m pip install -r requirements.txt
-          python -m pip install -r requirements/backends.txt
-          python -m mim install "mmcv==2.0.1"
-          python -m mim install -r requirements/codebases.txt
-          python -m pip install clip numba transformers numpy==1.23 albumentations
-          python -m pip list
-      - name: Install mmyolo
-        run: |
-          git clone -b dev --depth 1 https://github.com/open-mmlab/mmyolo.git /home/runner/work/mmyolo
-          python -m pip install -v -e /home/runner/work/mmyolo
-      - name: Install mmpose
-        run: |
-          git clone --depth 1 https://github.com/open-mmlab/mmpose.git /home/runner/work/mmpose
-          python -m pip install -v -e /home/runner/work/mmpose
+          uv pip install onedl-mim
+          mim install onedl-mmcv
+          uv export --only-group codebases > codebases.txt && mim install -r codebases.txt
+          uv pip install -r pyproject.toml --group test --group build --extra backends
+      # - name: Install mmyolo
+      #   run: |
+      #     git clone -b dev --depth 1 https://github.com/open-mmlab/mmyolo.git /home/runner/work/mmyolo
+      #     python -m pip install -v -e /home/runner/work/mmyolo
+      # - name: Install mmpose
+      #   run: |
+      #     git clone --depth 1 https://github.com/open-mmlab/mmpose.git /home/runner/work/mmpose
+      #     python -m pip install -v -e /home/runner/work/mmpose
       - name: Build and install
         run: |
-          rm -rf .eggs && python -m pip install -e .
+          rm -rf .eggs && uv pip install -e .
           python tools/check_env.py
       - name: Run python unittests and generate coverage report
         run: |
           coverage run --branch --source mmdeploy -m pytest -rsE tests
           coverage xml
           coverage report -m
-      - name: Run mmyolo deploy unittests
-        id: badge_status
-        run: |
-          python -m pip install xdoctest
-          cd /home/runner/work/mmyolo
-          pytest tests/test_deploy
-      - name: create badge
+      # - name: Run mmyolo deploy unittests
+      #   id: badge_status
+      #   run: |
+      #     python -m pip install xdoctest
+      #     cd /home/runner/work/mmyolo
+      #     pytest tests/test_deploy
+      # - name: create badge
         if: always()
         uses: RubbaBoy/BYOB@v1.2.1
         with:
@@ -80,7 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build_cpu_sdk:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -117,7 +106,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   cross_build_aarch64:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -143,24 +132,26 @@ jobs:
           COLOR: ${{ steps.badge_status.conclusion == 'success' && 'green' || 'red' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build_cuda117:
-    runs-on: ubuntu-20.04
+  build_cuda118:
+    runs-on: ubuntu-22.04
     container:
-      image: pytorch/pytorch:2.0.0-cuda11.7-cudnn8-devel
+      image: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
     env:
       FORCE_CUDA: 1
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install system dependencies
         run: |
           apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libxrender-dev
           apt-get clean
           rm -rf /var/lib/apt/lists/*
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Install PyTorch
         run: |
-          python -V
-          python -m pip show torch torchvision
-          python -m pip install --no-cache-dir --upgrade pip
+          uv pip install torch==${{ matrix.torch }} torchvision
       - name: Check disk space
         continue-on-error: true
         run: |
@@ -172,16 +163,12 @@ jobs:
           cat /proc/cpuinfo  | grep -ic proc
           free
           df -h
-      - name: Install dependencies
+      - name: Install unit tests dependencies
         run: |
-          python -V
-          python -m pip install --no-cache-dir openmim
-          python -m pip install --no-cache-dir -r requirements.txt
-          python -m pip install --no-cache-dir -r requirements/backends.txt
-          python -m mim install "mmcv==2.0.1"
-          python -m pip install --no-cache-dir -r requirements/codebases.txt
-          python -m pip install --no-cache-dir -U pycuda numpy==1.23 clip numba transformers albumentations
-          python -m pip list
+          uv pip install onedl-mim
+          mim install onedl-mmcv
+          uv export --only-group codebases > codebases.txt && mim install -r codebases.txt
+          uv pip install -r pyproject.toml --group test --group build --extra backends
       - name: Build and install
         run: |
           rm -rf .eggs && python -m pip install -e .
@@ -204,202 +191,146 @@ jobs:
         if: always()
         uses: RubbaBoy/BYOB@v1.2.1
         with:
-          NAME: build_cuda117
+          NAME: build_cuda118
           LABEL: 'build'
           STATUS: ${{ steps.badge_status.conclusion == 'success' && 'passing' || 'failing' }}
           COLOR: ${{ steps.badge_status.conclusion == 'success' && 'green' || 'red' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build_cuda113:
-    runs-on: ubuntu-20.04
-    container:
-      image: pytorch/pytorch:1.12.0-cuda11.3-cudnn8-devel
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install system dependencies
-        run: |
-          apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libxrender-dev
-          apt-get clean
-          rm -rf /var/lib/apt/lists/*
-      - name: Install PyTorch
-        run: |
-          python -V
-          python -m pip show torch torchvision
-          python -m pip install --no-cache-dir --upgrade pip
-      - name: Check disk space
-        continue-on-error: true
-        run: |
-          df -h
-          rm -rf /__t/go
-          rm -rf /__t/node
-          rm -rf /__t/Ruby
-          rm -rf /__t/CodeQL
-          cat /proc/cpuinfo  | grep -ic proc
-          free
-          df -h
-      - name: Install dependencies
-        run: |
-          python -V
-          python -m pip install --no-cache-dir openmim
-          python -m pip install --no-cache-dir -r requirements.txt
-          python -m pip install --no-cache-dir -r requirements/backends.txt
-          python -m mim install --no-cache-dir "mmcv==2.0.1"
-          python -m pip install --no-cache-dir -r requirements/codebases.txt
-          python -m pip install --no-cache-dir -U pycuda numpy clip numba transformers albumentations
-          python -m pip list
-      - name: Build and install
-        run: |
-          rm -rf .eggs && python -m pip install -e .
-          python tools/check_env.py
-      - name: Run unittests and generate coverage report
-        run: |
-          coverage run --branch --source mmdeploy -m pytest -rsE tests
-          coverage xml
-          coverage report -m
-      - name: create badge
-        if: always()
-        uses: RubbaBoy/BYOB@v1.2.1
-        with:
-          NAME: build_cuda113
-          LABEL: 'build'
-          STATUS: ${{ steps.badge_status.conclusion == 'success' && 'passing' || 'failing' }}
-          COLOR: ${{ steps.badge_status.conclusion == 'success' && 'green' || 'red' }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # build_cuda118_linux:
+  #   needs: [build_cpu_model_convert, build_cpu_sdk, build_cuda118]
+  #   runs-on: [self-hosted, linux-3090]
+  #   container:
+  #     image: openmmlab/mmdeploy:ubuntu20.04-cuda11.8 # TODO use new image
+  #     options: "--gpus=all --ipc=host"
+  #     volumes:
+  #       - /data2/pip-cache:/root/.cache/pip
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         submodules: recursive
+  #     - name: Install dependencies
+  #       run: |
+  #         apt update && apt install unzip
+  #         python3 -V
+  #         python3 -m pip install opencv-python==4.5.4.60 opencv-python-headless==4.5.4.60 opencv-contrib-python==4.5.4.60
+  #         python3 -m pip install openmim numpy pycuda clip transformers
+  #         python3 -m pip install -r requirements.txt
+  #         python3 -m mim install $(cat requirements/codebases.txt | grep mmpretrain)
+  #         python3 -m pip list
+  #     - name: Build SDK
+  #       run: |
+  #         export Torch_DIR=$(python3 -c "import torch;print(torch.utils.cmake_prefix_path + '/Torch')")
+  #         bash .github/scripts/linux/build.sh "cpu;cuda" "ort;trt;ncnn;torchscript" \
+  #             -Dpplcv_DIR=${pplcv_DIR} \
+  #             -DTENSORRT_DIR=${TENSORRT_DIR} \
+  #             -DONNXRUNTIME_DIR=${ONNXRUNTIME_DIR} \
+  #             -Dncnn_DIR=${ncnn_DIR} \
+  #             -DTorch_DIR=${Torch_DIR}
+  #         ls build/lib
+  #     - name: Install converter
+  #       run: |
+  #         rm -rf .eggs && python3 -m pip install -e .
+  #         export LD_LIBRARY_PATH="/root/workspace/mmdeploy/build/lib:${LD_LIBRARY_PATH}"
+  #         python3 tools/check_env.py
+  #     - name: Test TensorRT pipeline
+  #       id: badge_status
+  #       run: |
+  #         export LD_LIBRARY_PATH="/root/workspace/mmdeploy/build/lib:${LD_LIBRARY_PATH}"
+  #         export LD_LIBRARY_PATH="/root/workspace/mmdeploy/mmdeploy/lib:${LD_LIBRARY_PATH}"
+  #         bash .github/scripts/linux/test_full_pipeline.sh trt cuda
+  #     - name: create badge
+  #       if: always()
+  #       uses: RubbaBoy/BYOB@v1.2.1
+  #       with:
+  #         NAME: build_cuda118_linux
+  #         LABEL: 'build'
+  #         STATUS: ${{ steps.badge_status.conclusion == 'success' && 'passing' || 'failing' }}
+  #         COLOR: ${{ steps.badge_status.conclusion == 'success' && 'green' || 'red' }}
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build_cuda118_linux:
-    needs: [build_cpu_model_convert, build_cpu_sdk, build_cuda117]
-    runs-on: [self-hosted, linux-3090]
-    container:
-      image: openmmlab/mmdeploy:ubuntu20.04-cuda11.8
-      options: "--gpus=all --ipc=host"
-      volumes:
-        - /data2/pip-cache:/root/.cache/pip
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - name: Install dependencies
-        run: |
-          apt update && apt install unzip
-          python3 -V
-          python3 -m pip install opencv-python==4.5.4.60 opencv-python-headless==4.5.4.60 opencv-contrib-python==4.5.4.60
-          python3 -m pip install openmim numpy pycuda clip transformers
-          python3 -m pip install -r requirements.txt
-          python3 -m mim install $(cat requirements/codebases.txt | grep mmpretrain)
-          python3 -m pip list
-      - name: Build SDK
-        run: |
-          export Torch_DIR=$(python3 -c "import torch;print(torch.utils.cmake_prefix_path + '/Torch')")
-          bash .github/scripts/linux/build.sh "cpu;cuda" "ort;trt;ncnn;torchscript" \
-              -Dpplcv_DIR=${pplcv_DIR} \
-              -DTENSORRT_DIR=${TENSORRT_DIR} \
-              -DONNXRUNTIME_DIR=${ONNXRUNTIME_DIR} \
-              -Dncnn_DIR=${ncnn_DIR} \
-              -DTorch_DIR=${Torch_DIR}
-          ls build/lib
-      - name: Install converter
-        run: |
-          rm -rf .eggs && python3 -m pip install -e .
-          export LD_LIBRARY_PATH="/root/workspace/mmdeploy/build/lib:${LD_LIBRARY_PATH}"
-          python3 tools/check_env.py
-      - name: Test TensorRT pipeline
-        id: badge_status
-        run: |
-          export LD_LIBRARY_PATH="/root/workspace/mmdeploy/build/lib:${LD_LIBRARY_PATH}"
-          export LD_LIBRARY_PATH="/root/workspace/mmdeploy/mmdeploy/lib:${LD_LIBRARY_PATH}"
-          bash .github/scripts/linux/test_full_pipeline.sh trt cuda
-      - name: create badge
-        if: always()
-        uses: RubbaBoy/BYOB@v1.2.1
-        with:
-          NAME: build_cuda118_linux
-          LABEL: 'build'
-          STATUS: ${{ steps.badge_status.conclusion == 'success' && 'passing' || 'failing' }}
-          COLOR: ${{ steps.badge_status.conclusion == 'success' && 'green' || 'red' }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # build_cuda118_windows:
+  #   needs: [build_cpu_model_convert, build_cpu_sdk, build_cuda117]
+  #   runs-on: [self-hosted, win10-3080]
+  #   env:
+  #     BASE_ENV: mmdeploy-cuda11.8-torch2.0-py38
+  #   defaults:
+  #     run:
+  #       shell: powershell
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         submodules: 'recursive'
+  #     - name: Setup Python Environment
+  #       run: |
+  #         echo "============================== Info =============================="
+  #         echo "env:path= $env:path"
+  #         echo "============================== Info =============================="
+  #         conda info
+  #         conda info -e
+  #         $env:TEMP_ENV = "$pwd/../temp_envs/$env:GITHUB_RUN_ID"
+  #         New-Item -Path "$env:TEMP_ENV" -ItemType Directory -Force
+  #         echo "TEMP_ENV=$env:TEMP_ENV" >> $env:GITHUB_ENV
+  #         conda create -p $env:TEMP_ENV --clone $env:BASE_ENV -y
+  #         conda activate $env:TEMP_ENV
+  #         python -V
+  #         python -m pip install openmim
+  #         python -m pip install -r requirements.txt
+  #         python -m pip install -r requirements/backends.txt
+  #         python -m mim install "mmpretrain>=1.0.0rc7"
+  #         python -m pip list
+  #     - name: Build mmdeploy
+  #       run: |
+  #         conda activate $env:TEMP_ENV
+  #         python -V
+  #         mkdir build
+  #         cd build
+  #         cmake ..  -A x64 -T v142,cuda=$env:CUDA_PATH `
+  #           -DMMDEPLOY_BUILD_TEST=ON `
+  #           -DMMDEPLOY_BUILD_SDK_CSHARP_API=ON `
+  #           -DMMDEPLOY_BUILD_SDK_PYTHON_API=ON `
+  #           -DMMDEPLOY_BUILD_SDK=ON `
+  #           -DMMDEPLOY_TARGET_DEVICES='cuda' `
+  #           -DMMDEPLOY_TARGET_BACKENDS='ort;trt' `
+  #           -DMMDEPLOY_CODEBASES='all' `
+  #           -Dpplcv_DIR="$env:pplcv_DIR" `
+  #           -DOpenCV_DIR="$env:OpenCV_DIR" `
+  #           -DTENSORRT_DIR="$env:TENSORRT_DIR" `
+  #           -DONNXRUNTIME_DIR="$env:ONNXRUNTIME_GPU_DIR" `
+  #           -DMMDEPLOY_BUILD_EXAMPLES=ON `
+  #           -DCUDNN_DIR="$env:CUDNN_DIR"
+  #         cmake --build . --config Release -- /m
+  #         cmake --install . --config Release
+  #         ls $pwd\bin\Release
+  #     - name: Install mmdeploy converter
+  #       run: |
+  #         conda activate $env:TEMP_ENV
+  #         python -m pip install -e .
+  #         python .\tools\check_env.py
+  #     - name: Test trt full pipeline
+  #       run: |
+  #         conda activate $env:TEMP_ENV
+  #         $env:path = "$pwd\build\bin\Release;" + $env:path
+  #         $env:path = "$env:ONNXRUNTIME_GPU_DIR\lib;" + $env:path
+  #         echo $env:path
+  #         .github\scripts\windows\test_full_pipeline.ps1 -Backend trt -Device cuda
+  #     - name: Clear temp env
+  #       if: always()
+  #       run: |
+  #         conda env remove --prefix "$env:TEMP_ENV"
 
-  build_cuda118_windows:
-    needs: [build_cpu_model_convert, build_cpu_sdk, build_cuda117]
-    runs-on: [self-hosted, win10-3080]
-    env:
-      BASE_ENV: mmdeploy-cuda11.8-torch2.0-py38
-    defaults:
-      run:
-        shell: powershell
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          submodules: 'recursive'
-      - name: Setup Python Environment
-        run: |
-          echo "============================== Info =============================="
-          echo "env:path= $env:path"
-          echo "============================== Info =============================="
-          conda info
-          conda info -e
-          $env:TEMP_ENV = "$pwd/../temp_envs/$env:GITHUB_RUN_ID"
-          New-Item -Path "$env:TEMP_ENV" -ItemType Directory -Force
-          echo "TEMP_ENV=$env:TEMP_ENV" >> $env:GITHUB_ENV
-          conda create -p $env:TEMP_ENV --clone $env:BASE_ENV -y
-          conda activate $env:TEMP_ENV
-          python -V
-          python -m pip install openmim
-          python -m pip install -r requirements.txt
-          python -m pip install -r requirements/backends.txt
-          python -m mim install "mmpretrain>=1.0.0rc7"
-          python -m pip list
-      - name: Build mmdeploy
-        run: |
-          conda activate $env:TEMP_ENV
-          python -V
-          mkdir build
-          cd build
-          cmake ..  -A x64 -T v142,cuda=$env:CUDA_PATH `
-            -DMMDEPLOY_BUILD_TEST=ON `
-            -DMMDEPLOY_BUILD_SDK_CSHARP_API=ON `
-            -DMMDEPLOY_BUILD_SDK_PYTHON_API=ON `
-            -DMMDEPLOY_BUILD_SDK=ON `
-            -DMMDEPLOY_TARGET_DEVICES='cuda' `
-            -DMMDEPLOY_TARGET_BACKENDS='ort;trt' `
-            -DMMDEPLOY_CODEBASES='all' `
-            -Dpplcv_DIR="$env:pplcv_DIR" `
-            -DOpenCV_DIR="$env:OpenCV_DIR" `
-            -DTENSORRT_DIR="$env:TENSORRT_DIR" `
-            -DONNXRUNTIME_DIR="$env:ONNXRUNTIME_GPU_DIR" `
-            -DMMDEPLOY_BUILD_EXAMPLES=ON `
-            -DCUDNN_DIR="$env:CUDNN_DIR"
-          cmake --build . --config Release -- /m
-          cmake --install . --config Release
-          ls $pwd\bin\Release
-      - name: Install mmdeploy converter
-        run: |
-          conda activate $env:TEMP_ENV
-          python -m pip install -e .
-          python .\tools\check_env.py
-      - name: Test trt full pipeline
-        run: |
-          conda activate $env:TEMP_ENV
-          $env:path = "$pwd\build\bin\Release;" + $env:path
-          $env:path = "$env:ONNXRUNTIME_GPU_DIR\lib;" + $env:path
-          echo $env:path
-          .github\scripts\windows\test_full_pipeline.ps1 -Backend trt -Device cuda
-      - name: Clear temp env
-        if: always()
-        run: |
-          conda env remove --prefix "$env:TEMP_ENV"
-
-  badge_build_cuda118_windows:
-    needs: build_cuda118_windows
-    if: always()
-    runs-on: ubuntu-20.04
-    steps:
-      - name: create badge
-        uses: RubbaBoy/BYOB@v1.2.1
-        with:
-          NAME: build_cuda118_windows
-          LABEL: 'build'
-          STATUS: ${{ needs.build_cuda113_windows.result == 'success' && 'passing' || needs.build_cuda113_windows.result }}
-          COLOR: ${{ needs.build_cuda113_windows.result == 'success' && 'green' || 'red' }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # badge_build_cuda118_windows:
+  #   needs: build_cuda118_windows
+  #   if: always()
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: create badge
+  #       uses: RubbaBoy/BYOB@v1.2.1
+  #       with:
+  #         NAME: build_cuda118_windows
+  #         LABEL: 'build'
+  #         STATUS: ${{ needs.build_cuda113_windows.result == 'success' && 'passing' || needs.build_cuda113_windows.result }}
+  #         COLOR: ${{ needs.build_cuda113_windows.result == 'success' && 'green' || 'red' }}
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

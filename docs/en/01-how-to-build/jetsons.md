@@ -236,7 +236,7 @@ sudo apt-get install -y libspdlog-dev
 [ppl.cv](https://github.com/openppl-public/ppl.cv) is a high-performance image processing library of [openPPL](https://openppl.ai/home)
 
 ```shell
-git clone https://github.com/openppl-public/ppl.cv.git
+git clone https://github.com/VBTI-development/ppl.cv.git
 cd ppl.cv
 export PPLCV_DIR=$(pwd)
 echo -e '\n# set environment variable for ppl.cv' >> ~/.bashrc

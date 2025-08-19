@@ -1,17 +1,12 @@
 name: build_riscv64_gcc
 
 on:
-  push:
-    paths:
-      - "csrc/**"
-      - "demo/csrc/**"
-      - "CMakeLists.txt"
-
   pull_request:
     paths-ignore:
       - "csrc/**"
       - "demo/csrc/**"
       - "CMakeLists.txt"
+      - "docs/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,7 +14,7 @@ concurrency:
 
 jobs:
   build_riscv64_gcc:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

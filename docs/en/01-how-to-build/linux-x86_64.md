@@ -111,10 +111,10 @@ sudo apt-get install libopencv-dev
     <td>A high-performance image processing library of openPPL.<br>
   <b>It is optional which only be needed if <code>cuda</code> platform is required.</b><br>
 <pre><code>
-git clone https://github.com/openppl-public/ppl.cv.git
+git clone -b upgrade-for-cuda-12 https://github.com/VBTI-development/ppl.cv.git
 cd ppl.cv
 export PPLCV_DIR=$(pwd)
-git checkout tags/v0.7.0 -b v0.7.0
+git checkout tags/v0.8.0 -b v0.8.0
 ./build.sh cuda
 </code></pre>
    </td>

@@ -9,7 +9,7 @@ ARG CUDA_VERSION=11.8
 
 # important dependencies
 ARG OPENCV_VERSION=4.5.5
-ARG PPLCV_VERSION=0.7.0
+ARG PPLCV_VERSION=0.8.0
 
 # backends
 ARG ONNXRUNTIME_VERSION=1.15.1
@@ -70,7 +70,7 @@ ENV LD_LIBRARY_PATH=${ONNXRUNTIME_GPU_DIR}/lib:$TENSORRT_DIR/lib:$LD_LIBRARY_PAT
 ENV PATH=$TENSORRT_DIR/bin:$PATH
 
 ### install ppl.cv
-RUN git clone --depth 1 --branch v${PPLCV_VERSION} https://github.com/openppl-public/ppl.cv.git  &&\
+RUN git clone --depth 1 --branch v${PPLCV_VERSION} https://github.com/VBTI-development/ppl.cv.git  &&\
     cd ppl.cv &&\
     ./build.sh cuda &&\
     mv cuda-build/install ./ &&\

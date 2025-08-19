@@ -1,17 +1,12 @@
 name: backend-rknn
 
 on:
-  push:
-    paths:
-      - "csrc/**"
-      - "demo/csrc/**"
-      - "CMakeLists.txt"
-
   pull_request:
     paths-ignore:
       - "csrc/**"
       - "demo/csrc/**"
       - "CMakeLists.txt"
+      - "docs/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,7 +14,7 @@ concurrency:
 
 jobs:
   build_rknpu2:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -31,7 +26,7 @@ jobs:
         run: |
           sh -xe tools/scripts/ubuntu_cross_build_rknn.sh rk3588
   build_rknpu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

@@ -1,17 +1,12 @@
 name: backend-coreml
 
 on:
-  push:
-    paths:
-      - "csrc/**"
-      - "demo/csrc/**"
-      - "CMakeLists.txt"
-
   pull_request:
     paths:
       - "csrc/**"
       - "demo/csrc/**"
       - "CMakeLists.txt"
+      - "docs/**"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

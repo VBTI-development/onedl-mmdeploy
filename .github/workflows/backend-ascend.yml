@@ -1,11 +1,6 @@
 name: backend-ascend
 
 on:
-  push:
-    paths-ignore:
-      - "demo/**"
-      - "tools/**"
-
   pull_request:
     paths-ignore:
       - "demo/**"
@@ -21,7 +16,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: ["3.10"]
     steps:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2

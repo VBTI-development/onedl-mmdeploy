@@ -1,11 +1,6 @@
 name: backend-snpe
 
 on:
-  push:
-    paths-ignore:
-      - "demo/**"
-      - "tools/**"
-
   pull_request:
     paths-ignore:
       - "demo/**"
@@ -18,7 +13,7 @@ concurrency:
 
 jobs:
   build_sdk_demo:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

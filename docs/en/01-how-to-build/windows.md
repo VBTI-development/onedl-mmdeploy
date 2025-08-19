@@ -42,7 +42,7 @@ All the commands listed in the following chapters are verified on **Windows 10**
     <td> Please install conda according to the official <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">guide</a>. <br>
  After installation, open <code>anaconda powershell prompt</code> under the Start Menu <b>as the administrator</b>, because: <br>
 1. <b>All the commands listed in the following text are verified in anaconda powershell </b><br>
-2. <b>As an administrator, you can install the thirdparty libraries to the system path so as to simplify MMDeploy build command</b><br>
+2. <b>As an administrator, you can install the third party libraries to the system path so as to simplify MMDeploy build command</b><br>
 Note: if you are familiar with how cmake works, you can also use <code>anaconda powershell prompt</code> as an ordinary user.
     </td>
   </tr>
@@ -95,9 +95,9 @@ You can skip this chapter if you are only interested in the model converter.
     <td>A high-performance image processing library of openPPL.<br>
   <b>It is optional which only be needed if <code>cuda</code> platform is required.</b><br>
 <pre><code>
-git clone https://github.com/openppl-public/ppl.cv.git
+git clone https://github.com/VBTI-development/ppl.cv.git
 cd ppl.cv
-git checkout tags/v0.7.0 -b v0.7.0
+git checkout tags/v0.8.0 -b v0.8.0
 $env:PPLCV_DIR = "$pwd"
 mkdir pplcv-build
 cd pplcv-build
@@ -333,4 +333,4 @@ You can also activate other engines after the model.
 
 ### Note
 
-1. Release / Debug libraries can not be mixed. If MMDeploy is built with Release mode, all its dependent thirdparty libraries have to be built in Release mode too and vice versa.
+1. Release / Debug libraries can not be mixed. If MMDeploy is built with Release mode, all its dependent third party libraries have to be built in Release mode too and vice versa.
