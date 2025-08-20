@@ -19,7 +19,7 @@ ______________________________________________________________________
 
 ### Install mmrotate
 
-Please follow the [installation guide](https://mmrotate.readthedocs.io/en/1.x/get_started.html) to install mmrotate.
+Please follow the [installation guide](https://mmrotate.readthedocs.io/en/main/get_started.html) to install mmrotate.
 
 ### Install mmdeploy
 
@@ -176,10 +176,10 @@ Besides python API, mmdeploy SDK also provides other FFI (Foreign Function Inter
 
 ## Supported models
 
-| Model                                                                                                         | OnnxRuntime | TensorRT |
-| :------------------------------------------------------------------------------------------------------------ | :---------: | :------: |
-| [Rotated RetinaNet](https://github.com/vbti-development/onedl-mmrotate/blob/1.x/configs/rotated_retinanet)    |      Y      |    Y     |
-| [Rotated FasterRCNN](https://github.com/vbti-development/onedl-mmrotate/blob/1.x/configs/rotated_faster_rcnn) |      Y      |    Y     |
-| [Oriented R-CNN](https://github.com/vbti-development/onedl-mmrotate/blob/1.x/configs/oriented_rcnn)           |      Y      |    Y     |
-| [Gliding Vertex](https://github.com/vbti-development/onedl-mmrotate/blob/1.x/configs/gliding_vertex)          |      Y      |    Y     |
-| [RTMDET-R](https://github.com/vbti-development/onedl-mmrotate/blob/1.x/configs/rotated_rtmdet)                |      Y      |    Y     |
+| Model                                                                                                          | OnnxRuntime | TensorRT |
+| :------------------------------------------------------------------------------------------------------------- | :---------: | :------: |
+| [Rotated RetinaNet](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/rotated_retinanet)    |      Y      |    Y     |
+| [Rotated FasterRCNN](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/rotated_faster_rcnn) |      Y      |    Y     |
+| [Oriented R-CNN](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/oriented_rcnn)           |      Y      |    Y     |
+| [Gliding Vertex](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/gliding_vertex)          |      Y      |    Y     |
+| [RTMDET-R](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/rotated_rtmdet)                |      Y      |    Y     |

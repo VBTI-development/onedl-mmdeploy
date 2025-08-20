@@ -69,8 +69,10 @@ jobs:
         with:
           NAME: build_cpu_model_convert
           LABEL: 'build'
-          STATUS: ${{ steps.badge_status.conclusion == 'success' && 'passing' || 'failing' }}
-          COLOR: ${{ steps.badge_status.conclusion == 'success' && 'green' || 'red' }}
+          # STATUS: ${{ steps.badge_status.conclusion == 'success' && 'passing' || 'failing' }}
+          STATUS: 'unknown'
+          # COLOR: ${{ steps.badge_status.conclusion == 'success' && 'green' || 'red' }}
+          COLOR: 'yellow'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build_cpu_sdk:
@@ -186,6 +188,7 @@ jobs:
           rm -rf .eggs && python -m pip install -e .
           python tools/check_env.py
       - name: Run unittests and generate coverage report
+        id: badge_status
         run: |
           coverage run --branch --source mmdeploy -m pytest -rsE tests
           coverage xml

@@ -2,11 +2,12 @@ name: build_riscv64_gcc
 
 on:
   pull_request:
-    paths-ignore:
+    paths:
       - "csrc/**"
-      - "demo/csrc/**"
       - "CMakeLists.txt"
-      - "docs/**"
+  push:
+    branches:
+      - 'main'
 
 env:
   PIP_PRE: 1

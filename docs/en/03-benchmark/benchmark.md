@@ -757,7 +757,7 @@ Users can directly test the performance through [how_to_evaluate_a_model.md](../
     <td align="center">-</td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/vbti-development/onedl-mmdetection/tree/3.x/configs/centernet/centernet_r18_8xb16-crop512-140e_coco.py">CenterNet</a></td>
+    <td align="center"><a href="https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/centernet/centernet_r18_8xb16-crop512-140e_coco.py">CenterNet</a></td>
     <td align="center">Object Detection</td>
     <td align="center">COCO2017</td>
     <td align="center">box AP</td>
@@ -931,7 +931,7 @@ Users can directly test the performance through [how_to_evaluate_a_model.md](../
     <td align="center">-</td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/vbti-development/onedl-mmdetection/tree/3.x/configs/solo/solo_r50_fpn_1x_coco.py">SOLO</a></td>
+    <td align="center"><a href="https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/solo/solo_r50_fpn_1x_coco.py">SOLO</a></td>
     <td align="center">Instance Segmentation</td>
     <td align="center">COCO2017</td>
     <td align="center">mask AP</td>
@@ -946,7 +946,7 @@ Users can directly test the performance through [how_to_evaluate_a_model.md](../
     <td align="center">32.7</td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/vbti-development/onedl-mmdetection/tree/3.x/configs/solov2/solov2_r50_fpn_1x_coco.py">SOLOv2</a></td>
+    <td align="center"><a href="https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/solov2/solov2_r50_fpn_1x_coco.py">SOLOv2</a></td>
     <td align="center">Instance Segmentation</td>
     <td align="center">COCO2017</td>
     <td align="center">mask AP</td>

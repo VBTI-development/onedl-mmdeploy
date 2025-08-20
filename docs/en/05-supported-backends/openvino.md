@@ -39,7 +39,7 @@ cmake -DMMDEPLOY_TARGET_DEVICES='cpu' -DMMDEPLOY_TARGET_BACKENDS=openvino -DInfe
 make -j$(nproc) && make install
 ```
 
-To work with models from [MMDetection](https://mmdetection.readthedocs.io/en/3.x/get_started.html), you may need to install it additionally.
+To work with models from [MMDetection](https://mmdetection.readthedocs.io/en/main/get_started.html), you may need to install it additionally.
 
 ## Usage
 

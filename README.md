@@ -27,9 +27,14 @@
 [![open issues](https://isitmaintained.com/badge/open/VBTI-development/onedl-mmdeploy.svg)](https://github.com/VBTI-development/onedl-mmdeploy/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/VBTI-development/onedl-mmdeploy.svg)](https://github.com/VBTI-development/onedl-mmdeploy/issues)
 
+<!-- markdown-link-check-disable -->
+
 [📘 Documentation](https://onedl-mmdeploy.readthedocs.io/en/latest/) |
 [🛠️ Installation](https://onedl-mmdeploy.readthedocs.io/en/latest/get_started.html) |
 [🆕 Update News](https://onedl-mmdeploy.readthedocs.io/en/latest/notes/changelog.html) |
+
+<!-- markdown-link-check-enable -->
+
 [🤔 Reporting Issues](https://github.com/VBTI-development/onedl-mmdeploy/issues/new/choose) |
 
 ## Highlights

@@ -14,7 +14,7 @@ A）Use pre-generated kernel code
 
 i) Download the kernel code from here，unzip it and copy the csrc folder to the mmdeploy root folder.
 
-[elena_kernel-20220823.tar.gz](https://github.com/vbti-development/onedl-mmdeploy/files/9399795/elena_kernel-20220823.tar.gz)
+[elena_kernel-20220823.tar.gz](https://mmassets.onedl.ai/mmdeploy/files/elena_kernel-20220823.tar.gz)
 
 ii) Add option `-DMMDEPLOY_ELENA_FUSION=ON` when compile MMDeploy.
 

@@ -20,7 +20,7 @@ ______________________________________________________________________
 
 ### Install mmdet
 
-Please follow the [installation guide](https://mmdetection.readthedocs.io/en/3.x/get_started.html) to install mmdet.
+Please follow the [installation guide](https://mmdetection.readthedocs.io/en/main/get_started.html) to install mmdet.
 
 ### Install mmdeploy
 
