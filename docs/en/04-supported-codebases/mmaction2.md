@@ -29,7 +29,11 @@ There are several methods to install mmdeploy, among which you can choose an app
 
 **Method I：** Install precompiled package
 
-You can refer to [get_started](https://mmdeploy.readthedocs.io/en/latest/get_started.html#installation)
+<!-- markdown-link-check-disable -->
+
+You can refer to [get_started](https://onedl-mmdeploy.readthedocs.io/en/latest/get_started.html#installation)
+
+<!-- markdown-link-check-enable -->
 
 **Method II：** Build using scripts
 

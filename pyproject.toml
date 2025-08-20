@@ -52,8 +52,8 @@ tests = [
     "xlrd==1.2.0",
 ]
 docs=[
+    "breathe",
     "docutils",
-    "m2r==0.2.1",
     "markdown>=3.4.0",
     "mistune==0.8.4",
     "myst-parser",

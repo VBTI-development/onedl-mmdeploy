@@ -12,10 +12,12 @@
   </div>
 <div>&nbsp;</div>
 
-<!-- markdown-link-check-disable-next-line -->
+<!-- markdown-link-check-disable -->
 
 [![Docs](https://img.shields.io/badge/docs-latest-blue)](https://onedl-mmdeploy.readthedocs.io/en/latest/)
 [![license](https://img.shields.io/github/license/VBTI-development/onedl-mmdeploy.svg)](https://github.com/VBTI-development/onedl-mmdeploy/blob/main/LICENSE)
+
+<!-- markdown-link-check-enable -->
 
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/onedl-mmdeploy)](https://pypi.org/project/onedl-mmdeploy/)
 [![PyPI](https://img.shields.io/pypi/v/onedl-mmdeploy)](https://pypi.org/project/onedl-mmdeploy)
@@ -280,7 +282,11 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
 
 All kinds of modules in the SDK can be extended, such as `Transform` for image processing, `Net` for Neural Network inference, `Module` for postprocessing and so on
 
-## [Documentation](https://mmdeploy.readthedocs.io/en/latest/)
+<!-- markdown-link-check-disable -->
+
+## [Documentation](https://onedl-mmdeploy.readthedocs.io/en/latest/)
+
+<!-- markdown-link-check-enable -->
 
 Please read [getting_started](docs/en/get_started.md) for the basic usage of MMDeploy. We also provide tutoials about:
 
