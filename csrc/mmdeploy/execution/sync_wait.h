@@ -33,7 +33,7 @@ struct _Receiver<Sender>::type {
 
   template <typename... As>
   friend void tag_invoke(set_value_t, type&& receiver, As&&... as) noexcept {
-    receiver.state_->data_.emplace((As &&) as...);
+    receiver.state_->data_.emplace((As&&)as...);
     receiver.loop_->_Finish();
   }
 };
@@ -46,7 +46,7 @@ struct sync_wait_t {
   auto operator()(Sender&& sender) const
       -> tag_invoke_result_t<sync_wait_t, _completion_scheduler_for<Sender>, Sender> {
     auto scheduler = GetCompletionScheduler(sender);
-    return tag_invoke(sync_wait_t{}, std::move(scheduler), (Sender &&) sender);
+    return tag_invoke(sync_wait_t{}, std::move(scheduler), (Sender&&)sender);
   }
   template <typename Sender,
             std::enable_if_t<_is_sender<Sender> &&
@@ -54,7 +54,7 @@ struct sync_wait_t {
                                  tag_invocable<sync_wait_t, Sender>,
                              int> = 0>
   auto operator()(Sender&& sender) const -> tag_invoke_result_t<sync_wait_t, Sender> {
-    return tag_invoke(sync_wait_t{}, (Sender &&) sender);
+    return tag_invoke(sync_wait_t{}, (Sender&&)sender);
   }
 
   template <typename Sender,
@@ -66,7 +66,7 @@ struct sync_wait_t {
     _State<remove_cvref_t<Sender>> state;
     RunLoop loop;
     // connect to internal receiver
-    auto op_state = Connect((Sender &&) sender, receiver_t<Sender>{&state, &loop});
+    auto op_state = Connect((Sender&&)sender, receiver_t<Sender>{&state, &loop});
     Start(op_state);
 
     loop._Run();

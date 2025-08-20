@@ -18,10 +18,8 @@ struct _Receiver {
     template <class Tuple>
     friend void tag_invoke(set_value_t, type&& self, Tuple&& tup) noexcept {
       std::apply(
-          [&](auto&&... args) {
-            SetValue((Receiver &&) self.receiver_, (decltype(args)&&)args...);
-          },
-          (Tuple &&) tup);
+          [&](auto&&... args) { SetValue((Receiver&&)self.receiver_, (decltype(args)&&)args...); },
+          (Tuple&&)tup);
     }
   };
 };
@@ -36,8 +34,7 @@ struct _Sender {
 
     template <typename Self, typename Receiver, _decays_to<Self, type, bool> = true>
     friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver) {
-      return Connect(((Self &&) self).sender_,
-                     receiver_t<Sender, Receiver>{(Receiver &&) receiver});
+      return Connect(((Self&&)self).sender_, receiver_t<Sender, Receiver>{(Receiver&&)receiver});
     }
   };
 };
@@ -47,7 +44,7 @@ using sender_t = typename _Sender<remove_cvref_t<Sender>>::type;
 struct expand_t {
   template <typename Sender, std::enable_if_t<_is_sender<Sender>, int> = 0>
   auto operator()(Sender&& sender) const {
-    return sender_t<Sender>{(Sender &&) sender};
+    return sender_t<Sender>{(Sender&&)sender};
   }
   _BinderBack<expand_t> operator()() const { return {{}, {}, {}}; }
 };

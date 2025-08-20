@@ -28,10 +28,10 @@ struct _Receiver<Receiver, Func>::type {
   template <typename... Args>
   friend void tag_invoke(set_value_t, type&& self, Args&&... args) noexcept {
     if constexpr (std::is_void_v<std::invoke_result_t<Func&&, Args...>>) {
-      std::invoke(std::move(self.func_), (Args &&) args...);
+      std::invoke(std::move(self.func_), (Args&&)args...);
       SetValue(std::move(self.receiver_));
     } else {
-      SetValue(std::move(self.receiver_), std::invoke(std::move(self.func_), (Args &&) args...));
+      SetValue(std::move(self.receiver_), std::invoke(std::move(self.func_), (Args&&)args...));
     }
   }
 };
@@ -45,8 +45,8 @@ using sender_t = typename _Sender<remove_cvref_t<Sender>, remove_cvref_t<Func>>:
 
 template <typename Sender, typename Func>
 struct _Sender<Sender, Func>::type {
-  using _ret_type = decltype(
-      std::apply(std::declval<Func>(), std::declval<completion_signatures_of_t<Sender>>()));
+  using _ret_type = decltype(std::apply(std::declval<Func>(),
+                                        std::declval<completion_signatures_of_t<Sender>>()));
 
   using value_types =
       std::conditional_t<std::is_void_v<_ret_type>, std::tuple<>, std::tuple<_ret_type>>;
@@ -56,8 +56,8 @@ struct _Sender<Sender, Func>::type {
 
   template <typename Self, typename Receiver, _decays_to<Self, type, int> = 0>
   friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver) {
-    return Connect(((Self &&) self).sender_,
-                   receiver_t<Receiver, Func>{(Receiver &&) receiver, std::move(self.func_)});
+    return Connect(((Self&&)self).sender_,
+                   receiver_t<Receiver, Func>{(Receiver&&)receiver, std::move(self.func_)});
   }
 
   template <typename SenderT = Sender>
@@ -74,7 +74,7 @@ struct then_t {
                              int> = 0>
   auto operator()(Sender&& sender, Func func) const {
     auto scheduler = GetCompletionScheduler(sender);
-    return tag_invoke(then_t{}, std::move(scheduler), (Sender &&) sender, std::move(func));
+    return tag_invoke(then_t{}, std::move(scheduler), (Sender&&)sender, std::move(func));
   }
 
   template <typename Sender, typename Func,
@@ -84,7 +84,7 @@ struct then_t {
                              int> = 0>
   auto operator()(Sender&& sender, Func func) const {
     auto scheduler = GetCompletionScheduler(sender);
-    return tag_invoke(then_t{}, std::move(scheduler), (Sender &&) sender, std::move(func));
+    return tag_invoke(then_t{}, std::move(scheduler), (Sender&&)sender, std::move(func));
   }
 
   template <typename Sender, typename Func,
@@ -93,7 +93,7 @@ struct then_t {
                                  !tag_invocable<then_t, Sender, Func>,
                              int> = 0>
   sender_t<Sender, Func> operator()(Sender&& sender, Func func) const {
-    return {(Sender &&) sender, std::move(func)};
+    return {(Sender&&)sender, std::move(func)};
   }
   template <typename Func>
   _BinderBack<then_t, Func> operator()(Func func) const {

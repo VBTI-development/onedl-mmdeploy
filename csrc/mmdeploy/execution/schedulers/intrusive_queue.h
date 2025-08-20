@@ -25,7 +25,7 @@ namespace mmdeploy {
 template <auto Next>
 class intrusive_queue;
 
-template <class Item, Item* Item::*Next>
+template <class Item, Item* Item::* Next>
 class intrusive_queue<Next> {
  public:
   intrusive_queue() noexcept = default;

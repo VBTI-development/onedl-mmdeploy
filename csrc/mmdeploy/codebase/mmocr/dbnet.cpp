@@ -98,9 +98,8 @@ class DBHead : public MMOCR {
     auto distance = area * unclip_ratio / length;
 
     cl::Path src;
-    transform(begin(box), end(box), back_inserter(src), [](auto p) {
-      return cl::IntPoint{p.x, p.y};
-    });
+    transform(begin(box), end(box), back_inserter(src),
+              [](auto p) { return cl::IntPoint{p.x, p.y}; });
 
     cl::ClipperOffset offset;
     offset.AddPath(src, cl::jtRound, cl::etClosedPolygon);
@@ -112,9 +111,8 @@ class DBHead : public MMOCR {
     }
 
     std::vector<cv::Point> ret;
-    transform(begin(dst[0]), end(dst[0]), back_inserter(ret), [](auto p) {
-      return cv::Point{static_cast<int>(p.X), static_cast<int>(p.Y)};
-    });
+    transform(begin(dst[0]), end(dst[0]), back_inserter(ret),
+              [](auto p) { return cv::Point{static_cast<int>(p.X), static_cast<int>(p.Y)}; });
     return ret;
   }
 

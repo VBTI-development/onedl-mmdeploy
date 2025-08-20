@@ -43,7 +43,7 @@ struct _Receiver {
     operation_t<Sender, Scheduler, Receiver, Func>* op_state_;
     template <typename... Args>
     friend void tag_invoke(set_value_t, type&& self, Args&&... args) noexcept {
-      self.op_state_->context_->Notify(self.op_state_, (Args &&) args...);
+      self.op_state_->context_->Notify(self.op_state_, (Args&&)args...);
     }
   };
 };
@@ -105,7 +105,7 @@ struct Context : context_base_t {
     std::lock_guard lock{mutex_};
 
     std::unique_ptr<Batch> batch = std::move(batch_);
-    const size_t size = Assembler::get_size((Args &&) args...);
+    const size_t size = Assembler::get_size((Args&&)args...);
     op_state->count_ = size;
     op_state->batch_size_ = size;
 
@@ -121,7 +121,7 @@ struct Context : context_base_t {
 
       batch->states_.push_back(op_state);
       batch->ranges_.emplace_back(start, count);
-      Assembler::input(std::forward_as_tuple((Args &&) args...), {start, count}, batch->values_,
+      Assembler::input(std::forward_as_tuple((Args&&)args...), {start, count}, batch->values_,
                        {batch->size_, count}, max_batch_size_);
       batch->size_ += count;
 
@@ -182,8 +182,8 @@ struct _Operation<Sender, Scheduler, Receiver, Func>::type {
   using Assembler = typename Scheduler::Assembler;
   using _context_t = Context<Sender, Scheduler, Receiver, Func>;
   using _receiver_t = receiver_t<Sender, Scheduler, Receiver, Func>;
-  using _result_t = decltype(
-      std::apply(std::declval<Func>(), std::declval<completion_signatures_of_t<Sender>>()));
+  using _result_t = decltype(std::apply(std::declval<Func>(),
+                                        std::declval<completion_signatures_of_t<Sender>>()));
 
   _context_t* context_;
   connect_result_t<Sender, _receiver_t> op_state_;
@@ -197,8 +197,8 @@ struct _Operation<Sender, Scheduler, Receiver, Func>::type {
   type(Sender&& sender, Scheduler scheduler, std::atomic<context_base_t*>* context, Func func,
        Receiver2&& receiver)
       : context_(CreateContext(*context, std::move(scheduler), std::move(func))),
-        op_state_{Connect((Sender &&) sender, _receiver_t{this})},
-        receiver_((Receiver2 &&) receiver),
+        op_state_{Connect((Sender&&)sender, _receiver_t{this})},
+        receiver_((Receiver2&&)receiver),
         vals_{} {}
 
   type(const type&) = delete;
@@ -237,8 +237,8 @@ struct _Operation<Sender, Scheduler, Receiver, Func>::type {
 template <typename Sender, typename Scheduler, typename Func>
 struct _Sender {
   struct type {
-    using _result_t = decltype(
-        std::apply(std::declval<Func>(), std::declval<completion_signatures_of_t<Sender>>()));
+    using _result_t = decltype(std::apply(std::declval<Func>(),
+                                          std::declval<completion_signatures_of_t<Sender>>()));
 
     using value_types = std::tuple<_result_t>;
 
@@ -249,7 +249,7 @@ struct _Sender {
 
     template <typename Sender2>
     type(Sender2&& sender, Scheduler scheduler, std::atomic<context_base_t*>* context, Func func)
-        : sender_((Sender2 &&) sender),
+        : sender_((Sender2&&)sender),
           scheduler_(std::move(scheduler)),
           context_(context),
           func_(std::move(func)) {}
@@ -258,7 +258,7 @@ struct _Sender {
     friend auto tag_invoke(connect_t, type&& self, Receiver&& receiver)
         -> operation_t<Sender, Scheduler, Receiver, Func> {
       return {std::move(self).sender_, std::move(self).scheduler_, self.context_,
-              std::move(self).func_, (Receiver &&) receiver};
+              std::move(self).func_, (Receiver&&)receiver};
     }
   };
 };
@@ -270,7 +270,7 @@ template <typename Sender, typename Func, typename... Args>
 auto tag_invoke(dynamic_batch_t, const scheduler_t<Args...>& scheduler, Sender&& sender,
                 dynamic_batch_t::context_t& context, Func func)
     -> sender_t<Sender, scheduler_t<Args...>, Func> {
-  return {(Sender &&) sender, scheduler, &context.base, std::move(func)};
+  return {(Sender&&)sender, scheduler, &context.base, std::move(func)};
 }
 
 }  // namespace _dynamic_batch_scheduler

@@ -30,7 +30,7 @@ struct _Receiver<SharedState>::type {
   template <typename... As>
   friend void tag_invoke(set_value_t, type&& self, As&&... as) noexcept {
     assert(self.shared_state_);
-    self.shared_state_->data_.emplace((As &&) as...);
+    self.shared_state_->data_.emplace((As&&)as...);
     self.shared_state_->_Notify();
     self.shared_state_.reset();
   }
@@ -117,7 +117,7 @@ struct _Sender<Sender>::type {
   template <typename Sndr, std::enable_if_t<!std::is_same_v<remove_cvref_t<Sndr>, type>, int> = 0>
   explicit type(Sndr&& sender) : shared_state_(std::make_shared<SharedState>()) {
     shared_state_->op_state2_proxy_.emplace(
-        [&] { return Connect((Sndr &&) sender, receiver_t<SharedState>{shared_state_}); });
+        [&] { return Connect((Sndr&&)sender, receiver_t<SharedState>{shared_state_}); });
     Start(**shared_state_->op_state2_proxy_);
     //    Start(shared_state_->op_state2_.emplace(
     //        __conv{[&] { return Connect((Sndr &&) sender, receiver_t<SharedState>{shared_state_});
@@ -127,7 +127,7 @@ struct _Sender<Sender>::type {
   template <typename Self, typename Receiver, _decays_to<Self, type, int> = 0>
   friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver)
       -> Operation<Sender, Receiver> {
-    return {(Receiver &&) receiver, std::move(self.shared_state_)};
+    return {(Receiver&&)receiver, std::move(self.shared_state_)};
   }
 };
 
@@ -138,7 +138,7 @@ struct ensure_started_t {
                              int> = 0>
   auto operator()(Sender&& sender) const {
     auto scheduler = GetCompletionScheduler(sender);
-    return tag_invoke(ensure_started_t{}, std::move(scheduler), (Sender &&) sender);
+    return tag_invoke(ensure_started_t{}, std::move(scheduler), (Sender&&)sender);
   }
 
   template <
@@ -148,7 +148,7 @@ struct ensure_started_t {
                            tag_invocable<ensure_started_t, Sender>,
                        int> = 0>
   auto operator()(Sender&& sender) const {
-    return tag_invoke(ensure_started_t{}, (Sender &&) sender);
+    return tag_invoke(ensure_started_t{}, (Sender&&)sender);
   }
 
   template <
@@ -158,7 +158,7 @@ struct ensure_started_t {
                            !tag_invocable<ensure_started_t, Sender>,
                        int> = 0>
   sender_t<Sender> operator()(Sender&& sender) const {
-    return sender_t<Sender>{(Sender &&) sender};
+    return sender_t<Sender>{(Sender&&)sender};
   }
 };
 

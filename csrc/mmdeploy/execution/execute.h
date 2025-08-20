@@ -17,12 +17,12 @@ struct execute_t {
   template <typename Scheduler, typename Func,
             std::enable_if_t<tag_invocable<execute_t, Scheduler, Func>, int> = 0>
   void operator()(Scheduler&& scheduler, Func func) const {
-    return tag_invoke(*this, (Scheduler &&) scheduler, std::move(func));
+    return tag_invoke(*this, (Scheduler&&)scheduler, std::move(func));
   }
   template <typename Scheduler, typename Func,
             std::enable_if_t<!tag_invocable<execute_t, Scheduler, Func>, int> = 0>
   void operator()(Scheduler&& scheduler, Func func) const {
-    return StartDetached(Then(Schedule((Scheduler &&) scheduler), std::move(func)));
+    return StartDetached(Then(Schedule((Scheduler&&)scheduler), std::move(func)));
   }
 };
 

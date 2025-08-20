@@ -89,7 +89,7 @@ struct _TypeErasedOperationImpl : _TypeErasedOperation::Impl {
   virtual void _Start() { Start(operation_); }
 
   template <typename Fun, typename = std::enable_if_t<std::is_invocable_v<Fun>>>
-  explicit _TypeErasedOperationImpl(Fun&& fun) : operation_{((Fun &&) fun)()} {}
+  explicit _TypeErasedOperationImpl(Fun&& fun) : operation_{((Fun&&)fun)()} {}
 
   Operation operation_;
 };
@@ -97,7 +97,7 @@ struct _TypeErasedOperationImpl : _TypeErasedOperation::Impl {
 template <typename Fun, typename>
 _TypeErasedOperation::_TypeErasedOperation(Fun&& fun) {
   using _Operation = std::invoke_result_t<Fun>;
-  impl_.reset(new _TypeErasedOperationImpl<_Operation>{(Fun &&) fun});
+  impl_.reset(new _TypeErasedOperationImpl<_Operation>{(Fun&&)fun});
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ class _TypeErasedSenderAdapter {
 
   template <typename Self, typename Receiver, _decays_to<Self, _TypeErasedSenderAdapter, int> = 0>
   friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver) {
-    return Connect(((Self &&) self).sender_, (Receiver &&) receiver);
+    return Connect(((Self&&)self).sender_, (Receiver&&)receiver);
   }
 
  private:
@@ -121,7 +121,7 @@ class _TypeErasedSenderAdapter {
 };
 
 template <typename SenderType>
-_TypeErasedSenderAdapter(SenderType &&)->_TypeErasedSenderAdapter<remove_cvref_t<SenderType>>;
+_TypeErasedSenderAdapter(SenderType&&) -> _TypeErasedSenderAdapter<remove_cvref_t<SenderType>>;
 
 namespace _expose {
 
@@ -133,7 +133,7 @@ struct _Sender {
 
   template <typename Self, typename Receiver, _decays_to<Self, _Sender, int> = 0>
   friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver) {
-    return Connect(((Self &&) self).sender_, (Receiver &&) receiver);
+    return Connect(((Self&&)self).sender_, (Receiver&&)receiver);
   }
 
   friend auto tag_invoke(get_completion_scheduler_t, const _Sender& self) noexcept {
@@ -172,7 +172,7 @@ class _TypeErasedSender {
   template <typename Self, typename Receiver,
             std::enable_if_t<std::is_same_v<_TypeErasedSender, remove_cvref_t<Self>>, int> = 0>
   friend _Operation tag_invoke(connect_t, Self&& self, Receiver&& receiver) {
-    return self.impl_->_Connect(_TypeErasedReceiver<ValueTypes>((Receiver &&) receiver));
+    return self.impl_->_Connect(_TypeErasedReceiver<ValueTypes>((Receiver&&)receiver));
   }
 
   using SenderType = _TypeErasedSender;
@@ -199,7 +199,7 @@ template <typename... Ts>
 using TypeErasedSender = _TypeErasedSender<std::tuple<Ts...>>;
 
 template <typename Sender>
-_TypeErasedSender(Sender &&)->_TypeErasedSender<completion_signatures_of_t<Sender>>;
+_TypeErasedSender(Sender&&) -> _TypeErasedSender<completion_signatures_of_t<Sender>>;
 
 template <typename Sender, typename ValueTypes = completion_signatures_of_t<Sender>>
 struct _TypeErasedSenderImpl : _TypeErasedSender<ValueTypes>::Impl {
@@ -210,7 +210,7 @@ struct _TypeErasedSenderImpl : _TypeErasedSender<ValueTypes>::Impl {
 
   template <typename _Sender, typename = std::enable_if_t<
                                   !std::is_same_v<std::decay_t<_Sender>, _TypeErasedSenderImpl>>>
-  explicit _TypeErasedSenderImpl(_Sender&& sender) : sender_((_Sender &&) sender) {}
+  explicit _TypeErasedSenderImpl(_Sender&& sender) : sender_((_Sender&&)sender) {}
 
   _TypeErasedOperation _Connect(_Receiver receiver) override;
 
@@ -250,7 +250,7 @@ template <typename ValueTypes>
 template <typename Sender, typename>
 _TypeErasedSender<ValueTypes>::_TypeErasedSender(Sender&& sender) {
   using _Sender = remove_cvref_t<Sender>;
-  impl_ = std::make_unique<_TypeErasedSenderImpl<_Sender>>((Sender &&) sender);
+  impl_ = std::make_unique<_TypeErasedSenderImpl<_Sender>>((Sender&&)sender);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -271,7 +271,7 @@ class _TypeErasedReceiver {
 
   template <typename... As>
   friend void tag_invoke(set_value_t, _TypeErasedReceiver&& self, As&&... as) noexcept {
-    self.impl_->_SetValue(std::make_tuple((As &&) as...));
+    self.impl_->_SetValue(std::make_tuple((As&&)as...));
   }
 
  private:
@@ -288,14 +288,14 @@ struct _TypeErasedReceiverImpl : _TypeErasedReceiver<ValueTypes>::Impl {
   Receiver receiver_;
 
   template <typename _Receiver>
-  explicit _TypeErasedReceiverImpl(_Receiver&& receiver) : receiver_((_Receiver &&) receiver) {}
+  explicit _TypeErasedReceiverImpl(_Receiver&& receiver) : receiver_((_Receiver&&)receiver) {}
 };
 
 template <typename ValueTypes>
 template <typename Receiver, typename>
 _TypeErasedReceiver<ValueTypes>::_TypeErasedReceiver(Receiver&& receiver) {
   using _Receiver = std::decay_t<Receiver>;
-  impl_ = std::make_unique<_TypeErasedReceiverImpl<_Receiver, ValueTypes>>((Receiver &&) receiver);
+  impl_ = std::make_unique<_TypeErasedReceiverImpl<_Receiver, ValueTypes>>((Receiver&&)receiver);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -431,13 +431,13 @@ template <typename Scheduler, typename>
 _TypeErasedScheduler<ValueTypes>::_TypeErasedScheduler(Scheduler&& scheduler) {
   using _Scheduler = std::decay_t<Scheduler>;
   impl_ =
-      std::make_unique<_TypeErasedSchedulerImpl<ValueTypes, _Scheduler>>((Scheduler &&) scheduler);
+      std::make_unique<_TypeErasedSchedulerImpl<ValueTypes, _Scheduler>>((Scheduler&&)scheduler);
 }
 
 struct type_erase_t {
   template <typename Sender, std::enable_if_t<_is_sender<Sender>, int> = 0>
   auto operator()(Sender&& sender) const {
-    return _TypeErasedSender((Sender &&) sender);
+    return _TypeErasedSender((Sender&&)sender);
   }
   _BinderBack<type_erase_t> operator()() const { return {{}, {}, {}}; }
 };

@@ -42,12 +42,12 @@ struct Scheduler {
 
     template <typename Receiver>
     operation_t<Receiver> MakeOperation(Receiver&& r) const {
-      return {pool_, (Receiver &&) r};
+      return {pool_, (Receiver&&)r};
     }
 
     template <typename Receiver>
     friend operation_t<Receiver> tag_invoke(connect_t, Sender s, Receiver&& r) {
-      return s.MakeOperation((Receiver &&) r);
+      return s.MakeOperation((Receiver&&)r);
     }
 
     friend auto tag_invoke(get_completion_scheduler_t, const Sender& sender) noexcept -> Scheduler {
@@ -127,10 +127,10 @@ struct _Operation<Receiver>::type : TaskBase {
   StaticThreadPool& pool_;
   Receiver receiver_;
 
-  type(StaticThreadPool& pool, Receiver&& r) : TaskBase{}, pool_(pool), receiver_((Receiver &&) r) {
+  type(StaticThreadPool& pool, Receiver&& r) : TaskBase{}, pool_(pool), receiver_((Receiver&&)r) {
     this->execute_ = [](TaskBase* t) noexcept {
       auto& op = *static_cast<type*>(t);
-      SetValue((Receiver &&) op.receiver_);
+      SetValue((Receiver&&)op.receiver_);
     };
   }
 
@@ -297,13 +297,13 @@ struct _Receiver<Receiver, Shape, Func, Tuple>::type {
   std::shared_ptr<State> state_;
 
   type(Receiver&& receiver, Shape shape, Func func, Scheduler scheduler)
-      : state_(new State{(Receiver &&) receiver, shape, (Func &&) func, std::nullopt, scheduler,
-                         shape}) {}
+      : state_(
+            new State{(Receiver&&)receiver, shape, (Func&&)func, std::nullopt, scheduler, shape}) {}
 
   template <typename... As>
   friend void tag_invoke(set_value_t, type&& self, As&&... as) noexcept {
     auto& state = self.state_;
-    state->values_.emplace((As &&) as...);
+    state->values_.emplace((As&&)as...);
     for (Shape index = {}; index < state->shape_; ++index) {
       StartDetached(Then(Schedule(state->scheduler_), [state, index] {
         std::apply([&](auto&... vals) { state->func_(index, vals...); }, state->values_.value());
@@ -338,9 +338,9 @@ struct _Sender<Sender, Shape, Func>::type {
 
   template <typename Self, typename Receiver, _decays_to<Self, type, int> = 0>
   friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver) {
-    return Connect(((Self &&) self).sender_,
-                   _receiver_t<Receiver>{(Receiver &&) receiver, ((Self &&) self).shape_,
-                                         ((Self &&) self).func_, ((Self &&) self).scheduler_});
+    return Connect(((Self&&)self).sender_,
+                   _receiver_t<Receiver>{(Receiver&&)receiver, ((Self&&)self).shape_,
+                                         ((Self&&)self).func_, ((Self&&)self).scheduler_});
   }
 };
 
@@ -349,7 +349,7 @@ struct _Sender<Sender, Shape, Func>::type {
 template <typename Sender, typename Shape, typename Func>
 __bulk::sender_t<Sender, Shape, Func> tag_invoke(bulk_t, Scheduler scheduler, Sender&& sender,
                                                  Shape&& shape, Func&& func) {
-  return {(Sender &&) sender, scheduler, (Shape &&) shape, (Func &&) func};
+  return {(Sender&&)sender, scheduler, (Shape&&)shape, (Func&&)func};
 }
 
 }  // namespace __static_thread_pool

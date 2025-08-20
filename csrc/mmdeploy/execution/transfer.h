@@ -19,7 +19,7 @@ struct transfer_t {
                              int> = 0>
   auto operator()(Sender&& sender, Scheduler&& scheduler) const {
     auto sched = GetCompletionScheduler(sender);
-    return tag_invoke(transfer_t{}, std::move(sched), (Sender &&) sender, (Scheduler &&) scheduler);
+    return tag_invoke(transfer_t{}, std::move(sched), (Sender&&)sender, (Scheduler&&)scheduler);
   }
   template <typename Sender, typename Scheduler,
             std::enable_if_t<
@@ -28,7 +28,7 @@ struct transfer_t {
                     tag_invocable<transfer_t, Sender, Scheduler>,
                 int> = 0>
   auto operator()(Sender&& sender, Scheduler&& scheduler) const {
-    return tag_invoke(transfer_t{}, (Sender &&) sender, (Scheduler &&) scheduler);
+    return tag_invoke(transfer_t{}, (Sender&&)sender, (Scheduler&&)scheduler);
   }
   template <typename Sender, typename Scheduler,
             std::enable_if_t<
@@ -37,11 +37,11 @@ struct transfer_t {
                     !tag_invocable<transfer_t, Sender, Scheduler>,
                 int> = 0>
   auto operator()(Sender&& sender, Scheduler&& scheduler) const {
-    return ScheduleFrom((Scheduler &&) scheduler, (Sender &&) sender);
+    return ScheduleFrom((Scheduler&&)scheduler, (Sender&&)sender);
   }
   template <typename Scheduler>
   _BinderBack<transfer_t, remove_cvref_t<Scheduler>> operator()(Scheduler&& scheduler) const {
-    return {{}, {}, {(Scheduler &&) scheduler}};
+    return {{}, {}, {(Scheduler&&)scheduler}};
   }
 };
 

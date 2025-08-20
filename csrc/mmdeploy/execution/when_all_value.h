@@ -48,7 +48,7 @@ struct _Operation<Receiver>::type {
   }
   type(std::vector<TypeErasedSender<Value>> senders, Receiver receiver)
       : child_op_states_{ConnectChildren(std::move(senders))},
-        rcvr_((Receiver &&) receiver),
+        rcvr_((Receiver&&)receiver),
         count_(child_op_states_.size()),
         values_(child_op_states_.size()) {}
 
@@ -72,7 +72,7 @@ struct sender_t {
   template <typename Self, typename Receiver, typename = _decays_to<Self, sender_t>>
   friend operation_t<remove_cvref_t<Receiver>> tag_invoke(connect_t, Self&& self,
                                                           Receiver&& receiver) {
-    return {((Self &&) self).senders_, (Receiver &&) receiver};
+    return {((Self&&)self).senders_, (Receiver&&)receiver};
   }
 };
 

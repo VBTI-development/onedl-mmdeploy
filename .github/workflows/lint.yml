@@ -16,15 +16,7 @@ jobs:
           uv pip install pre-commit
           pre-commit install
       - name: Linting
-        run: |
-          pre-commit run --all-files
-          git diff
-      - name: Format c/cuda codes with clang-format
-        uses: DoozyX/clang-format-lint-action@v0.11
-        with:
-          source: csrc
-          extensions: h,c,cpp,hpp,cu,cuh
-          style: file
+        run: pre-commit run --all-files
       - name: Check index.rst
         run: |
           python .github/scripts/check_index_rst.py docs/en/index.rst

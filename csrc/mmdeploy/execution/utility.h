@@ -28,22 +28,22 @@ template <typename F>
 struct __conv {
   F f_;
   using type = __call_result_t<F>;
-  operator type() && { return ((F &&) f_)(); }
+  operator type() && { return ((F&&)f_)(); }
 };
 
 template <typename F>
-__conv(F)->__conv<F>;
+__conv(F) -> __conv<F>;
 
 template <typename T, typename = std::enable_if_t<std::is_destructible_v<T>>>
 struct __conv_proxy {
   T v_;
   template <typename F>
-  explicit __conv_proxy(F&& f) : v_(((F &&) f)()) {}
+  explicit __conv_proxy(F&& f) : v_(((F&&)f)()) {}
   T& operator*() noexcept { return v_; }
 };
 
 template <typename _Member, typename _Self>
-_Member _Self::*__memptr(const _Self&);
+_Member _Self::* __memptr(const _Self&);
 
 template <typename _Self, typename _Member>
 using __member_t = decltype((std::declval<_Self>().*__memptr<_Member>(std::declval<_Self>())));
@@ -67,7 +67,7 @@ namespace __schedule {
 struct schedule_t {
   template <typename Scheduler, std::enable_if_t<tag_invocable<schedule_t, Scheduler>, int> = 0>
   auto operator()(Scheduler&& scheduler) const -> tag_invoke_result_t<schedule_t, Scheduler> {
-    return tag_invoke(schedule_t{}, (Scheduler &&) scheduler);
+    return tag_invoke(schedule_t{}, (Scheduler&&)scheduler);
   }
 };
 

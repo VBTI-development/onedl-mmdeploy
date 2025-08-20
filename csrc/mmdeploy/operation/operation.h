@@ -35,7 +35,7 @@ class MMDEPLOY_API Context {
 
   template <typename T, typename... Args>
   T Create(Args&&... args) {
-    return _track(T((Args &&) args...));
+    return _track(T((Args&&)args...));
   }
 
   const Device& device() const noexcept { return device_; }
@@ -82,14 +82,14 @@ static unique_ptr<T> Create(Args&&... args) {
         tried.emplace_back(platform);
         if (auto creator = gRegistry<T>().Get(platform)) {
           Context context(device);
-          return creator->Create((Args &&) args...);
+          return creator->Create((Args&&)args...);
         }
       }
     }
   } else {
     tried.emplace_back("dummy");
     if (auto creator = gRegistry<T>().Get("dummy")) {
-      return creator->Create((Args &&) args...);
+      return creator->Create((Args&&)args...);
     }
   }
   MMDEPLOY_ERROR("Unable to create operation, tried platforms: {}", tried);

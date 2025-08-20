@@ -25,7 +25,7 @@
 [![issue resolution](https://img.shields.io/github/issues-closed-raw/open-mmlab/mmdeploy)](https://github.com/open-mmlab/mmdeploy/issues)
 [![open issues](https://img.shields.io/github/issues-raw/open-mmlab/mmdeploy)](https://github.com/open-mmlab/mmdeploy/issues)
 
-English | [简体中文](README_zh-CN.md)
+English
 
 </div>
 

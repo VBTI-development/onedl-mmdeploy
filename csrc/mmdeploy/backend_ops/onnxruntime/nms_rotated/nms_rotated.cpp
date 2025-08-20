@@ -350,7 +350,7 @@ void NMSRotatedKernel::Compute(OrtKernelContext* context) {
         }
       }
     }  // class loop
-  }    // batch loop
+  }  // batch loop
 
   std::vector<int64_t> inds_dims({(int64_t)res_order.size() / 3, 3});
 

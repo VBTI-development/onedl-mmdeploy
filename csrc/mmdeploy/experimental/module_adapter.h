@@ -26,7 +26,7 @@ struct InvokeImpl {
   static Result<Value> apply(F&& f, const Value& args) {
     try {
       using ArgsType = std::tuple<uncvref_t<Args>...>;
-      return make_ret_val(std::apply((F &&) f, from_value<ArgsType>(args)));
+      return make_ret_val(std::apply((F&&)f, from_value<ArgsType>(args)));
     } catch (const std::exception& e) {
       MMDEPLOY_ERROR("unhandled exception: {}", e.what());
       return Status(eFail);
@@ -67,7 +67,7 @@ Result<Value> Invoke(Ret (C::*)(Args...), F& f, const Value& args) {
 template <typename F, typename C = std::remove_reference_t<F>,
           typename = std::void_t<decltype(&C::operator())>>
 Result<Value> Invoke(F&& f, const Value& args) {
-  return Invoke(&C::operator(), (F &&) f, args);
+  return Invoke(&C::operator(), (F&&)f, args);
 }
 
 template <typename F>

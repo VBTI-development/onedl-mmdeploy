@@ -191,9 +191,9 @@ void ROIAlignRotatedForwardCPU(const int nthreads, const float *input, const flo
 
           output[index] = output_val;
         }  // for pw
-      }    // for ph
-    }      // for c
-  }        // for n
+      }  // for ph
+    }  // for c
+  }  // for n
 }
 
 void MMCVRoIAlignRotatedKernel::Compute(OrtKernelContext *context) {

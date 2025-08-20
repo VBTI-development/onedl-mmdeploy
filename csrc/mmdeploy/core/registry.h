@@ -144,7 +144,7 @@ class Registry : public Registry<void> {
   auto Create(const std::pair<string_view, int>& desc,
               Args&&... args) & -> optional<typename _result_of<Signature>::type> {
     if (auto creator = Get(desc.first, desc.second); creator) {
-      return creator->Create((Args &&) args...);
+      return creator->Create((Args&&)args...);
     } else {
       return std::nullopt;
     }
@@ -152,7 +152,7 @@ class Registry : public Registry<void> {
 
   template <typename... Args>
   auto Create(const string_view& name, Args&&... args) & {
-    return Create(std::pair{name, -1}, (Args &&) args...);
+    return Create(std::pair{name, -1}, (Args&&)args...);
   }
 
   Span<CreatorType*> Creators() & {
