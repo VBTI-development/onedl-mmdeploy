@@ -70,7 +70,7 @@ conda install pytorch==1.8.0 torchvision==0.9.0 cudatoolkit=11.1 -c pytorch -c c
   </tr>
   <tr>
     <td>mmcv </td>
-    <td>Install mmcv as follows. Refer to the <a href="https://github.com/open-mmlab/mmcv/tree/2.x#installation">guide</a> for details.
+    <td>Install mmcv as follows. Refer to the <a href="https://github.com/vbti-development/onedl-mmcv/tree/2.x#installation">guide</a> for details.
 <pre><code>
 export cu_version=cu111 # cuda 11.1
 export torch_version=torch1.8

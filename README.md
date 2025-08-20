@@ -1,49 +1,45 @@
 <div align="center">
-  <img src="resources/mmdeploy-logo.png" width="450"/>
+  <img width="600" alt="onedl-mmdeploy" src="https://raw.githubusercontent.com/VBTI-development/onedl-mmdeploy/main/resources/onedl_logo_mmdeploy.png"/>
   <div>&nbsp;</div>
   <div align="center">
-    <b><font size="5">OpenMMLab website</font></b>
-    <sup>
-        <a href="https://openmmlab.com">
-        <i><font size="4">HOT</font></i>
-      </a>
-    </sup>
+    <a href="https://vbti.ai">
+      <b><font size="5">VBTI Website</font></b>
+    </a>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <b><font size="5">OpenMMLab platform</font></b>
-    <sup>
-      <a href="https://platform.openmmlab.com">
-        <i><font size="4">TRY IT OUT</font></i>
-      </a>
-    </sup>
+    <a href="https://onedl.ai">
+      <b><font size="5">OneDL platform</font></b>
+    </a>
   </div>
-  <div>&nbsp;</div>
+<div>&nbsp;</div>
 
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://mmdeploy.readthedocs.io/en/latest/)
-[![badge](https://github.com/open-mmlab/mmdeploy/workflows/build/badge.svg)](https://github.com/open-mmlab/mmdeploy/actions)
-[![codecov](https://codecov.io/gh/open-mmlab/mmdeploy/branch/main/graph/badge.svg)](https://codecov.io/gh/open-mmlab/mmdeploy)
-[![license](https://img.shields.io/github/license/open-mmlab/mmdeploy.svg)](https://github.com/open-mmlab/mmdeploy/tree/main/LICENSE)
-[![issue resolution](https://img.shields.io/github/issues-closed-raw/open-mmlab/mmdeploy)](https://github.com/open-mmlab/mmdeploy/issues)
-[![open issues](https://img.shields.io/github/issues-raw/open-mmlab/mmdeploy)](https://github.com/open-mmlab/mmdeploy/issues)
+[![Docs](https://img.shields.io/badge/docs-latest-blue)](https://onedl-mmdeploy.readthedocs.io/en/latest/)
+[![license](https://img.shields.io/github/license/VBTI-development/onedl-mmdeploy.svg)](https://github.com/VBTI-development/onedl-mmdeploy/blob/main/LICENSE)
 
-English
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/onedl-mmdeploy)](https://pypi.org/project/onedl-mmdeploy/)
+[![PyPI](https://img.shields.io/pypi/v/onedl-mmdeploy)](https://pypi.org/project/onedl-mmdeploy)
 
-</div>
+[![Build Status](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml/badge.svg)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
+[![Build CPU convert](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/build_cpu_model_convert)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
+[![Build CPU SDK](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/build_cpu_sdk)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
+[![Build Cross AARCH64](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/cross_build_aarch64)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
+[![Build Cross AARCH64](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/build_cuda118)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
 
-<div align="center">
-  <a href="https://openmmlab.medium.com/" style="text-decoration:none;">
-    <img src="https://user-images.githubusercontent.com/25839884/218352562-cdded397-b0f3-4ca1-b8dd-a60df8dca75b.png" width="3%" alt="" /></a>
-  <img src="https://user-images.githubusercontent.com/25839884/218346358-56cc8e2f-a2b8-487f-9088-32480cceabcf.png" width="3%" alt="" />
-  <a href="https://discord.gg/raweFPmdzG" style="text-decoration:none;">
-    <img src="https://user-images.githubusercontent.com/25839884/218347213-c080267f-cbb6-443e-8532-8e1ed9a58ea9.png" width="3%" alt="" /></a>
-  <img src="https://user-images.githubusercontent.com/25839884/218346358-56cc8e2f-a2b8-487f-9088-32480cceabcf.png" width="3%" alt="" />
-  <a href="https://twitter.com/OpenMMLab" style="text-decoration:none;">
-    <img src="https://user-images.githubusercontent.com/25839884/218346637-d30c8a0f-3eba-4699-8131-512fb06d46db.png" width="3%" alt="" /></a>
-  <img src="https://user-images.githubusercontent.com/25839884/218346358-56cc8e2f-a2b8-487f-9088-32480cceabcf.png" width="3%" alt="" />
-  <a href="https://www.youtube.com/openmmlab" style="text-decoration:none;">
-    <img src="https://user-images.githubusercontent.com/25839884/218346691-ceb2116a-465a-40af-8424-9f30d2348ca9.png" width="3%" alt="" /></a>
-</div>
+[![open issues](https://isitmaintained.com/badge/open/VBTI-development/onedl-mmdeploy.svg)](https://github.com/VBTI-development/onedl-mmdeploy/issues)
+[![issue resolution](https://isitmaintained.com/badge/resolution/VBTI-development/onedl-mmdeploy.svg)](https://github.com/VBTI-development/onedl-mmdeploy/issues)
+
+[📘 Documentation](https://onedl-mmdeploy.readthedocs.io/en/latest/) |
+[🛠️ Installation](https://onedl-mmdeploy.readthedocs.io/en/latest/get_started.html) |
+[🆕 Update News](https://onedl-mmdeploy.readthedocs.io/en/latest/notes/changelog.html) |
+[🤔 Reporting Issues](https://github.com/VBTI-development/onedl-mmdeploy/issues/new/choose) |
 
 ## Highlights
+
+The VBTI development team is reviving MMLabs code, making it work with
+newer pytorch versions and fixing bugs. We are only a small team, so your help
+is appreciated.
+
+Since most backends won't build/succeed anymore we have deleted them from the workflows.
+If you want to revive them, we need your support.
 
 The MMDeploy 1.x has been released, which is adapted to upstream codebases from OpenMMLab 2.0. Please **align the version** when using it.
 The default branch has been switched to `main` from `master`. MMDeploy 0.x (`master`) will be deprecated and new features will only be added to MMDeploy 1.x (`main`) in future.
@@ -97,10 +93,10 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
   <tr>
     <th>x86_64 <br> CPU</th>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-ort.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ort.yml"></a></sub> <sub>onnxruntime</sub> <br>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-pplnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-pplnn.yml"></a></sub> <sub>pplnn</sub> <br>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-ncnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ncnn.yml"></a></sub> <sub>ncnn</sub> <br>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-torchscript.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-torchscript.yml"></a></sub> <sub>LibTorch</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-ort.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ort.yml"></a></sub> <sub>onnxruntime</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-pplnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-pplnn.yml"></a></sub> <sub>pplnn</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-ncnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ncnn.yml"></a></sub> <sub>ncnn</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-torchscript.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-torchscript.yml"></a></sub> <sub>LibTorch</sub> <br>
         <sub><img src="https://img.shields.io/badge/build-no%20status-lightgrey"></sub> <sub>OpenVINO</sub> <br>
         <sub><img src="https://img.shields.io/badge/build-no%20status-lightgrey"></sub> <sub>TVM</sub> <br>
     </td>
@@ -120,7 +116,7 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
 <tr>
     <th>ARM <br> CPU</th>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/cross_build_aarch64"></a></sub> <sub>ncnn</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/cross_build_aarch64"></a></sub> <sub>ncnn</sub> <br>
     </td>
     <td align="center">
         -
@@ -129,14 +125,14 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
         -
     </td>
     <td align="center">
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-ncnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ncnn.yml"></a></sub> <sub>ncnn</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-ncnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ncnn.yml"></a></sub> <sub>ncnn</sub> <br>
     </td>
   </tr>
 
 <tr>
     <th>RISC-V</th>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/linux-riscv64-gcc.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/linux-riscv64-gcc.yml"></a></sub> <sub>ncnn</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/linux-riscv64-gcc.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/linux-riscv64-gcc.yml"></a></sub> <sub>ncnn</sub> <br>
     </td>
     <td align="center">
         -
@@ -152,14 +148,14 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
 <tr>
     <th>NVIDIA <br> GPU</th>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/build_cuda113_linux"></a></sub> <sub>onnxruntime</sub> <br>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/build_cuda113_linux"></a></sub> <sub>TensorRT</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/build_cuda113_linux"></a></sub> <sub>onnxruntime</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/build_cuda113_linux"></a></sub> <sub>TensorRT</sub> <br>
         <sub><img src="https://img.shields.io/badge/build-no%20status-lightgrey"></sub> <sub>LibTorch</sub> <br>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-pplnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-pplnn.yml"></a></sub> <sub>pplnn</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-pplnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-pplnn.yml"></a></sub> <sub>pplnn</sub> <br>
     </td>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/build_cuda113_windows"></a></sub> <sub>onnxruntime</sub> <br>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/build_cuda113_windows"></a></sub> <sub>TensorRT</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/build_cuda113_windows"></a></sub> <sub>onnxruntime</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/build.yml"><img src="https://byob.yarr.is/open-mmlab/mmdeploy/build_cuda113_windows"></a></sub> <sub>TensorRT</sub> <br>
     </td>
     <td align="center">
         -
@@ -188,7 +184,7 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
 <tr>
     <th>Huawei <br> ascend310</th>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-ascend.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ascend.yml"></a></sub> <sub>CANN</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-ascend.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ascend.yml"></a></sub> <sub>CANN</sub> <br>
     </td>
     <td align="center">
         -
@@ -204,7 +200,7 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
 <tr>
     <th>Rockchip</th>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-rknn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-rknn.yml"></a></sub> <sub>RKNN</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-rknn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-rknn.yml"></a></sub> <sub>RKNN</sub> <br>
     </td>
     <td align="center">
         -
@@ -226,7 +222,7 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
         -
     </td>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-coreml.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-coreml.yml"></a></sub> <sub>CoreML</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-coreml.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-coreml.yml"></a></sub> <sub>CoreML</sub> <br>
     </td>
     <td align="center">
         -
@@ -245,8 +241,8 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
         -
     </td>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-snpe.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-snpe.yml"></a></sub> <sub>SNPE</sub> <br>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-ncnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ncnn.yml"></a></sub> <sub>ncnn</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-snpe.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-snpe.yml"></a></sub> <sub>SNPE</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-ncnn.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-ncnn.yml"></a></sub> <sub>ncnn</sub> <br>
     </td>
   </tr>
 
@@ -262,7 +258,7 @@ The benchmark can be found from [here](docs/en/03-benchmark/benchmark.md)
         -
     </td>
     <td>
-        <sub><a href="https://github.com/open-mmlab/mmdeploy/actions/workflows/backend-snpe.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-snpe.yml"></a></sub> <sub>SNPE</sub> <br>
+        <sub><a href="https://github.com/vbti-development/onedl-mmdeploy/actions/workflows/backend-snpe.yml"><img src="https://img.shields.io/github/actions/workflow/status/open-mmlab/mmdeploy/backend-snpe.yml"></a></sub> <sub>SNPE</sub> <br>
     </td>
   </tr>
 </table>
@@ -317,11 +313,12 @@ We appreciate all contributions to MMDeploy. Please refer to [CONTRIBUTING.md](.
 
 ## Acknowledgement
 
-We would like to sincerely thank the following teams for their contributions to [MMDeploy](https://github.com/open-mmlab/mmdeploy):
+We would like to sincerely thank the following teams for their contributions to [MMDeploy](https://github.com/vbti-development/onedl-mmdeploy):
 
 - [OpenPPL](https://github.com/openppl-public)
 - [OpenVINO](https://github.com/openvinotoolkit/openvino)
 - [ncnn](https://github.com/Tencent/ncnn)
+- [MMLabs](https://openmmlab.com)
 
 ## Citation
 
@@ -331,7 +328,7 @@ If you find this project useful in your research, please consider citing:
 @misc{=mmdeploy,
     title={OpenMMLab's Model Deployment Toolbox.},
     author={MMDeploy Contributors},
-    howpublished = {\url{https://github.com/open-mmlab/mmdeploy}},
+    howpublished = {\url{https://github.com/vbti-development/onedl-mmdeploy}},
     year={2021}
 }
 ```
@@ -340,25 +337,32 @@ If you find this project useful in your research, please consider citing:
 
 This project is released under the [Apache 2.0 license](LICENSE).
 
+## Projects in VBTI-development
+
+- [MMEngine](https://github.com/vbti-development/onedl-mmengine): OpenMMLab foundational library for training deep learning models.
+- [MMCV](https://github.com/vbti-development/onedl-mmcv): OpenMMLab foundational library for computer vision.
+- [MMPreTrain](https://github.com/vbti-development/onedl-mmpretrain): OpenMMLab pre-training toolbox and benchmark.
+- [MMDetection](https://github.com/vbti-development/onedl-mmdetection): OpenMMLab detection toolbox and benchmark.
+- [MMRotate](https://github.com/vbti-development/onedl-mmrotate): OpenMMLab rotated object detection toolbox and benchmark.
+- [MMSegmentation](https://github.com/vbti-development/onedl-mmsegmentation): OpenMMLab semantic segmentation toolbox and benchmark.
+- [MMDeploy](https://github.com/vbti-development/onedl-mmdeploy): OpenMMLab model deployment framework.
+- [MIM](https://github.com/vbti-development/onedl-mim): MIM installs OpenMMLab packages.
+
 ## Projects in OpenMMLab
 
-- [MMEngine](https://github.com/open-mmlab/mmengine): OpenMMLab foundational library for training deep learning models.
-- [MMCV](https://github.com/open-mmlab/mmcv): OpenMMLab foundational library for computer vision.
-- [MMPretrain](https://github.com/open-mmlab/mmpretrain): OpenMMLab pre-training toolbox and benchmark.
 - [MMagic](https://github.com/open-mmlab/mmagic): Open**MM**Lab **A**dvanced, **G**enerative and **I**ntelligent **C**reation toolbox.
-- [MMDetection](https://github.com/open-mmlab/mmdetection): OpenMMLab detection toolbox and benchmark.
 - [MMDetection3D](https://github.com/open-mmlab/mmdetection3d): OpenMMLab's next-generation platform for general 3D object detection.
-- [MMYOLO](https://github.com/open-mmlab/mmyolo): OpenMMLab YOLO series toolbox and benchmark
-- [MMRotate](https://github.com/open-mmlab/mmrotate): OpenMMLab rotated object detection toolbox and benchmark.
-- [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab video perception toolbox and benchmark.
-- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): OpenMMLab semantic segmentation toolbox and benchmark.
+- [MMYOLO](https://github.com/open-mmlab/mmyolo): OpenMMLab YOLO series toolbox and benchmark.
 - [MMOCR](https://github.com/open-mmlab/mmocr): OpenMMLab text detection, recognition, and understanding toolbox.
 - [MMPose](https://github.com/open-mmlab/mmpose): OpenMMLab pose estimation toolbox and benchmark.
 - [MMHuman3D](https://github.com/open-mmlab/mmhuman3d): OpenMMLab 3D human parametric model toolbox and benchmark.
+- [MMSelfSup](https://github.com/open-mmlab/mmselfsup): OpenMMLab self-supervised learning toolbox and benchmark.
+- [MMRazor](https://github.com/open-mmlab/mmrazor): OpenMMLab model compression toolbox and benchmark.
 - [MMFewShot](https://github.com/open-mmlab/mmfewshot): OpenMMLab fewshot learning toolbox and benchmark.
 - [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab's next-generation action understanding toolbox and benchmark.
+- [MMTracking](https://github.com/open-mmlab/mmtracking): OpenMMLab video perception toolbox and benchmark.
 - [MMFlow](https://github.com/open-mmlab/mmflow): OpenMMLab optical flow toolbox and benchmark.
-- [MMDeploy](https://github.com/open-mmlab/mmdeploy): OpenMMLab model deployment framework.
-- [MMRazor](https://github.com/open-mmlab/mmrazor): OpenMMLab model compression toolbox and benchmark.
-- [MIM](https://github.com/open-mmlab/mim): MIM installs OpenMMLab packages.
+- [MMEditing](https://github.com/open-mmlab/mmediting): OpenMMLab image and video editing toolbox.
+- [MMGeneration](https://github.com/open-mmlab/mmgeneration): OpenMMLab image and video generative models toolbox.
+- [MMEval](https://github.com/open-mmlab/mmeval): A unified evaluation library for multiple machine learning libraries.
 - [Playground](https://github.com/open-mmlab/playground): A central hub for gathering and showcasing amazing projects built upon OpenMMLab.

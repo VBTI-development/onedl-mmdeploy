@@ -65,7 +65,7 @@ RUN cp -r /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tensorrt* /opt/co
 ENV ONNXRUNTIME_DIR=/root/workspace/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}
 ENV TENSORRT_DIR=/workspace/tensorrt
 ARG VERSION
-RUN git clone -b main https://github.com/open-mmlab/mmdeploy &&\
+RUN git clone -b main https://github.com/vbti-development/onedl-mmdeploy &&\
     cd mmdeploy &&\
     if [ -z ${VERSION} ] ; then echo "No MMDeploy version passed in, building on main" ; else git checkout tags/v${VERSION} -b tag_v${VERSION} ; fi &&\
     git submodule update --init --recursive &&\

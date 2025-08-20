@@ -57,7 +57,7 @@ pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f htt
   </tr>
   <tr>
     <td>mmcv </td>
-    <td>Install mmcv as follows. Refer to the <a href="https://github.com/open-mmlab/mmcv/tree/2.x#installation">guide</a> for details.
+    <td>Install mmcv as follows. Refer to the <a href="https://github.com/vbti-development/onedl-mmcv/tree/2.x#installation">guide</a> for details.
 <pre><code>
 $env:cu_version="cu111"
 $env:torch_version="torch1.8.0"

@@ -1,7 +1,7 @@
 // Copyright (c) OpenMMLab. All rights reserved
 // Modified from https://github.com/whai362/PSENet
 // and
-// https://github.com/open-mmlab/mmcv/blob/master/mmcv/ops/csrc/pytorch/contour_expand.cpp
+// https://github.com/vbti-development/onedl-mmcv/blob/master/mmcv/ops/csrc/pytorch/contour_expand.cpp
 
 #include <cmath>
 #include <iostream>

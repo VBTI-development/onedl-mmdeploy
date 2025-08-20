@@ -14,7 +14,7 @@
 
 ______________________________________________________________________
 
-[MMDetection](https://github.com/open-mmlab/mmdetection) aka `mmdet` is an open source object detection toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+[MMDetection](https://github.com/vbti-development/onedl-mmdetection) aka `mmdet` is an open source object detection toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
 ## Installation
 
@@ -36,7 +36,7 @@ If your target platform is **Ubuntu 18.04 or later version**, we encourage you t
 [scripts](../01-how-to-build/build_from_script.md). For example, the following commands install mmdeploy as well as inference engine - `ONNX Runtime`.
 
 ```shell
-git clone --recursive -b main https://github.com/open-mmlab/mmdeploy.git
+git clone --recursive -b main https://github.com/vbti-development/onedl-mmdeploy.git
 cd mmdeploy
 python3 tools/scripts/build_ubuntu_x64_ort.py $(nproc)
 export PYTHONPATH=$(pwd)/build/lib:$PYTHONPATH
@@ -49,7 +49,7 @@ If neither **I** nor **II** meets your requirements, [building mmdeploy from sou
 
 ## Convert model
 
-You can use [tools/deploy.py](https://github.com/open-mmlab/mmdeploy/tree/main/tools/deploy.py) to convert mmdet models to the specified backend models. Its detailed usage can be learned from [here](../02-how-to-run/convert_model.md).
+You can use [tools/deploy.py](https://github.com/vbti-development/onedl-mmdeploy/tree/main/tools/deploy.py) to convert mmdet models to the specified backend models. Its detailed usage can be learned from [here](../02-how-to-run/convert_model.md).
 
 The command below shows an example about converting `Faster R-CNN` model to onnx model that can be inferred by ONNX Runtime.
 
@@ -69,7 +69,7 @@ python tools/deploy.py \
     --dump-info
 ```
 
-It is crucial to specify the correct deployment config during model conversion. We've already provided builtin deployment config [files](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmdet) of all supported backends for mmdetection, under which the config file path follows the pattern:
+It is crucial to specify the correct deployment config during model conversion. We've already provided builtin deployment config [files](https://github.com/vbti-development/onedl-mmdeploy/tree/main/configs/mmdet) of all supported backends for mmdetection, under which the config file path follows the pattern:
 
 ```
 {task}/{task}_{backend}-{precision}_{static | dynamic}_{shape}.py
@@ -91,7 +91,7 @@ It is crucial to specify the correct deployment config during model conversion. 
 
 - **{shape}:** input shape or shape range of a model
 
-Therefore, in the above example, you can also convert `faster r-cnn` to other backend models by changing the deployment config file `detection_onnxruntime_dynamic.py` to [others](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmdet/detection), e.g., converting to tensorrt-fp16 model by `detection_tensorrt-fp16_dynamic-320x320-1344x1344.py`.
+Therefore, in the above example, you can also convert `faster r-cnn` to other backend models by changing the deployment config file `detection_onnxruntime_dynamic.py` to [others](https://github.com/vbti-development/onedl-mmdeploy/tree/main/configs/mmdet/detection), e.g., converting to tensorrt-fp16 model by `detection_tensorrt-fp16_dynamic-320x320-1344x1344.py`.
 
 ```{tip}
 When converting mmdet models to tensorrt models, --device should be set to "cuda"
@@ -186,43 +186,43 @@ for index, bbox, label_id in zip(indices, bboxes, labels):
 cv2.imwrite('output_detection.png', img)
 ```
 
-Besides python API, mmdeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/open-mmlab/mmdeploy/tree/main/demo).
+Besides python API, mmdeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/vbti-development/onedl-mmdeploy/tree/main/demo).
 
 ## Supported models
 
-|                                                        Model                                                        |         Task          | OnnxRuntime | TensorRT | ncnn | PPLNN | OpenVINO |
-| :-----------------------------------------------------------------------------------------------------------------: | :-------------------: | :---------: | :------: | :--: | :---: | :------: |
-|                      [ATSS](https://github.com/open-mmlab/mmdetection/tree/main/configs/atss)                       |   Object Detection    |      Y      |    Y     |  N   |   N   |    Y     |
-|                      [FCOS](https://github.com/open-mmlab/mmdetection/tree/main/configs/fcos)                       |   Object Detection    |      Y      |    Y     |  Y   |   N   |    Y     |
-|                  [FoveaBox](https://github.com/open-mmlab/mmdetection/tree/main/configs/foveabox)                   |   Object Detection    |      Y      |    N     |  N   |   N   |    Y     |
-|                      [FSAF](https://github.com/open-mmlab/mmdetection/tree/main/configs/fsaf)                       |   Object Detection    |      Y      |    Y     |  Y   |   Y   |    Y     |
-|                 [RetinaNet](https://github.com/open-mmlab/mmdetection/tree/main/configs/retinanet)                  |   Object Detection    |      Y      |    Y     |  Y   |   Y   |    Y     |
-|                       [SSD](https://github.com/open-mmlab/mmdetection/tree/main/configs/ssd)                        |   Object Detection    |      Y      |    Y     |  Y   |   N   |    Y     |
-|                     [VFNet](https://github.com/open-mmlab/mmdetection/tree/main/configs/vfnet)                      |   Object Detection    |      N      |    N     |  N   |   N   |    Y     |
-|                     [YOLOv3](https://github.com/open-mmlab/mmdetection/tree/main/configs/yolo)                      |   Object Detection    |      Y      |    Y     |  Y   |   N   |    Y     |
-|                     [YOLOX](https://github.com/open-mmlab/mmdetection/tree/main/configs/yolox)                      |   Object Detection    |      Y      |    Y     |  Y   |   N   |    Y     |
-|              [Cascade R-CNN](https://github.com/open-mmlab/mmdetection/tree/main/configs/cascade_rcnn)              |   Object Detection    |      Y      |    Y     |  N   |   Y   |    Y     |
-|               [Faster R-CNN](https://github.com/open-mmlab/mmdetection/tree/main/configs/faster_rcnn)               |   Object Detection    |      Y      |    Y     |  Y   |   Y   |    Y     |
-|            [Faster R-CNN + DCN](https://github.com/open-mmlab/mmdetection/tree/main/configs/faster_rcnn)            |   Object Detection    |      Y      |    Y     |  Y   |   Y   |    Y     |
-|                       [GFL](https://github.com/open-mmlab/mmdetection/tree/main/configs/gfl)                        |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
-|                 [RepPoints](https://github.com/open-mmlab/mmdetection/tree/main/configs/reppoints)                  |   Object Detection    |      N      |    Y     |  N   |   ?   |    Y     |
-|             [DETR](https://github.com/open-mmlab/mmdetection/tree/main/configs/detr)[\*](#nobatchinfer)             |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
-|  [Deformable DETR](https://github.com/open-mmlab/mmdetection/tree/main/configs/deformable_detr)[\*](#nobatchinfer)  |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
-| [Conditional DETR](https://github.com/open-mmlab/mmdetection/tree/main/configs/conditional_detr)[\*](#nobatchinfer) |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
-|         [DAB-DETR](https://github.com/open-mmlab/mmdetection/tree/main/configs/dab_detr)[\*](#nobatchinfer)         |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
-|             [DINO](https://github.com/open-mmlab/mmdetection/tree/main/configs/dino)[\*](#nobatchinfer)             |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
-|                 [CenterNet](https://github.com/open-mmlab/mmdetection/tree/main/configs/centernet)                  |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
-|                    [RTMDet](https://github.com/open-mmlab/mmdetection/tree/main/configs/rtmdet)                     |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
-|           [Cascade Mask R-CNN](https://github.com/open-mmlab/mmdetection/tree/main/configs/cascade_rcnn)            | Instance Segmentation |      Y      |    Y     |  N   |   N   |    Y     |
-|                       [HTC](https://github.com/open-mmlab/mmdetection/tree/main/configs/htc)                        | Instance Segmentation |      Y      |    Y     |  N   |   ?   |    Y     |
-|                 [Mask R-CNN](https://github.com/open-mmlab/mmdetection/tree/main/configs/mask_rcnn)                 | Instance Segmentation |      Y      |    Y     |  N   |   N   |    Y     |
-|                [Swin Transformer](https://github.com/open-mmlab/mmdetection/tree/main/configs/swin)                 | Instance Segmentation |      Y      |    Y     |  N   |   N   |    Y     |
-|                      [SOLO](https://github.com/open-mmlab/mmdetection/tree/main/configs/solo)                       | Instance Segmentation |      Y      |    N     |  N   |   N   |    Y     |
-|                    [SOLOv2](https://github.com/open-mmlab/mmdetection/tree/main/configs/solov2)                     | Instance Segmentation |      Y      |    N     |  N   |   N   |    Y     |
-|                  [CondInst](https://github.com/open-mmlab/mmdetection/tree/main/configs/condinst)                   | Instance Segmentation |      Y      |    Y     |  N   |   N   |    N     |
-|              [Panoptic FPN](https://github.com/open-mmlab/mmdetection/tree/main/configs/panoptic_fpn)               | Panoptic Segmentation |      Y      |    Y     |  N   |   N   |    N     |
-|                [MaskFormer](https://github.com/open-mmlab/mmdetection/tree/main/configs/maskformer)                 | Panoptic Segmentation |      Y      |    Y     |  N   |   N   |    N     |
-|      [Mask2Former](https://github.com/open-mmlab/mmdetection/tree/main/configs/mask2former)[\*](#mask2former)       | Panoptic Segmentation |      Y      |    Y     |  N   |   N   |    N     |
+|                                                              Model                                                              |         Task          | OnnxRuntime | TensorRT | ncnn | PPLNN | OpenVINO |
+| :-----------------------------------------------------------------------------------------------------------------------------: | :-------------------: | :---------: | :------: | :--: | :---: | :------: |
+|                      [ATSS](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/atss)                       |   Object Detection    |      Y      |    Y     |  N   |   N   |    Y     |
+|                      [FCOS](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/fcos)                       |   Object Detection    |      Y      |    Y     |  Y   |   N   |    Y     |
+|                  [FoveaBox](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/foveabox)                   |   Object Detection    |      Y      |    N     |  N   |   N   |    Y     |
+|                      [FSAF](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/fsaf)                       |   Object Detection    |      Y      |    Y     |  Y   |   Y   |    Y     |
+|                 [RetinaNet](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/retinanet)                  |   Object Detection    |      Y      |    Y     |  Y   |   Y   |    Y     |
+|                       [SSD](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/ssd)                        |   Object Detection    |      Y      |    Y     |  Y   |   N   |    Y     |
+|                     [VFNet](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/vfnet)                      |   Object Detection    |      N      |    N     |  N   |   N   |    Y     |
+|                     [YOLOv3](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/yolo)                      |   Object Detection    |      Y      |    Y     |  Y   |   N   |    Y     |
+|                     [YOLOX](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/yolox)                      |   Object Detection    |      Y      |    Y     |  Y   |   N   |    Y     |
+|              [Cascade R-CNN](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/cascade_rcnn)              |   Object Detection    |      Y      |    Y     |  N   |   Y   |    Y     |
+|               [Faster R-CNN](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/faster_rcnn)               |   Object Detection    |      Y      |    Y     |  Y   |   Y   |    Y     |
+|            [Faster R-CNN + DCN](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/faster_rcnn)            |   Object Detection    |      Y      |    Y     |  Y   |   Y   |    Y     |
+|                       [GFL](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/gfl)                        |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
+|                 [RepPoints](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/reppoints)                  |   Object Detection    |      N      |    Y     |  N   |   ?   |    Y     |
+|             [DETR](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/detr)[\*](#nobatchinfer)             |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
+|  [Deformable DETR](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/deformable_detr)[\*](#nobatchinfer)  |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
+| [Conditional DETR](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/conditional_detr)[\*](#nobatchinfer) |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
+|         [DAB-DETR](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/dab_detr)[\*](#nobatchinfer)         |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
+|             [DINO](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/dino)[\*](#nobatchinfer)             |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
+|                 [CenterNet](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/centernet)                  |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
+|                    [RTMDet](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/rtmdet)                     |   Object Detection    |      Y      |    Y     |  N   |   ?   |    Y     |
+|           [Cascade Mask R-CNN](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/cascade_rcnn)            | Instance Segmentation |      Y      |    Y     |  N   |   N   |    Y     |
+|                       [HTC](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/htc)                        | Instance Segmentation |      Y      |    Y     |  N   |   ?   |    Y     |
+|                 [Mask R-CNN](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/mask_rcnn)                 | Instance Segmentation |      Y      |    Y     |  N   |   N   |    Y     |
+|                [Swin Transformer](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/swin)                 | Instance Segmentation |      Y      |    Y     |  N   |   N   |    Y     |
+|                      [SOLO](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/solo)                       | Instance Segmentation |      Y      |    N     |  N   |   N   |    Y     |
+|                    [SOLOv2](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/solov2)                     | Instance Segmentation |      Y      |    N     |  N   |   N   |    Y     |
+|                  [CondInst](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/condinst)                   | Instance Segmentation |      Y      |    Y     |  N   |   N   |    N     |
+|              [Panoptic FPN](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/panoptic_fpn)               | Panoptic Segmentation |      Y      |    Y     |  N   |   N   |    N     |
+|                [MaskFormer](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/maskformer)                 | Panoptic Segmentation |      Y      |    Y     |  N   |   N   |    N     |
+|      [Mask2Former](https://github.com/vbti-development/onedl-mmdetection/tree/main/configs/mask2former)[\*](#mask2former)       | Panoptic Segmentation |      Y      |    Y     |  N   |   N   |    N     |
 
 ## Reminder
 

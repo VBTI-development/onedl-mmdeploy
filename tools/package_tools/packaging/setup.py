@@ -58,7 +58,7 @@ if __name__ == '__main__':
         author='OpenMMLab',
         author_email='openmmlab@gmail.com',
         keywords='computer vision, model deployment',
-        url='https://github.com/open-mmlab/mmdeploy',
+        url='https://github.com/vbti-development/onedl-mmdeploy',
         packages=find_packages(),
         include_package_data=True,
         platforms=get_platform_name(),

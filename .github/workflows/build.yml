@@ -19,6 +19,8 @@ env:
 jobs:
   build_cpu_model_convert:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     strategy:
       matrix:
         torch: [2.5.1]
@@ -73,6 +75,8 @@ jobs:
 
   build_cpu_sdk:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -110,6 +114,8 @@ jobs:
 
   cross_build_aarch64:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -137,6 +143,9 @@ jobs:
 
   build_cuda118:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      pull-requests: write
     container:
       image: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
     env:
@@ -181,15 +190,19 @@ jobs:
           coverage run --branch --source mmdeploy -m pytest -rsE tests
           coverage xml
           coverage report -m
-      - name: Upload coverage to Codecov
-        id: badge_status
-        uses: codecov/codecov-action@v2
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          file: ./coverage.xml,./coverage.info
-          flags: unittests
-          env_vars: OS,PYTHON,CPLUS
-          name: codecov-umbrella
-          fail_ci_if_error: false
+          filename: coverage.xml
+          format: markdown
+          output: both
+          hide_branch_rate: false
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md
       - name: create badge
         if: always()
         uses: RubbaBoy/BYOB@v1.2.1

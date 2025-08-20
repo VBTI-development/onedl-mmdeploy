@@ -40,7 +40,7 @@ Back in mmdeploy, enable quantization with the option 'tools/deploy.py --quant'.
 cd /path/to/mmdeploy
 
 export MODEL_CONFIG=/home/rg/konghuanjun/mmpretrain/configs/resnet/resnet18_8xb32_in1k.py
-export MODEL_PATH=https://download.openmmlab.com/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth
+export MODEL_PATH=https://mmassets.onedl.ai/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth
 
 # get some imagenet sample images
 git clone https://github.com/nihui/imagenet-sample-images --depth=1

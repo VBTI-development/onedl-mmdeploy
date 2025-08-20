@@ -10,10 +10,10 @@ Here are the test conclusions of our edge devices. You can directly obtain the r
 
 ## mmpretrain
 
-|                                                          model                                                           |   dataset   | spatial | fp32 top-1 (%) | snpe gpu hybrid fp32 top-1 (%) | latency (ms) |
-| :----------------------------------------------------------------------------------------------------------------------: | :---------: | :-----: | :------------: | :----------------------------: | :----------: |
-| [ShuffleNetV2](https://github.com/open-mmlab/mmpretrain/blob/main/configs/shufflenet_v2/shufflenet-v2-1x_16xb64_in1k.py) | ImageNet-1k | 224x224 |     69.55      |            69.83\*             |     20±7     |
-|    [MobilenetV2](https://github.com/open-mmlab/mmpretrain/blob/main/configs/mobilenet_v2/mobilenet-v2_8xb32_in1k.py)     | ImageNet-1k | 224x224 |     71.86      |            72.14\*             |     15±6     |
+|                                                                model                                                                 |   dataset   | spatial | fp32 top-1 (%) | snpe gpu hybrid fp32 top-1 (%) | latency (ms) |
+| :----------------------------------------------------------------------------------------------------------------------------------: | :---------: | :-----: | :------------: | :----------------------------: | :----------: |
+| [ShuffleNetV2](https://github.com/vbti-development/onedl-mmpretrain/blob/main/configs/shufflenet_v2/shufflenet-v2-1x_16xb64_in1k.py) | ImageNet-1k | 224x224 |     69.55      |            69.83\*             |     20±7     |
+|    [MobilenetV2](https://github.com/vbti-development/onedl-mmpretrain/blob/main/configs/mobilenet_v2/mobilenet-v2_8xb32_in1k.py)     | ImageNet-1k | 224x224 |     71.86      |            72.14\*             |     15±6     |
 
 tips:
 
@@ -38,9 +38,9 @@ tips:
 
 ## mmseg
 
-|                                                        model                                                         |  dataset   | spatial  | mIoU  | latency(ms) |
-| :------------------------------------------------------------------------------------------------------------------: | :--------: | :------: | :---: | :---------: |
-| [fcn](https://github.com/open-mmlab/mmsegmentation/blob/main/configs/fcn/fcn_r18-d8_4xb2-80k_cityscapes-512x1024.py) | Cityscapes | 512x1024 | 71.11 |  4915±500   |
+|                                                              model                                                               |  dataset   | spatial  | mIoU  | latency(ms) |
+| :------------------------------------------------------------------------------------------------------------------------------: | :--------: | :------: | :---: | :---------: |
+| [fcn](https://github.com/vbti-development/onedl-mmsegmentation/blob/main/configs/fcn/fcn_r18-d8_4xb2-80k_cityscapes-512x1024.py) | Cityscapes | 512x1024 | 71.11 |  4915±500   |
 
 tips:
 

@@ -85,7 +85,7 @@ ENV PATH="/root/workspace/ncnn/build/tools/quantize/:${PATH}"
 ### install mmdeploy
 WORKDIR /root/workspace
 ARG VERSION
-RUN git clone -b main https://github.com/open-mmlab/mmdeploy.git &&\
+RUN git clone -b main https://github.com/vbti-development/onedl-mmdeploy.git &&\
     cd mmdeploy &&\
     if [ -z ${VERSION} ] ; then echo "No MMDeploy version passed in, building on main" ; else git checkout tags/v${VERSION} -b tag_v${VERSION} ; fi &&\
     git submodule update --init --recursive &&\

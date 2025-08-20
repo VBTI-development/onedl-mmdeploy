@@ -60,7 +60,7 @@ On GPU platform, please ensure that {cudatoolkit_version} matches your host CUDA
 
 We recommend that users follow our best practices installing MMDeploy.
 
-**Step 0.** Install [MMCV](https://github.com/open-mmlab/mmcv).
+**Step 0.** Install [MMCV](https://github.com/vbti-development/onedl-mmcv).
 
 ```shell
 pip install -U openmim
@@ -70,7 +70,7 @@ mim install "mmcv>=2.0.0rc2"
 
 **Step 1.** Install MMDeploy and inference engine
 
-We recommend using MMDeploy precompiled package as our best practice. Currently, we support model converter and sdk inference pypi package, and the sdk c/cpp library is provided [here](https://github.com/open-mmlab/mmdeploy/releases). You can download them according to your target platform and device.
+We recommend using MMDeploy precompiled package as our best practice. Currently, we support model converter and sdk inference pypi package, and the sdk c/cpp library is provided [here](https://github.com/vbti-development/onedl-mmdeploy/releases). You can download them according to your target platform and device.
 
 The supported platform and device matrix is presented as following:
 
@@ -166,20 +166,20 @@ Please learn its prebuilt package from [this](02-how-to-run/prebuilt_package_win
 
 After the installation, you can enjoy the model deployment journey starting from converting PyTorch model to backend model by running `tools/deploy.py`.
 
-Based on the above settings, we provide an example to convert the Faster R-CNN in [MMDetection](https://github.com/open-mmlab/mmdetection) to TensorRT as below:
+Based on the above settings, we provide an example to convert the Faster R-CNN in [MMDetection](https://github.com/vbti-development/onedl-mmdetection) to TensorRT as below:
 
 ```shell
 # clone mmdeploy to get the deployment config. `--recursive` is not necessary
-git clone -b main https://github.com/open-mmlab/mmdeploy.git
+git clone -b main https://github.com/vbti-development/onedl-mmdeploy.git
 
 # clone mmdetection repo. We have to use the config file to build PyTorch nn module
-git clone -b 3.x https://github.com/open-mmlab/mmdetection.git
+git clone -b 3.x https://github.com/vbti-development/onedl-mmdetection.git
 cd mmdetection
 mim install -v -e .
 cd ..
 
 # download Faster R-CNN checkpoint
-wget -P checkpoints https://download.openmmlab.com/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_fpn_1x_coco/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth
+wget -P checkpoints https://mmassets.onedl.ai/mmdetection/v2.0/faster_rcnn/faster_rcnn_r50_fpn_1x_coco/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth
 
 # run the command to start model conversion
 python mmdeploy/tools/deploy.py \
@@ -230,7 +230,7 @@ result = inference_model(
 You can directly run MMDeploy demo programs in the precompiled package to get inference results.
 
 ```shell
-wget https://github.com/open-mmlab/mmdeploy/releases/download/v1.3.1/mmdeploy-1.3.1-linux-x86_64-cuda11.8.tar.gz
+wget https://github.com/vbti-development/onedl-mmdeploy/releases/download/v1.3.1/mmdeploy-1.3.1-linux-x86_64-cuda11.8.tar.gz
 tar xf mmdeploy-1.3.1-linux-x86_64-cuda11.8
 cd mmdeploy-1.3.1-linux-x86_64-cuda11.8
 # run python demo
@@ -269,7 +269,7 @@ for index, bbox, label_id in zip(indices, bboxes, labels):
 cv2.imwrite('output_detection.png', img)
 ```
 
-You can find more examples from [here](https://github.com/open-mmlab/mmdeploy/tree/main/demo/python).
+You can find more examples from [here](https://github.com/vbti-development/onedl-mmdeploy/tree/main/demo/python).
 
 #### C++ API
 
@@ -321,9 +321,9 @@ find_package(MMDeploy REQUIRED)
 target_link_libraries(${name} PRIVATE mmdeploy ${OpenCV_LIBS})
 ```
 
-For more SDK C++ API usages, please read these [samples](https://github.com/open-mmlab/mmdeploy/tree/main/demo/csrc/cpp).
+For more SDK C++ API usages, please read these [samples](https://github.com/vbti-development/onedl-mmdeploy/tree/main/demo/csrc/cpp).
 
-For the rest C, C# and Java API usages, please read [C demos](https://github.com/open-mmlab/mmdeploy/tree/main/demo/csrc/c), [C# demos](https://github.com/open-mmlab/mmdeploy/tree/main/demo/csharp) and [Java demos](https://github.com/open-mmlab/mmdeploy/tree/main/demo/java) respectively.
+For the rest C, C# and Java API usages, please read [C demos](https://github.com/vbti-development/onedl-mmdeploy/tree/main/demo/csrc/c), [C# demos](https://github.com/vbti-development/onedl-mmdeploy/tree/main/demo/csharp) and [Java demos](https://github.com/vbti-development/onedl-mmdeploy/tree/main/demo/java) respectively.
 We'll talk about them more in our next release.
 
 #### Accelerate preprocessing（Experimental）

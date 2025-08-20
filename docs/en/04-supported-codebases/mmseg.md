@@ -14,7 +14,7 @@
 
 ______________________________________________________________________
 
-[MMSegmentation](https://github.com/open-mmlab/mmsegmentation/tree/main) aka `mmseg` is an open source semantic segmentation toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+[MMSegmentation](https://github.com/vbti-development/onedl-mmsegmentation/tree/main) aka `mmseg` is an open source semantic segmentation toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
 ## Installation
 
@@ -36,7 +36,7 @@ If your target platform is **Ubuntu 18.04 or later version**, we encourage you t
 [scripts](../01-how-to-build/build_from_script.md). For example, the following commands install mmdeploy as well as inference engine - `ONNX Runtime`.
 
 ```shell
-git clone --recursive -b main https://github.com/open-mmlab/mmdeploy.git
+git clone --recursive -b main https://github.com/vbti-development/onedl-mmdeploy.git
 cd mmdeploy
 python3 tools/scripts/build_ubuntu_x64_ort.py $(nproc)
 export PYTHONPATH=$(pwd)/build/lib:$PYTHONPATH
@@ -54,7 +54,7 @@ If neither **I** nor **II** meets your requirements, [building mmdeploy from sou
 
 ## Convert model
 
-You can use [tools/deploy.py](https://github.com/open-mmlab/mmdeploy/tree/main/tools/deploy.py) to convert mmseg models to the specified backend models. Its detailed usage can be learned from [here](https://github.com/open-mmlab/mmdeploy/tree/main/docs/en/02-how-to-run/convert_model.md#usage).
+You can use [tools/deploy.py](https://github.com/vbti-development/onedl-mmdeploy/tree/main/tools/deploy.py) to convert mmseg models to the specified backend models. Its detailed usage can be learned from [here](https://github.com/vbti-development/onedl-mmdeploy/tree/main/docs/en/02-how-to-run/convert_model.md#usage).
 
 The command below shows an example about converting `unet` model to onnx model that can be inferred by ONNX Runtime.
 
@@ -76,7 +76,7 @@ python tools/deploy.py \
     --dump-info
 ```
 
-It is crucial to specify the correct deployment config during model conversion. We've already provided builtin deployment config [files](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmseg) of all supported backends for mmsegmentation. The config filename pattern is:
+It is crucial to specify the correct deployment config during model conversion. We've already provided builtin deployment config [files](https://github.com/vbti-development/onedl-mmdeploy/tree/main/configs/mmseg) of all supported backends for mmsegmentation. The config filename pattern is:
 
 ```
 segmentation_{backend}-{precision}_{static | dynamic}_{shape}.py
@@ -87,7 +87,7 @@ segmentation_{backend}-{precision}_{static | dynamic}_{shape}.py
 - **{static | dynamic}:** static shape or dynamic shape
 - **{shape}:** input shape or shape range of a model
 
-Therefore, in the above example, you can also convert `unet` to other backend models by changing the deployment config file `segmentation_onnxruntime_dynamic.py` to [others](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmseg), e.g., converting to tensorrt-fp16 model by `segmentation_tensorrt-fp16_dynamic-512x1024-2048x2048.py`.
+Therefore, in the above example, you can also convert `unet` to other backend models by changing the deployment config file `segmentation_onnxruntime_dynamic.py` to [others](https://github.com/vbti-development/onedl-mmdeploy/tree/main/configs/mmseg), e.g., converting to tensorrt-fp16 model by `segmentation_tensorrt-fp16_dynamic-512x1024-2048x2048.py`.
 
 ```{tip}
 When converting mmseg models to tensorrt models, --device should be set to "cuda"
@@ -184,51 +184,51 @@ img = img.astype(np.uint8)
 cv2.imwrite('output_segmentation.png', img)
 ```
 
-Besides python API, mmdeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/open-mmlab/mmdeploy/tree/main/demo).
+Besides python API, mmdeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/vbti-development/onedl-mmdeploy/tree/main/demo).
 
 ## Supported models
 
-| Model                                                                                                     | TorchScript | OnnxRuntime | TensorRT | ncnn | PPLNN | OpenVino |
-| :-------------------------------------------------------------------------------------------------------- | :---------: | :---------: | :------: | :--: | :---: | :------: |
-| [FCN](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/fcn)                                 |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
-| [PSPNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/pspnet)[\*](#static_shape)        |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
-| [DeepLabV3](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/deeplabv3)                     |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
-| [DeepLabV3+](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/deeplabv3plus)                |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
-| [Fast-SCNN](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/fastscnn)[\*](#static_shape)   |      Y      |      Y      |    Y     |  N   |   Y   |    Y     |
-| [UNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/unet)                               |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
-| [ANN](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/ann)[\*](#static_shape)              |      Y      |      Y      |    Y     |  N   |   N   |    N     |
-| [APCNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/apcnet)                           |      Y      |      Y      |    Y     |  Y   |   N   |    N     |
-| [BiSeNetV1](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/bisenetv1)                     |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [BiSeNetV2](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/bisenetv2)                     |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [CGNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/cgnet)                             |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [DMNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/dmnet)                             |      ?      |      Y      |    N     |  N   |   N   |    N     |
-| [DNLNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/dnlnet)                           |      ?      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [EMANet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/emanet)                           |      Y      |      Y      |    Y     |  N   |   N   |    Y     |
-| [EncNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/encnet)                           |      Y      |      Y      |    Y     |  N   |   N   |    Y     |
-| [ERFNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/erfnet)                           |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [FastFCN](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/fastfcn)                         |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [GCNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/gcnet)                             |      Y      |      Y      |    Y     |  N   |   N   |    N     |
-| [ICNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/icnet)[\*](#static_shape)          |      Y      |      Y      |    Y     |  N   |   N   |    Y     |
-| [ISANet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/isanet)[\*](#static_shape)        |      N      |      Y      |    Y     |  N   |   N   |    Y     |
-| [NonLocal Net](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/nonlocal_net)               |      ?      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [OCRNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/ocrnet)                           |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [PointRend](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/point_rend)[\*](#static_shape) |      Y      |      Y      |    Y     |  N   |   N   |    N     |
-| [Semantic FPN](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/sem_fpn)                    |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [STDC](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/stdc)                               |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [UPerNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/upernet)[\*](#static_shape)      |      N      |      Y      |    Y     |  N   |   N   |    N     |
-| [DANet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/danet)                             |      ?      |      Y      |    Y     |  N   |   N   |    Y     |
-| [Segmenter](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/segmenter)[\*](#static_shape)  |      N      |      Y      |    Y     |  Y   |   N   |    Y     |
-| [SegFormer](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/segformer)[\*](#static_shape)  |      Y      |      Y      |    Y     |  N   |   N   |    Y     |
-| [SETR](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/setr)                               |      ?      |      Y      |    N     |  N   |   N   |    Y     |
-| [CCNet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/ccnet)                             |      ?      |      N      |    N     |  N   |   N   |    N     |
-| [PSANet](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/psanet)                           |      ?      |      N      |    N     |  N   |   N   |    N     |
-| [DPT](https://github.com/open-mmlab/mmsegmentation/tree/main/configs/dpt)                                 |      ?      |      N      |    N     |  N   |   N   |    N     |
+| Model                                                                                                                 | TorchScript | OnnxRuntime | TensorRT | ncnn | PPLNN | OpenVino |
+| :-------------------------------------------------------------------------------------------------------------------- | :---------: | :---------: | :------: | :--: | :---: | :------: |
+| [FCN](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/fcn)                                 |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
+| [PSPNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/pspnet)[\*](#static_shape)        |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
+| [DeepLabV3](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/deeplabv3)                     |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
+| [DeepLabV3+](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/deeplabv3plus)                |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
+| [Fast-SCNN](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/fastscnn)[\*](#static_shape)   |      Y      |      Y      |    Y     |  N   |   Y   |    Y     |
+| [UNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/unet)                               |      Y      |      Y      |    Y     |  Y   |   Y   |    Y     |
+| [ANN](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/ann)[\*](#static_shape)              |      Y      |      Y      |    Y     |  N   |   N   |    N     |
+| [APCNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/apcnet)                           |      Y      |      Y      |    Y     |  Y   |   N   |    N     |
+| [BiSeNetV1](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/bisenetv1)                     |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [BiSeNetV2](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/bisenetv2)                     |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [CGNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/cgnet)                             |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [DMNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/dmnet)                             |      ?      |      Y      |    N     |  N   |   N   |    N     |
+| [DNLNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/dnlnet)                           |      ?      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [EMANet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/emanet)                           |      Y      |      Y      |    Y     |  N   |   N   |    Y     |
+| [EncNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/encnet)                           |      Y      |      Y      |    Y     |  N   |   N   |    Y     |
+| [ERFNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/erfnet)                           |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [FastFCN](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/fastfcn)                         |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [GCNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/gcnet)                             |      Y      |      Y      |    Y     |  N   |   N   |    N     |
+| [ICNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/icnet)[\*](#static_shape)          |      Y      |      Y      |    Y     |  N   |   N   |    Y     |
+| [ISANet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/isanet)[\*](#static_shape)        |      N      |      Y      |    Y     |  N   |   N   |    Y     |
+| [NonLocal Net](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/nonlocal_net)               |      ?      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [OCRNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/ocrnet)                           |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [PointRend](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/point_rend)[\*](#static_shape) |      Y      |      Y      |    Y     |  N   |   N   |    N     |
+| [Semantic FPN](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/sem_fpn)                    |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [STDC](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/stdc)                               |      Y      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [UPerNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/upernet)[\*](#static_shape)      |      N      |      Y      |    Y     |  N   |   N   |    N     |
+| [DANet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/danet)                             |      ?      |      Y      |    Y     |  N   |   N   |    Y     |
+| [Segmenter](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/segmenter)[\*](#static_shape)  |      N      |      Y      |    Y     |  Y   |   N   |    Y     |
+| [SegFormer](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/segformer)[\*](#static_shape)  |      Y      |      Y      |    Y     |  N   |   N   |    Y     |
+| [SETR](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/setr)                               |      ?      |      Y      |    N     |  N   |   N   |    Y     |
+| [CCNet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/ccnet)                             |      ?      |      N      |    N     |  N   |   N   |    N     |
+| [PSANet](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/psanet)                           |      ?      |      N      |    N     |  N   |   N   |    N     |
+| [DPT](https://github.com/vbti-development/onedl-mmsegmentation/tree/main/configs/dpt)                                 |      ?      |      N      |    N     |  N   |   N   |    N     |
 
 ## Reminder
 
 - Only `whole` inference mode is supported for all mmseg models.
 
-- <i id="static_shape">PSPNet, Fast-SCNN</i> only support static shape, because [nn.AdaptiveAvgPool2d](https://github.com/open-mmlab/mmsegmentation/blob/0c87f7a0c9099844eff8e90fa3db5b0d0ca02fee/mmseg/models/decode_heads/psp_head.py#L38) is not supported by most inference backends.
+- <i id="static_shape">PSPNet, Fast-SCNN</i> only support static shape, because [nn.AdaptiveAvgPool2d](https://github.com/vbti-development/onedl-mmsegmentation/blob/0c87f7a0c9099844eff8e90fa3db5b0d0ca02fee/mmseg/models/decode_heads/psp_head.py#L38) is not supported by most inference backends.
 
 - For models that only supports static shape, you should use the deployment config file of static shape such as `configs/mmseg/segmentation_tensorrt_static-1024x2048.py`.
 

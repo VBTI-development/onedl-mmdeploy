@@ -121,12 +121,14 @@ html_theme_path = [pytorch_sphinx_theme.get_html_theme_path()]
 # documentation.
 #
 html_theme_options = {
-    'logo_url': 'https://mmdeploy.readthedocs.io/en/latest/',
+    'logo_url':
+    'https://mmdeploy.readthedocs.io/en/latest/',
     'menu': [{
         'name': 'GitHub',
-        'url': 'https://github.com/open-mmlab/mmdeploy'
+        'url': 'https://github.com/vbti-development/onedl-mmdeploy'
     }],
-    'menu_lang': 'en'
+    'menu_lang':
+    'en'
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

@@ -301,12 +301,12 @@ py_venv() {
       #cd ../
       # mmcv
       pip3 uninstall mmcv-full
-      pip3 install mmcv-full==1.4.1 -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.10.0/index.html
+      pip3 install mmcv-full==1.4.1 -f https://mmassets.onedl.ai/mmcv/dist/cu102/torch1.10.0/index.html
     else
       pip3 install torch==1.10.0+cu113 torchvision==0.11.1+cu113 torchaudio==0.10.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
       # mmcv
       pip3 uninstall mmcv-full
-      pip3 install mmcv-full==1.4.1 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html
+      pip3 install mmcv-full==1.4.1 -f https://mmassets.onedl.ai/mmcv/dist/cu113/torch1.10.0/index.html
     fi
   fi
 

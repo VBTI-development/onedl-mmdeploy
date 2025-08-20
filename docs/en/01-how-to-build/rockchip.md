@@ -52,7 +52,7 @@ Example:
 python tools/deploy.py \
     configs/mmpretrain/classification_rknn-fp16_static-224x224.py \
     /mmpretrain_dir/configs/resnet/resnet50_8xb32_in1k.py \
-    https://download.openmmlab.com/mmclassification/v0/resnet/resnet50_batch256_imagenet_20200708-cfb998bf.pth \
+    https://mmassets.onedl.ai/mmclassification/v0/resnet/resnet50_batch256_imagenet_20200708-cfb998bf.pth \
     /mmpretrain_dir/demo/demo.JPEG \
     --work-dir ../resnet50 \
     --device cpu
@@ -140,7 +140,7 @@ label: 65, score: 0.95
 
 - MMDet models.
 
-  YOLOV3 & YOLOX: you may paste the following partition configuration into [detection_rknn_static-320x320.py](https://github.com/open-mmlab/mmdeploy/blob/main/configs/mmdet/detection/detection_rknn-int8_static-320x320.py):
+  YOLOV3 & YOLOX: you may paste the following partition configuration into [detection_rknn_static-320x320.py](https://github.com/vbti-development/onedl-mmdeploy/blob/main/configs/mmdet/detection/detection_rknn-int8_static-320x320.py):
 
   ```python
   # yolov3, yolox for rknn-toolkit and rknn-toolkit2
@@ -156,7 +156,7 @@ label: 65, score: 0.95
       ])
   ```
 
-  RTMDet: you may paste the following partition configuration into [detection_rknn-int8_static-640x640.py](https://github.com/open-mmlab/mmdeploy/blob/main/configs/mmdet/detection/detection_rknn-int8_static-640x640.py):
+  RTMDet: you may paste the following partition configuration into [detection_rknn-int8_static-640x640.py](https://github.com/vbti-development/onedl-mmdeploy/blob/main/configs/mmdet/detection/detection_rknn-int8_static-640x640.py):
 
   ```python
   # rtmdet for rknn-toolkit and rknn-toolkit2
@@ -172,7 +172,7 @@ label: 65, score: 0.95
       ])
   ```
 
-  RetinaNet & SSD & FSAF with rknn-toolkit2, you may paste the following partition configuration into [detection_rknn_static-320x320.py](https://github.com/open-mmlab/mmdeploy/blob/main/configs/mmdet/detection/detection_rknn-int8_static-320x320.py). Users with rknn-toolkit can directly use default config.
+  RetinaNet & SSD & FSAF with rknn-toolkit2, you may paste the following partition configuration into [detection_rknn_static-320x320.py](https://github.com/vbti-development/onedl-mmdeploy/blob/main/configs/mmdet/detection/detection_rknn-int8_static-320x320.py). Users with rknn-toolkit can directly use default config.
 
   ```python
   # retinanet, ssd for rknn-toolkit2

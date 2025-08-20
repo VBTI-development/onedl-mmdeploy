@@ -13,13 +13,13 @@
 
 ______________________________________________________________________
 
-[MMPretrain](https://github.com/open-mmlab/mmpretrain) aka `mmpretrain` is an open-source image classification toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com) project.
+[MMPretrain](https://github.com/vbti-development/onedl-mmpretrain) aka `mmpretrain` is an open-source image classification toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com) project.
 
 ## Installation
 
 ### Install mmpretrain
 
-Please follow this [quick guide](https://github.com/open-mmlab/mmpretrain/tree/main#installation) to install mmpretrain.
+Please follow this [quick guide](https://github.com/vbti-development/onedl-mmpretrain/tree/main#installation) to install mmpretrain.
 
 ### Install mmdeploy
 
@@ -35,7 +35,7 @@ If your target platform is **Ubuntu 18.04 or later version**, we encourage you t
 [scripts](../01-how-to-build/build_from_script.md). For example, the following commands install mmdeploy as well as inference engine - `ONNX Runtime`.
 
 ```shell
-git clone --recursive -b main https://github.com/open-mmlab/mmdeploy.git
+git clone --recursive -b main https://github.com/vbti-development/onedl-mmdeploy.git
 cd mmdeploy
 python3 tools/scripts/build_ubuntu_x64_ort.py $(nproc)
 export PYTHONPATH=$(pwd)/build/lib:$PYTHONPATH
@@ -48,7 +48,7 @@ If neither **I** nor **II** meets your requirements, [building mmdeploy from sou
 
 ## Convert model
 
-You can use [tools/deploy.py](https://github.com/open-mmlab/mmdeploy/tree/main/tools/deploy.py) to convert mmpretrain models to the specified backend models. Its detailed usage can be learned from [here](https://github.com/open-mmlab/mmdeploy/tree/main/docs/en/02-how-to-run/convert_model.md#usage).
+You can use [tools/deploy.py](https://github.com/vbti-development/onedl-mmdeploy/tree/main/tools/deploy.py) to convert mmpretrain models to the specified backend models. Its detailed usage can be learned from [here](https://github.com/vbti-development/onedl-mmdeploy/tree/main/docs/en/02-how-to-run/convert_model.md#usage).
 
 The command below shows an example about converting `resnet18` model to onnx model that can be inferred by ONNX Runtime.
 
@@ -70,7 +70,7 @@ python tools/deploy.py \
     --dump-info
 ```
 
-It is crucial to specify the correct deployment config during model conversion. We've already provided builtin deployment config [files](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmpretrain) of all supported backends for mmpretrain. The config filename pattern is:
+It is crucial to specify the correct deployment config during model conversion. We've already provided builtin deployment config [files](https://github.com/vbti-development/onedl-mmdeploy/tree/main/configs/mmpretrain) of all supported backends for mmpretrain. The config filename pattern is:
 
 ```
 classification_{backend}-{precision}_{static | dynamic}_{shape}.py
@@ -81,7 +81,7 @@ classification_{backend}-{precision}_{static | dynamic}_{shape}.py
 - **{static | dynamic}:** static shape or dynamic shape
 - **{shape}:** input shape or shape range of a model
 
-Therefore, in the above example, you can also convert `resnet18` to other backend models by changing the deployment config file `classification_onnxruntime_dynamic.py` to [others](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmpretrain), e.g., converting to tensorrt-fp16 model by `classification_tensorrt-fp16_dynamic-224x224-224x224.py`.
+Therefore, in the above example, you can also convert `resnet18` to other backend models by changing the deployment config file `classification_onnxruntime_dynamic.py` to [others](https://github.com/vbti-development/onedl-mmdeploy/tree/main/configs/mmpretrain), e.g., converting to tensorrt-fp16 model by `classification_tensorrt-fp16_dynamic-224x224-224x224.py`.
 
 ```{tip}
 When converting mmpretrain models to tensorrt models, --device should be set to "cuda"
@@ -168,22 +168,22 @@ for label_id, score in result:
     print(label_id, score)
 ```
 
-Besides python API, mmdeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/open-mmlab/mmdeploy/tree/main/demo).
+Besides python API, mmdeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/vbti-development/onedl-mmdeploy/tree/main/demo).
 
 ## Supported models
 
-| Model                                                                                              | TorchScript | ONNX Runtime | TensorRT | ncnn | PPLNN | OpenVINO |
-| :------------------------------------------------------------------------------------------------- | :---------: | :----------: | :------: | :--: | :---: | :------: |
-| [ResNet](https://github.com/open-mmlab/mmpretrain/tree/main/configs/resnet)                        |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
-| [ResNeXt](https://github.com/open-mmlab/mmpretrain/tree/main/configs/resnext)                      |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
-| [SE-ResNet](https://github.com/open-mmlab/mmpretrain/tree/main/configs/seresnet)                   |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
-| [MobileNetV2](https://github.com/open-mmlab/mmpretrain/tree/main/configs/mobilenet_v2)             |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
-| [MobileNetV3](https://github.com/open-mmlab/mmpretrain/tree/main/configs/mobilenet_v3)             |      Y      |      Y       |    Y     |  Y   |   ?   |    Y     |
-| [ShuffleNetV1](https://github.com/open-mmlab/mmpretrain/tree/main/configs/shufflenet_v1)           |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
-| [ShuffleNetV2](https://github.com/open-mmlab/mmpretrain/tree/main/configs/shufflenet_v2)           |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
-| [VisionTransformer](https://github.com/open-mmlab/mmpretrain/tree/main/configs/vision_transformer) |      Y      |      Y       |    Y     |  Y   |   ?   |    Y     |
-| [SwinTransformer](https://github.com/open-mmlab/mmpretrain/tree/main/configs/swin_transformer)     |      Y      |      Y       |    Y     |  N   |   ?   |    Y     |
-| [MobileOne](https://github.com/open-mmlab/mmpretrain/tree/main/configs/mobileone)                  |      Y      |      Y       |    Y     |  Y   |   ?   |    Y     |
-| [EfficientNet](https://github.com/open-mmlab/mmpretrain/tree/main/configs/efficientnet)            |      Y      |      Y       |    Y     |  N   |   ?   |    Y     |
-| [Conformer](https://github.com/open-mmlab/mmpretrain/tree/main/configs/conformer)                  |      Y      |      Y       |    Y     |  N   |   ?   |    Y     |
-| [EfficientFormer](https://github.com/open-mmlab/mmpretrain/tree/main/configs/efficientformer)      |      Y      |      Y       |    Y     |  N   |   ?   |    Y     |
+| Model                                                                                                          | TorchScript | ONNX Runtime | TensorRT | ncnn | PPLNN | OpenVINO |
+| :------------------------------------------------------------------------------------------------------------- | :---------: | :----------: | :------: | :--: | :---: | :------: |
+| [ResNet](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/resnet)                        |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
+| [ResNeXt](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/resnext)                      |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
+| [SE-ResNet](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/seresnet)                   |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
+| [MobileNetV2](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/mobilenet_v2)             |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
+| [MobileNetV3](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/mobilenet_v3)             |      Y      |      Y       |    Y     |  Y   |   ?   |    Y     |
+| [ShuffleNetV1](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/shufflenet_v1)           |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
+| [ShuffleNetV2](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/shufflenet_v2)           |      Y      |      Y       |    Y     |  Y   |   Y   |    Y     |
+| [VisionTransformer](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/vision_transformer) |      Y      |      Y       |    Y     |  Y   |   ?   |    Y     |
+| [SwinTransformer](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/swin_transformer)     |      Y      |      Y       |    Y     |  N   |   ?   |    Y     |
+| [MobileOne](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/mobileone)                  |      Y      |      Y       |    Y     |  Y   |   ?   |    Y     |
+| [EfficientNet](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/efficientnet)            |      Y      |      Y       |    Y     |  N   |   ?   |    Y     |
+| [Conformer](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/conformer)                  |      Y      |      Y       |    Y     |  N   |   ?   |    Y     |
+| [EfficientFormer](https://github.com/vbti-development/onedl-mmpretrain/tree/main/configs/efficientformer)      |      Y      |      Y       |    Y     |  N   |   ?   |    Y     |
