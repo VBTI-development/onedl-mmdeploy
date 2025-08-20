@@ -72,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build_cpu_sdk:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -327,7 +327,7 @@ jobs:
   # badge_build_cuda118_windows:
   #   needs: build_cuda118_windows
   #   if: always()
-  #   runs-on: ubuntu-20.04
+  #   runs-on: ubuntu-22.04
   #   steps:
   #     - name: create badge
   #       uses: RubbaBoy/BYOB@v1.2.1
