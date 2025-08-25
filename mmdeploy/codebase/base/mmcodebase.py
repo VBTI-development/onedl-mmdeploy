@@ -51,12 +51,12 @@ class MMCodebase(metaclass=ABCMeta):
 
     @classmethod
     def register_deploy_modules(cls):
-        """register deploy module."""
+        """Register deploy module."""
         raise NotImplementedError('register_deploy_modules not implemented.')
 
     @classmethod
     def register_all_modules(cls):
-        """register codebase module."""
+        """Register codebase module."""
         raise NotImplementedError('register_all_modules not implemented.')
 
 

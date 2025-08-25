@@ -94,7 +94,7 @@ class RetryOnRpcErrorClientInterceptor(grpc.UnaryUnaryClientInterceptor,
 
 @BACKEND_WRAPPER.register_module(Backend.SNPE.value)
 class SNPEWrapper(BaseWrapper):
-    """snpe wrapper class for inference.
+    """Snpe wrapper class for inference.
 
     Args:
         dlc_file (str): Path of a weight file.
@@ -223,8 +223,8 @@ class SNPEWrapper(BaseWrapper):
 
         def get_shape(shape):
             if len(shape) == 4:
-                if shape[0] == 1 and shape[
-                        1] == 1 and shape[2] > 1 and shape[3] > 1:
+                if shape[0] == 1 and shape[1] == 1 and shape[2] > 1 and shape[
+                        3] > 1:
                     # snpe NHWC layout works except for segmentation task
                     return (0, 1, 2, 3)
                 return (0, 3, 1, 2)

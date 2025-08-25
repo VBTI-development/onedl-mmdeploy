@@ -46,19 +46,19 @@ struct _Sender<Ts...>::type {
 
   template <typename Receiver>
   friend operation_t<Receiver, Ts...> tag_invoke(connect_t, const type& self, Receiver&& receiver) {
-    return {self.values_, (Receiver &&) receiver};
+    return {self.values_, (Receiver&&)receiver};
   }
 
   template <typename Receiver>
   friend operation_t<Receiver, Ts...> tag_invoke(connect_t, type&& self, Receiver&& receiver) {
-    return {std::move(self).values_, (Receiver &&) receiver};
+    return {std::move(self).values_, (Receiver&&)receiver};
   }
 };
 
 struct just_t {
   template <typename... Ts>
   sender_t<Ts...> operator()(Ts&&... ts) const {
-    return {{(Ts &&) ts...}};
+    return {{(Ts&&)ts...}};
   }
 };
 

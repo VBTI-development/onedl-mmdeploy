@@ -10,7 +10,7 @@ g_jobs = 2
 
 
 def install_protobuf(dep_dir) -> int:
-    """build and install protobuf. protobuf seems not support repeated install,
+    """Build and install protobuf. protobuf seems not support repeated install,
     so clean build first.
 
     Args:

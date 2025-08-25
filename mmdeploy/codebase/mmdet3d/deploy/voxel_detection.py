@@ -130,7 +130,7 @@ class VoxelDetection(BaseTask):
                   show_result: bool = False,
                   draw_gt: bool = False,
                   **kwargs):
-        """visualize backend output.
+        """Visualize backend output.
 
         Args:
             image (Union[str, np.ndarray]): pcd file path

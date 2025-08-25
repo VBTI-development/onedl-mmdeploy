@@ -82,7 +82,8 @@ def get_quant(deploy_cfg: Config,
             calib_data_shape = input_data.shape
             assert model_shape[2] >= calib_data_shape[2] and model_shape[
                 3] >= calib_data_shape[
-                    3], f'vacc backend model shape is {tuple(model_shape[2:])}, \
+                    3], 'vacc backend model shape is ' \
+                        f'{tuple(model_shape[2:])}, \
                         the calib_data shape {calib_data_shape[2:]} is bigger'
 
             input_data_group.create_dataset(

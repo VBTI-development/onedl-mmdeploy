@@ -146,6 +146,7 @@ class DummyModel(BaseModel):
 
 class SwitchBackendWrapper:
     """A switcher for backend wrapper for unit tests.
+
     Examples:
         >>> from mmdeploy.utils.test import SwitchBackendWrapper
         >>> from mmdeploy.backend.onnxruntime import ORTWrapper
@@ -207,7 +208,7 @@ class SwitchBackendWrapper:
     def recover(self):
         """Recover to original class."""
         assert self.init is not None and \
-            self.forward is not None,\
+            self.forward is not None, \
             'recover method must be called after exchange'
         obj = self._recover_class
         obj.__init__ = self.init

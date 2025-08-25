@@ -7,7 +7,7 @@ from mmdeploy.utils import Backend
 
 @symbolic_helper.parse_args('v')
 def gelu__ncnn_pt111(g, self):
-    """gelu for torch<=1.12."""
+    """Gelu for torch<=1.12."""
     return g.op('mmdeploy::Gelu', self)
 
 

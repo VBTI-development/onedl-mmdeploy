@@ -31,7 +31,7 @@ struct dynamic_batch_t {
                 int> = 0>
   auto operator()(Sender&& sender, context_t& context, Func func) const {
     auto scheduler = GetCompletionScheduler(sender);
-    return tag_invoke(*this, std::move(scheduler), (Sender &&) sender, context, std::move(func));
+    return tag_invoke(*this, std::move(scheduler), (Sender&&)sender, context, std::move(func));
   }
 
   template <typename Sender, typename Func,
@@ -40,7 +40,7 @@ struct dynamic_batch_t {
                                  tag_invocable<dynamic_batch_t, Sender, context_t&, Func>,
                              int> = 0>
   auto operator()(Sender&& sender, context_t& context, Func func) const {
-    return tag_invoke(*this, (Sender &&) sender, context, std::move(func));
+    return tag_invoke(*this, (Sender&&)sender, context, std::move(func));
   }
 
   template <typename Sender, typename Context, typename Func,
@@ -49,7 +49,7 @@ struct dynamic_batch_t {
                     !tag_invocable<dynamic_batch_t, Sender, Context, Func>,
                 int> = 0>
   auto operator()(Sender&& sender, Context&&, Func func) const {
-    return Then((Sender &&) sender, std::move(func));
+    return Then((Sender&&)sender, std::move(func));
   }
 };
 

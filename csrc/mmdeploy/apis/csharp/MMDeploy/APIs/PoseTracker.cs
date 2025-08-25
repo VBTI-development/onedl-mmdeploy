@@ -17,7 +17,7 @@ namespace MMDeploy
 
     /// <summary>
     /// Single tracking result of a bbox.
-    /// A picture may contains multiple reuslts.
+    /// A picture may contains multiple results.
     /// </summary>
     public struct PoseTrack
     {

@@ -60,7 +60,7 @@ MMDEPLOY_API cv::Mat Normalize(cv::Mat& src, const std::vector<float>& mean,
                                const std::vector<float>& std, bool to_rgb, bool inplace = true);
 
 /**
- * @brief tranpose an image, from {h, w, c} to {c, h, w}
+ * @brief transpose an image, from {h, w, c} to {c, h, w}
  *
  * @param src input image
  * @return

@@ -408,7 +408,7 @@ class ContextCaller:
 
 
 def get_func_qualname(func: Callable) -> str:
-    """get function name."""
+    """Get function name."""
     assert isinstance(func, Callable), f'{func} is not a Callable object.'
     _func_name = None
     if hasattr(func, '__qualname__'):
@@ -421,7 +421,7 @@ def get_func_qualname(func: Callable) -> str:
 
 
 def get_frame_func(top: int = 1) -> Callable:
-    """get func of frame."""
+    """Get func of frame."""
     frameinfo = inspect.stack()[top]
     frame = frameinfo.frame
 
@@ -434,7 +434,7 @@ def get_frame_func(top: int = 1) -> Callable:
 
 
 def get_frame_qualname(top: int = 1) -> str:
-    """get frame name."""
+    """Get frame name."""
     frameinfo = inspect.stack()[top]
     frame = frameinfo.frame
 

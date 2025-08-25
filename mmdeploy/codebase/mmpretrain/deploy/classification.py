@@ -19,18 +19,18 @@ MMPRETRAIN_TASK = Registry('mmpretrain_tasks')
 
 @CODEBASE.register_module(Codebase.MMPRETRAIN.value)
 class MMPretrain(MMCodebase):
-    """mmpretrain codebase class."""
+    """Mmpretrain codebase class."""
 
     task_registry = MMPRETRAIN_TASK
 
     @classmethod
     def register_deploy_modules(cls):
-        """register all rewriters for mmpretrain."""
+        """Register all rewriters for mmpretrain."""
         import mmdeploy.codebase.mmpretrain.models  # noqa: F401
 
     @classmethod
     def register_all_modules(cls):
-        """register all related modules and rewriters for mmpretrain."""
+        """Register all related modules and rewriters for mmpretrain."""
         from mmpretrain.utils.setup_env import register_all_modules
 
         cls.register_deploy_modules()
@@ -70,8 +70,8 @@ def process_model_config(model_cfg: Config,
                     if tuple(input_shape) != (crop_size, crop_size):
                         logger = get_root_logger()
                         logger.warning(
-                            f'`input shape` should be equal to `crop_size`: {crop_size},\
-                                but given: {input_shape}')
+                            f'`input shape` should be equal to `crop_size`: \
+                                {crop_size}, but given: {input_shape}')
     return cfg
 
 

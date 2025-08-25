@@ -106,7 +106,7 @@ def main():
 
     # prepare the dataset loader
     test_dataloader = deepcopy(model_cfg['test_dataloader'])
-    if type(test_dataloader) == list:
+    if type(test_dataloader) == list:  # noqa: E721
         dataset = []
         for loader in test_dataloader:
             ds = task_processor.build_dataset(loader['dataset'])

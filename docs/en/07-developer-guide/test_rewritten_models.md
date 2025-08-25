@@ -7,7 +7,7 @@ After you create a rewritten model using our [rewriter](support_new_model.md), i
 If the changes to the model are small (e.g., only change the behavior of one or two variables and don't introduce side effects), you can construct the input arguments for the rewritten functions/modules，run model's inference in `RewriteContext` and check the results.
 
 ```python
-# mmpretrain.models.classfiers.base.py
+# mmpretrain.models.classifiers.base.py
 class BaseClassifier(BaseModule, metaclass=ABCMeta):
     def forward(self, img, return_loss=True, **kwargs):
         if return_loss:

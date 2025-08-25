@@ -556,7 +556,7 @@ def multiclass_nms__coreml(boxes: Tensor,
                            pre_top_k: int = -1,
                            keep_top_k: int = -1,
                            output_index: bool = False):
-    """rewrite for coreml batched nms.
+    """Rewrite for coreml batched nms.
 
     Use coreml_nms from custom ops.
     """
@@ -618,7 +618,7 @@ def multiclass_nms__torchscript(boxes: Tensor,
                                 pre_top_k: int = -1,
                                 keep_top_k: int = -1,
                                 output_index=False):
-    """rewrite for torchscript batched nms.
+    """Rewrite for torchscript batched nms.
 
     Use batched_nms from torchvision instead of custom nms.
     """

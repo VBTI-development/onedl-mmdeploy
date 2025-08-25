@@ -10,7 +10,7 @@ from mmdeploy.utils import Backend, get_root_logger
 def l2norm__forward__default(self, x):
     """Default rewriter for l2norm.
 
-    Implement with functinoal.normalize .
+    Implement with functional.normalize .
     """
     return torch.nn.functional.normalize(
         x, dim=1) * self.weight[None, :, None, None]
@@ -20,7 +20,7 @@ def l2norm__forward__default(self, x):
     func_name='mmdet.models.necks.ssd_neck.L2Norm.forward',
     backend=Backend.TENSORRT.value)
 def l2norm__forward__tensorrt(self, x):
-    """rewrite `l2norm` for TensorRT.
+    """Rewrite `l2norm` for TensorRT.
 
     TensorRT7 does not support dynamic clamp, which is used in normalize.
     """

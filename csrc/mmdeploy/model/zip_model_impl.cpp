@@ -75,7 +75,7 @@ class ZipModelImpl : public ModelImpl {
                      index);
       return Status(eFail);
     }
-    struct zip_stat stat {};
+    struct zip_stat stat{};
     if ((ret = zip_stat_index(zip_, index, 0, &stat)) < 0) {
       MMDEPLOY_ERROR("get stat of file {} error, ret {}", file_path.c_str(), ret);
       return Status(eFail);

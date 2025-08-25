@@ -8,24 +8,24 @@ import subprocess
 CONFIGS = [
     (
         'mmpretrain/configs/vision_transformer/vit-base-p32_ft-64xb64_in1k-384.py',  # noqa: E501
-        'https://download.openmmlab.com/mmclassification/v0/vit/finetune/vit-base-p32_in21k-pre-3rdparty_ft-64xb64_in1k-384_20210928-9cea8599.pth',  # noqa: E501
+        'https://mmassets.onedl.ai/mmclassification/v0/vit/finetune/vit-base-p32_in21k-pre-3rdparty_ft-64xb64_in1k-384_20210928-9cea8599.pth',  # noqa: E501
         'vit.onnx'),
     (
         'mmpretrain/configs/resnet/resnet50_8xb32_in1k.py',
-        'https://download.openmmlab.com/mmclassification/v0/resnet/resnet50_8xb32_in1k_20210831-ea4938fc.pth',  # noqa: E501
+        'https://mmassets.onedl.ai/mmclassification/v0/resnet/resnet50_8xb32_in1k_20210831-ea4938fc.pth',  # noqa: E501
         'resnet50.onnx',
     ),
     (
         'mmpretrain/configs/resnet/resnet18_8xb32_in1k.py',
-        'https://download.openmmlab.com/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth',  # noqa: E501
+        'https://mmassets.onedl.ai/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth',  # noqa: E501
         'resnet18.onnx',
-        'https://github.com/open-mmlab/mmdeploy/releases/download/v0.1.0/resnet18.onnx',  # noqa: E501
+        'https://github.com/vbti-development/onedl-mmdeploy/releases/download/v0.1.0/resnet18.onnx',  # noqa: E501
     ),
     (
         'mmpretrain/configs/mobilenet_v2/mobilenet-v2_8xb32_in1k.py',
-        'https://download.openmmlab.com/mmclassification/v0/mobilenet_v2/mobilenet_v2_batch256_imagenet_20200708-3b2dc3af.pth',  # noqa: E501
+        'https://mmassets.onedl.ai/mmclassification/v0/mobilenet_v2/mobilenet_v2_batch256_imagenet_20200708-3b2dc3af.pth',  # noqa: E501
         'mobilenet-v2.onnx',
-        'https://github.com/open-mmlab/mmdeploy/releases/download/v0.1.0/mobilenet-v2.onnx',  # noqa: E501
+        'https://github.com/vbti-development/onedl-mmdeploy/releases/download/v0.1.0/mobilenet-v2.onnx',  # noqa: E501
     )
 ]
 
@@ -85,7 +85,7 @@ def run(args):
 
 
 def main():
-    """test `onnx2ncnn.cpp`
+    """Test `onnx2ncnn.cpp`
 
     First generate onnx model then convert it with `mmdeploy_onnx2ncnn`.
     """

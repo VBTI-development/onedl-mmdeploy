@@ -4,5 +4,5 @@ title: "OpenMMLab's Model deployment toolbox"
 authors:
   - name: "MMDeploy Contributors"
 date-released: 2021-12-27
-url: "https://github.com/open-mmlab/mmdeploy"
+url: "https://github.com/vbti-development/onedl-mmdeploy"
 license: Apache-2.0

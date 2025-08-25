@@ -9,18 +9,18 @@ MMAGIC_TASK = Registry('mmagic_tasks')
 
 @CODEBASE.register_module(Codebase.MMAGIC.value)
 class MMagic(MMCodebase):
-    """mmagic codebase class."""
+    """Mmagic codebase class."""
 
     task_registry = MMAGIC_TASK
 
     @classmethod
     def register_deploy_modules(cls):
-        """register all rewriters for mmagic."""
+        """Register all rewriters for mmagic."""
         import mmdeploy.codebase.mmagic.models  # noqa: F401
 
     @classmethod
     def register_all_modules(cls):
-        """register all related modules and rewriters for mmagic."""
+        """Register all related modules and rewriters for mmagic."""
         from mmagic.utils.setup_env import register_all_modules
 
         cls.register_deploy_modules()

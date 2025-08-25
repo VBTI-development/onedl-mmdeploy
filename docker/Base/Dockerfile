@@ -10,7 +10,7 @@ ARG TORCHVISION_VERSION=0.15.1
 
 # important dependencies
 ARG OPENCV_VERSION==4.5.4.60
-ARG PPLCV_VERSION=0.7.0
+ARG PPLCV_VERSION=0.8.0
 
 # backends
 ARG ONNXRUNTIME_VERSION=1.15.1
@@ -94,7 +94,7 @@ RUN git clone --depth 1 --branch ${NCNN_VERSION} --recursive https://github.com/
 ENV ncnn_DIR=/root/workspace/ncnn/install/lib/cmake/ncnn
 
 ### install ppl.cv
-RUN git clone --depth 1 --branch v${PPLCV_VERSION} https://github.com/openppl-public/ppl.cv.git  &&\
+RUN git clone --depth 1 --branch v${PPLCV_VERSION} https://github.com/VBTI-development/ppl.cv.git  &&\
     cd ppl.cv &&\
     ./build.sh cuda && mv cuda-build/install ./ && rm -rf cuda-build
 

@@ -71,11 +71,11 @@ $ python3 -m pip install -e .
 
 ## 3. Test the model
 
-Take Resnet-18 as an example. First refer to [documentation to install mmpretrain](https://github.com/open-mmlab/mmpretrain/tree/main)  and  use `tools/deploy.py` to convert the model.
+Take Resnet-18 as an example. First refer to [documentation to install mmpretrain](https://github.com/vbti-development/onedl-mmpretrain/tree/main)  and  use `tools/deploy.py` to convert the model.
 
 ```bash
 $ export MODEL_CONFIG=/path/to/mmpretrain/configs/resnet/resnet18_8xb16_cifar10.py
-$ export MODEL_PATH=https://download.openmmlab.com/mmclassification/v0/resnet/resnet18_b16x8_cifar10_20210528-bd6371c8.pth
+$ export MODEL_PATH=https://mmassets.onedl.ai/mmclassification/v0/resnet/resnet18_b16x8_cifar10_20210528-bd6371c8.pth
 
 # Convert the model
 $ cd /path/to/mmdeploy

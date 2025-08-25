@@ -45,7 +45,7 @@ class Storage {
   void create(index_sequence<i...>, const array<size_t, Size>& sizes,
               const array<size_t, Size>& aligns, As&&... as) {
     std::tie(data_, pointers_) =
-        Creator{{sizes[i]..., sizeof(void*)}, {aligns[i]..., alignof(void*)}}.create((As &&) as...);
+        Creator{{sizes[i]..., sizeof(void*)}, {aligns[i]..., alignof(void*)}}.create((As&&)as...);
   }
 
   ~Storage() {

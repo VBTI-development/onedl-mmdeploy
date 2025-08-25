@@ -67,7 +67,7 @@ PARAMS = [
 
 
 def main():
-    """test java apis and demos.
+    """Test java apis and demos.
 
     Run all java demos for test.
     """

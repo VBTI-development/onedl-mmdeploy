@@ -75,7 +75,7 @@ class Tracker {
   void SummaryTracks();
 
  private:
-  static constexpr const auto kInf = 1000.f;
+  static constexpr const auto kInf = 1000.f;  // codespell:ignore
 
   float frame_h_ = 0;
   float frame_w_ = 0;

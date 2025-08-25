@@ -11,7 +11,7 @@ from mmdeploy.utils import IR
 def modulated_deform_conv__torchscript(input, offset, mask, weight, bias,
                                        stride, padding, dilation, groups,
                                        deform_groups):
-    """rewriter for the custom torchscript mdcn op."""
+    """Rewriter for the custom torchscript mdcn op."""
     from mmdeploy.backend.torchscript import get_ops_path, ops_available
     assert ops_available(), 'torchscript custom ops is required.'
     torch.ops.load_library(get_ops_path())

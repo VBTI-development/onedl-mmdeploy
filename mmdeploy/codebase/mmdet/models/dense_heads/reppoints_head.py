@@ -16,7 +16,7 @@ from mmdeploy.utils import is_dynamic_shape
 
 def _bbox_pre_decode(points: torch.Tensor, bbox_pred: torch.Tensor,
                      stride: torch.Tensor):
-    """compute real bboxes."""
+    """Compute real bboxes."""
     points = points[..., :2]
     bbox_pos_center = torch.cat([points, points], dim=-1)
     bboxes = bbox_pred * stride + bbox_pos_center
@@ -24,7 +24,7 @@ def _bbox_pre_decode(points: torch.Tensor, bbox_pred: torch.Tensor,
 
 
 def _bbox_post_decode(bboxes: torch.Tensor, max_shape: Sequence[int]):
-    """clamp bbox."""
+    """Clamp bbox."""
     x1 = bboxes[..., 0].clamp(min=0, max=max_shape[1])
     y1 = bboxes[..., 1].clamp(min=0, max=max_shape[0])
     x2 = bboxes[..., 2].clamp(min=0, max=max_shape[1])

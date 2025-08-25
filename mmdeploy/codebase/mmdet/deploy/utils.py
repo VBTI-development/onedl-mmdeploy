@@ -213,7 +213,7 @@ class TRTGatherTopk(torch.autograd.Function):
 
     @staticmethod
     def symbolic(g, x, inds):
-        """symbolic of gather topk."""
+        """Symbolic of gather topk."""
         out = g.op('mmdeploy::GatherTopk', x, inds, outputs=1)
 
         return out

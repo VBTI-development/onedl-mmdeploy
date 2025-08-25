@@ -48,7 +48,7 @@ In order to use the prebuilt package, you need to install some third-party depen
 2. Clone the mmdeploy repository
 
    ```bash
-   git clone -b main https://github.com/open-mmlab/mmdeploy.git
+   git clone -b main https://github.com/vbti-development/onedl-mmdeploy.git
    ```
 
    :point_right: The main purpose here is to use the configs, so there is no need to compile `mmdeploy`.
@@ -56,14 +56,14 @@ In order to use the prebuilt package, you need to install some third-party depen
 3. Install mmpretrain
 
    ```bash
-   git clone -b main https://github.com/open-mmlab/mmpretrain.git
+   git clone -b main https://github.com/vbti-development/onedl-mmpretrain.git
    cd mmpretrain
    pip install -e .
    ```
 
 4. Prepare a PyTorch model as our example
 
-   Download the pth [resnet18_8xb32_in1k_20210831-fbbb1da6.pth](https://download.openmmlab.com/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth). The corresponding config of the model is [resnet18_8xb32_in1k.py](https://github.com/open-mmlab/mmpretrain/blob/main/configs/resnet/resnet18_8xb32_in1k.py)
+   Download the pth [resnet18_8xb32_in1k_20210831-fbbb1da6.pth](https://mmassets.onedl.ai/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth). The corresponding config of the model is [resnet18_8xb32_in1k.py](https://github.com/vbti-development/onedl-mmpretrain/blob/main/configs/resnet/resnet18_8xb32_in1k.py)
 
 After the above work is done, the structure of the current working directory should be:
 

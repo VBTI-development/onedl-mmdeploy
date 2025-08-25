@@ -23,7 +23,7 @@ MMDEPLOY_DIR=${WORKING_DIR}
 
 #####
 # Versions
-PPLCV_VER="0.7.0"
+PPLCV_VER="0.8.0"
 CMAKE_VER="3.23.0"
 
 #####
@@ -301,12 +301,12 @@ py_venv() {
       #cd ../
       # mmcv
       pip3 uninstall mmcv-full
-      pip3 install mmcv-full==1.4.1 -f https://download.openmmlab.com/mmcv/dist/cu102/torch1.10.0/index.html
+      pip3 install mmcv-full==1.4.1 -f https://mmassets.onedl.ai/mmcv/dist/cu102/torch1.10.0/index.html
     else
       pip3 install torch==1.10.0+cu113 torchvision==0.11.1+cu113 torchaudio==0.10.0+cu113 -f https://download.pytorch.org/whl/cu113/torch_stable.html
       # mmcv
       pip3 uninstall mmcv-full
-      pip3 install mmcv-full==1.4.1 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html
+      pip3 install mmcv-full==1.4.1 -f https://mmassets.onedl.ai/mmcv/dist/cu113/torch1.10.0/index.html
     fi
   fi
 
@@ -323,7 +323,7 @@ pplcv() {
   if [ -d "${PPLCV_DIR}" ]; then
       echo "Already exists! Checking out the requested version..."
   else
-      git clone https://github.com/openppl-public/ppl.cv.git ${PPLCV_DIR}
+      git clone https://github.com/VBTI-development/ppl.cv.git ${PPLCV_DIR}
   fi
   cd ${PPLCV_DIR}
   git pull

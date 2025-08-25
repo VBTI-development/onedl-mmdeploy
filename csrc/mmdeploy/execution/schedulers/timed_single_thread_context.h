@@ -169,11 +169,11 @@ struct _Operation<Duration, Receiver>::type : TaskBase {
   type(TimedSingleThreadContext& context, Duration duration, Receiver2&& receiver)
       : TaskBase(context, &type::ExecuteImpl),
         duration_(duration),
-        receiver_((Receiver2 &&) receiver) {}
+        receiver_((Receiver2&&)receiver) {}
 
   static void ExecuteImpl(TaskBase* p) noexcept {
     auto& self = *static_cast<type*>(p);
-    SetValue((Receiver &&) self.receiver_);
+    SetValue((Receiver&&)self.receiver_);
   }
 
   void Enqueue() { context_->Enqueue(this); }
@@ -193,7 +193,7 @@ struct _Sender<Duration>::type {
 
   template <typename Self, typename Receiver, _decays_to<Self, type, int> = 0>
   friend operation_t<Duration, Receiver> tag_invoke(connect_t, Self&& self, Receiver&& receiver) {
-    return {*self.context_, self.duration_, (Receiver &&) receiver};
+    return {*self.context_, self.duration_, (Receiver&&)receiver};
   }
 };
 

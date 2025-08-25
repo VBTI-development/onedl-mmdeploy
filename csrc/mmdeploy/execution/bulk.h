@@ -35,12 +35,12 @@ struct _Receiver<Receiver, Shape, Func>::type {
   Func func_;
 
   template <class... As>
-  friend void tag_invoke(set_value_t, type&& self, As&&... as) noexcept {
+  friend void tag_invoke(set_value_t, type &&self, As &&...as) noexcept {
     MMDEPLOY_DEBUG("fallback Bulk implementation");
     for (Shape i = 0; i < self.shape_; ++i) {
       self.func_(i, as...);
     }
-    SetValue(std::move(self.receiver_), (As &&) as...);
+    SetValue(std::move(self.receiver_), (As &&)as...);
   }
 };
 
@@ -48,7 +48,7 @@ template <typename CvrefSender, typename Shape, typename Func, typename Receiver
 struct _Operation<CvrefSender, Shape, Func, Receiver>::type {
   connect_result_t<CvrefSender, receiver_t<Receiver, Shape, Func>> op_state2_;
 
-  friend void tag_invoke(start_t, type& self) { Start(self.op_state2_); }
+  friend void tag_invoke(start_t, type &self) { Start(self.op_state2_); }
 };
 
 template <typename Sender, typename Shape, typename Func>
@@ -70,11 +70,11 @@ struct _Sender<Sender, Shape, Func>::type {
   Func func_;
 
   template <typename Self, typename Receiver, _decays_to<Self, type, int> = 0>
-  friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver)
+  friend auto tag_invoke(connect_t, Self &&self, Receiver &&receiver)
       -> Operation<_copy_cvref_t<Self, Sender>, Shape, Func, Receiver> {
-    return {Connect(((Self &&) self).sender_,
-                    _receiver_t<Receiver>{(Receiver &&) receiver, ((Self &&) self).shape_,
-                                          ((Self &&) self).func_})};
+    return {Connect(((Self &&)self).sender_,
+                    _receiver_t<Receiver>{(Receiver &&)receiver, ((Self &&)self).shape_,
+                                          ((Self &&)self).func_})};
   }
 };
 
@@ -85,10 +85,10 @@ struct bulk_t {
             enable_if_t<_is_sender<Sender> &&
                             _tag_invocable_with_completion_scheduler<bulk_t, Sender, Shape, Func>,
                         int> = 0>
-  auto operator()(Sender&& sender, Shape&& shape, Func func) const {
+  auto operator()(Sender &&sender, Shape &&shape, Func func) const {
     auto scheduler = GetCompletionScheduler(sender);
-    return tag_invoke(bulk_t{}, std::move(scheduler), (Sender &&) sender, (Shape &&) shape,
-                      (Func &&) func);
+    return tag_invoke(bulk_t{}, std::move(scheduler), (Sender &&)sender, (Shape &&)shape,
+                      (Func &&)func);
   }
   template <
       typename Sender, typename Shape, typename Func,
@@ -96,8 +96,8 @@ struct bulk_t {
                       !_tag_invocable_with_completion_scheduler<bulk_t, Sender, Shape, Func> &&
                       tag_invocable<bulk_t, Sender, Shape, Func>,
                   int> = 0>
-  auto operator()(Sender&& sender, Shape&& shape, Func func) const {
-    return tag_invoke(bulk_t{}, (Sender &&) sender, (Shape &&) shape, (Func &&) func);
+  auto operator()(Sender &&sender, Shape &&shape, Func func) const {
+    return tag_invoke(bulk_t{}, (Sender &&)sender, (Shape &&)shape, (Func &&)func);
   }
   template <
       typename Sender, typename Shape, typename Func,
@@ -105,9 +105,9 @@ struct bulk_t {
                       !_tag_invocable_with_completion_scheduler<bulk_t, Sender, Shape, Func> &&
                       !tag_invocable<bulk_t, Sender, Shape, Func>,
                   int> = 0>
-  auto operator()(Sender&& sender, Shape&& shape, Func func) const
+  auto operator()(Sender &&sender, Shape &&shape, Func func) const
       -> sender_t<Sender, Shape, Func> {
-    return {(Sender &&) sender, (Shape &&) shape, std::move(func)};
+    return {(Sender &&)sender, (Shape &&)shape, std::move(func)};
   }
   template <typename Shape, typename Func>
   _BinderBack<bulk_t, Shape, Func> operator()(Shape shape, Func fun) const {

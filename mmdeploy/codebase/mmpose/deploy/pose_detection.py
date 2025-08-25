@@ -115,12 +115,12 @@ MMPOSE_TASK = Registry('mmpose_tasks')
 
 @CODEBASE.register_module(Codebase.MMPOSE.value)
 class MMPose(MMCodebase):
-    """mmpose codebase class."""
+    """Mmpose codebase class."""
     task_registry = MMPOSE_TASK
 
     @classmethod
     def register_deploy_modules(cls):
-        """register rewritings."""
+        """Register rewritings."""
         import mmdeploy.codebase.mmdet.models
         import mmdeploy.codebase.mmdet.ops
         import mmdeploy.codebase.mmdet.structures
@@ -128,7 +128,7 @@ class MMPose(MMCodebase):
 
     @classmethod
     def register_all_modules(cls):
-        """register all modules from mmpose."""
+        """Register all modules from mmpose."""
         from mmpose.utils.setup_env import register_all_modules
 
         cls.register_deploy_modules()
@@ -156,7 +156,7 @@ class PoseDetection(BaseTask):
             model_files: Sequence[str] = None,
             data_preprocessor_updater: Optional[Callable] = None,
             **kwargs) -> torch.nn.Module:
-        """build backend model.
+        """Build backend model.
 
         Args:
             model_files (Sequence[str]): Input model files. Default is None.

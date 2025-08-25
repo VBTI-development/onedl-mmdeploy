@@ -43,7 +43,7 @@ struct _Operation<Receiver>::type final : _Task {
  public:
   template <class _Receiver2>
   explicit type(_Receiver2&& receiver, RunLoop* loop)
-      : receiver_((_Receiver2 &&) receiver), loop_(loop) {}
+      : receiver_((_Receiver2&&)receiver), loop_(loop) {}
 };
 
 }  // namespace __impl
@@ -63,7 +63,7 @@ class RunLoop {
       template <typename Receiver>
       friend __impl::operation_t<Receiver> tag_invoke(connect_t, const _ScheduleTask& self,
                                                       Receiver&& receiver) {
-        return __impl::operation_t<Receiver>{(Receiver &&) receiver, self.loop_};
+        return __impl::operation_t<Receiver>{(Receiver&&)receiver, self.loop_};
       }
       RunLoop* const loop_;
 

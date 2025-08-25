@@ -5,7 +5,7 @@ import os.path as osp
 import pandas as pd
 
 MMDEPLOY_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..', '..'))
-MMDEPLOY_URL = 'https://github.com/open-mmlab/mmdeploy/tree/main'
+MMDEPLOY_URL = 'https://github.com/vbti-development/onedl-mmdeploy/tree/main'
 
 REPO_NAMES = dict(
     mmpretrain='mmpretrain',

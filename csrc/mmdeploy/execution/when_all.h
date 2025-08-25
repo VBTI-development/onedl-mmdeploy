@@ -35,7 +35,7 @@ struct _Receiver<CvrefReceiver, Index, Senders...>::type {
 
   template <typename... As>
   friend void tag_invoke(set_value_t, type&& self, As&&... as) noexcept {
-    std::get<Index>(self.op_state_->vals_).emplace((As &&) as...);
+    std::get<Index>(self.op_state_->vals_).emplace((As&&)as...);
     self.op_state_->_Arrive();
   }
 };
@@ -55,13 +55,13 @@ struct _Operation<CvrefReceiver, Senders...>::type {
   // workaround for a bug in GCC7 that `Is` in a lambda is treated as unexpanded parameter pack
   template <typename Sender, typename Receiver>
   static auto _Connect1(Sender&& sender, Receiver&& receiver) {
-    return __conv{[&]() mutable { return Connect((Sender &&) sender, (Receiver &&) receiver); }};
+    return __conv{[&]() mutable { return Connect((Sender&&)sender, (Receiver&&)receiver); }};
   }
 
   template <size_t... Is, typename... _Senders>
   static auto _ConnectChildren(type* self, std::index_sequence<Is...>, _Senders&&... senders)
       -> std::tuple<_ChildOpState<Senders, Is>...> {
-    return {_Connect1((_Senders &&) senders, _receiver_t<Is>{self})...};
+    return {_Connect1((_Senders&&)senders, _receiver_t<Is>{self})...};
   }
 
   using _ChildOpStates = decltype(_ConnectChildren(
@@ -80,7 +80,7 @@ struct _Operation<CvrefReceiver, Senders...>::type {
         [this](auto&... opt_vals) -> void {
           std::apply(
               [this](auto&... all_vals) -> void {
-                SetValue((Receiver &&) receiver_, std::move(all_vals)...);
+                SetValue((Receiver&&)receiver_, std::move(all_vals)...);
               },
               std::tuple_cat(
                   std::apply([](auto&... vals) { return std::tie(vals...); }, *opt_vals)...));
@@ -90,7 +90,7 @@ struct _Operation<CvrefReceiver, Senders...>::type {
 
   template <typename... _Senders>
   explicit type(Receiver&& receiver, _Senders&&... senders)
-      : child_states_{_ConnectChildren(this, _Indices{}, (_Senders &&) senders...)},
+      : child_states_{_ConnectChildren(this, _Indices{}, (_Senders&&)senders...)},
         receiver_(std::move(receiver)) {}
 
   friend void tag_invoke(start_t, type& self) noexcept {
@@ -131,9 +131,9 @@ struct _Sender<Senders...>::type {
         [&](auto&&... senders) {
           // MSVC v142 doesn't recognize operation_t here
           return Operation<_copy_cvref_t<Self, remove_cvref_t<Receiver>>, Senders...>(
-              (Receiver &&) receiver, (decltype(senders)&&)senders...);
+              (Receiver&&)receiver, (decltype(senders)&&)senders...);
         },
-        ((Self &&) self).senders_);
+        ((Self&&)self).senders_);
   }
 
   std::tuple<Senders...> senders_;
@@ -145,7 +145,7 @@ struct when_all_t {
                                  tag_invocable<when_all_t, Senders...>,
                              int> = 0>
   auto operator()(Senders&&... senders) const {
-    return tag_invoke(when_all_t{}, (Senders &&) senders...);
+    return tag_invoke(when_all_t{}, (Senders&&)senders...);
   }
 
   template <
@@ -153,7 +153,7 @@ struct when_all_t {
       std::enable_if_t<
           _is_range_v<Range> && _is_sender<ValueType> && tag_invocable<when_all_t, Range>, int> = 0>
   auto operator()(Range&& range) const {
-    return tag_invoke(when_all_t{}, (Range &&) range);
+    return tag_invoke(when_all_t{}, (Range&&)range);
   }
 
   template <typename... Senders,
@@ -161,7 +161,7 @@ struct when_all_t {
                                  !tag_invocable<when_all_t, Senders...>,
                              int> = 0>
   Sender<Senders...> operator()(Senders&&... senders) const {
-    return {{(Senders &&) senders...}};
+    return {{(Senders&&)senders...}};
   }
 };
 

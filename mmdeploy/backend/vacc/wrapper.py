@@ -129,7 +129,7 @@ class VACCForward:
 
 @BACKEND_WRAPPER.register_module(Backend.VACC.value)
 class VACCWrapper(BaseWrapper):
-    """vacc wrapper class for inference.
+    """Vacc wrapper class for inference.
 
     Args:
         lib_file (str): Path of a model lib file.

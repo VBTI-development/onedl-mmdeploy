@@ -13,13 +13,13 @@
 
 ______________________________________________________________________
 
-[MMRotate](https://github.com/open-mmlab/mmrotate) is an open-source toolbox for rotated object detection based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+[MMRotate](https://github.com/vbti-development/onedl-mmrotate) is an open-source toolbox for rotated object detection based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
 
 ## Installation
 
 ### Install mmrotate
 
-Please follow the [installation guide](https://mmrotate.readthedocs.io/en/1.x/get_started.html) to install mmrotate.
+Please follow the [installation guide](https://mmrotate.readthedocs.io/en/main/get_started.html) to install mmrotate.
 
 ### Install mmdeploy
 
@@ -27,7 +27,11 @@ There are several methods to install mmdeploy, among which you can choose an app
 
 **Method I:** Install precompiled package
 
-You can refer to [get_started](https://mmdeploy.readthedocs.io/en/latest/get_started.html#installation)
+<!-- markdown-link-check-disable -->
+
+You can refer to [get_started](https://onedl-mmdeploy.readthedocs.io/en/latest/get_started.html#installation)
+
+<!-- markdown-link-check-enable -->
 
 **Method II:** Build using scripts
 
@@ -35,7 +39,7 @@ If your target platform is **Ubuntu 18.04 or later version**, we encourage you t
 [scripts](../01-how-to-build/build_from_script.md). For example, the following commands install mmdeploy as well as inference engine - `ONNX Runtime`.
 
 ```shell
-git clone --recursive -b main https://github.com/open-mmlab/mmdeploy.git
+git clone --recursive -b main https://github.com/vbti-development/onedl-mmdeploy.git
 cd mmdeploy
 python3 tools/scripts/build_ubuntu_x64_ort.py $(nproc)
 export PYTHONPATH=$(pwd)/build/lib:$PYTHONPATH
@@ -53,7 +57,7 @@ If neither **I** nor **II** meets your requirements, [building mmdeploy from sou
 
 ## Convert model
 
-You can use [tools/deploy.py](https://github.com/open-mmlab/mmdeploy/blob/main/tools/deploy.py) to convert mmrotate models to the specified backend models. Its detailed usage can be learned from [here](https://github.com/open-mmlab/mmdeploy/blob/main/docs/en/02-how-to-run/convert_model.md#usage).
+You can use [tools/deploy.py](https://github.com/vbti-development/onedl-mmdeploy/blob/main/tools/deploy.py) to convert mmrotate models to the specified backend models. Its detailed usage can be learned from [here](https://github.com/vbti-development/onedl-mmdeploy/blob/main/docs/en/02-how-to-run/convert_model.md#usage).
 
 The command below shows an example about converting `rotated-faster-rcnn` model to onnx model that can be inferred by ONNX Runtime.
 
@@ -62,7 +66,7 @@ cd mmdeploy
 
 # download rotated-faster-rcnn model from mmrotate model zoo
 mim download mmrotate --config rotated-faster-rcnn-le90_r50_fpn_1x_dota --dest .
-wget https://github.com/open-mmlab/mmrotate/raw/main/demo/dota_demo.jpg
+wget https://github.com/vbti-development/onedl-mmrotate/raw/main/demo/dota_demo.jpg
 
 # convert mmrotate model to onnxruntime model with dynamic shape
 python tools/deploy.py \
@@ -76,7 +80,7 @@ python tools/deploy.py \
     --dump-info
 ```
 
-It is crucial to specify the correct deployment config during model conversion. We've already provided builtin deployment config [files](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmrotate) of all supported backends for mmrotate. The config filename pattern is:
+It is crucial to specify the correct deployment config during model conversion. We've already provided builtin deployment config [files](https://github.com/vbti-development/onedl-mmdeploy/tree/main/configs/mmrotate) of all supported backends for mmrotate. The config filename pattern is:
 
 ```
 rotated_detection-{backend}-{precision}_{static | dynamic}_{shape}.py
@@ -87,7 +91,7 @@ rotated_detection-{backend}-{precision}_{static | dynamic}_{shape}.py
 - **{static | dynamic}:** static shape or dynamic shape
 - **{shape}:** input shape or shape range of a model
 
-Therefore, in the above example, you can also convert `rotated-faster-rcnn` to other backend models by changing the deployment config file `rotated-detection_onnxruntime_dynamic` to [others](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmrotate), e.g., converting to tensorrt-fp16 model by `rotated-detection_tensorrt-fp16_dynamic-320x320-1024x1024.py`.
+Therefore, in the above example, you can also convert `rotated-faster-rcnn` to other backend models by changing the deployment config file `rotated-detection_onnxruntime_dynamic` to [others](https://github.com/vbti-development/onedl-mmdeploy/tree/main/configs/mmrotate), e.g., converting to tensorrt-fp16 model by `rotated-detection_tensorrt-fp16_dynamic-320x320-1024x1024.py`.
 
 ```{tip}
 When converting mmrotate models to tensorrt models, --device should be set to "cuda"
@@ -172,14 +176,14 @@ detector = RotatedDetector(model_path='./mmdeploy_models/mmrotate/ort', device_n
 det = detector(img)
 ```
 
-Besides python API, mmdeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/open-mmlab/mmdeploy/tree/main/demo).
+Besides python API, mmdeploy SDK also provides other FFI (Foreign Function Interface), such as C, C++, C#, Java and so on. You can learn their usage from [demos](https://github.com/vbti-development/onedl-mmdeploy/tree/main/demo).
 
 ## Supported models
 
-| Model                                                                                             | OnnxRuntime | TensorRT |
-| :------------------------------------------------------------------------------------------------ | :---------: | :------: |
-| [Rotated RetinaNet](https://github.com/open-mmlab/mmrotate/blob/1.x/configs/rotated_retinanet)    |      Y      |    Y     |
-| [Rotated FasterRCNN](https://github.com/open-mmlab/mmrotate/blob/1.x/configs/rotated_faster_rcnn) |      Y      |    Y     |
-| [Oriented R-CNN](https://github.com/open-mmlab/mmrotate/blob/1.x/configs/oriented_rcnn)           |      Y      |    Y     |
-| [Gliding Vertex](https://github.com/open-mmlab/mmrotate/blob/1.x/configs/gliding_vertex)          |      Y      |    Y     |
-| [RTMDET-R](https://github.com/open-mmlab/mmrotate/blob/1.x/configs/rotated_rtmdet)                |      Y      |    Y     |
+| Model                                                                                                          | OnnxRuntime | TensorRT |
+| :------------------------------------------------------------------------------------------------------------- | :---------: | :------: |
+| [Rotated RetinaNet](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/rotated_retinanet)    |      Y      |    Y     |
+| [Rotated FasterRCNN](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/rotated_faster_rcnn) |      Y      |    Y     |
+| [Oriented R-CNN](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/oriented_rcnn)           |      Y      |    Y     |
+| [Gliding Vertex](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/gliding_vertex)          |      Y      |    Y     |
+| [RTMDET-R](https://github.com/vbti-development/onedl-mmrotate/blob/main/configs/rotated_rtmdet)                |      Y      |    Y     |

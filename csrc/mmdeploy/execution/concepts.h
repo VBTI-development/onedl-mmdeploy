@@ -22,8 +22,8 @@ using _get_completion_signatures::get_completion_signatures_t;
 inline constexpr get_completion_signatures_t GetCompletionSignatures{};
 
 template <typename Sender>
-inline constexpr bool _is_sender = std::is_invocable_v<get_completion_signatures_t, Sender>&&
-    std::is_move_constructible_v<remove_cvref_t<Sender>>;
+inline constexpr bool _is_sender = std::is_invocable_v<get_completion_signatures_t, Sender> &&
+                                   std::is_move_constructible_v<remove_cvref_t<Sender>>;
 
 // GetCompletionSignatures is expected to return identity<std::tuple<Types...>>;
 template <typename Sender>
@@ -36,7 +36,7 @@ struct set_value_t {
             std::enable_if_t<is_tag_invocable_v<set_value_t, Receiver, Args...>, int> = 0>
   void operator()(Receiver&& receiver, Args&&... args) const noexcept {
     static_assert(is_nothrow_tag_invocable_v<set_value_t, Receiver, Args...>);
-    (void)tag_invoke(set_value_t{}, (Receiver &&) receiver, (Args &&) args...);
+    (void)tag_invoke(set_value_t{}, (Receiver&&)receiver, (Args&&)args...);
   }
 };
 
@@ -67,7 +67,7 @@ struct connect_t {
             std::enable_if_t<is_tag_invocable_v<connect_t, Sender, Receiver>, int> = 0>
   auto operator()(Sender&& sender, Receiver&& receiver) const
       -> tag_invoke_result_t<connect_t, Sender, Receiver> {
-    return tag_invoke(connect_t{}, (Sender &&) sender, (Receiver &&) receiver);
+    return tag_invoke(connect_t{}, (Sender&&)sender, (Receiver&&)receiver);
   }
 };
 

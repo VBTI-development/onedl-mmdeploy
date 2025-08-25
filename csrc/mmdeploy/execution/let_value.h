@@ -59,7 +59,7 @@ struct _Receiver<CvrefSender, Receiver, Func>::type {
   template <typename... As>
   friend void tag_invoke(set_value_t, type&& self, As&&... as) noexcept {
     auto* op_state = self.op_state_;
-    auto& args = op_state->storage_.args_.emplace((As &&) as...);
+    auto& args = op_state->storage_.args_.emplace((As&&)as...);
     op_state->storage_.proxy_.emplace([&] {
       return Connect(std::apply(std::move(op_state->func_), args), std::move(op_state->receiver_));
     });
@@ -75,8 +75,8 @@ struct _Operation<CvrefSender, Receiver, Func>::type {
 
   template <typename Receiver2>
   type(CvrefSender&& sender, Receiver2&& receiver, Func func)
-      : op_state2_(Connect((CvrefSender &&) sender, _receiver_t{this})),
-        receiver_((Receiver2 &&) receiver),
+      : op_state2_(Connect((CvrefSender&&)sender, _receiver_t{this})),
+        receiver_((Receiver2&&)receiver),
         func_(std::move(func)) {}
 
   connect_result_t<CvrefSender, _receiver_t> op_state2_;
@@ -103,8 +103,8 @@ struct _Sender<Sender, Func>::type {
   template <typename Self, typename Receiver, _decays_to<Self, type, int> = 0>
   friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver)
       -> _operation_t<Self, Receiver> {
-    return _operation_t<Self, Receiver>{((Self &&) self).sender_, (Receiver &&) receiver,
-                                        ((Self &&) self).func_};
+    return _operation_t<Self, Receiver>{((Self&&)self).sender_, (Receiver&&)receiver,
+                                        ((Self&&)self).func_};
   }
   Sender sender_;
   Func func_;
@@ -119,7 +119,7 @@ struct let_value_t {
                         int> = 0>
   auto operator()(Sender&& sender, Func func) const {
     auto scheduler = GetCompletionScheduler(sender);
-    return tag_invoke(let_value_t{}, std::move(scheduler), (Sender &&) sender, std::move(func));
+    return tag_invoke(let_value_t{}, std::move(scheduler), (Sender&&)sender, std::move(func));
   }
 
   template <typename Sender, typename Func,
@@ -128,7 +128,7 @@ struct let_value_t {
                             tag_invocable<let_value_t, Sender, Func>,
                         int> = 0>
   auto operator()(Sender&& sender, Func func) const {
-    return tag_invoke(let_value_t{}, (Sender &&) sender, std::move(func));
+    return tag_invoke(let_value_t{}, (Sender&&)sender, std::move(func));
   }
 
   template <typename Sender, typename Func,
@@ -137,7 +137,7 @@ struct let_value_t {
                             !tag_invocable<let_value_t, Sender>,
                         int> = 0>
   sender_t<Sender, Func> operator()(Sender&& sender, Func func) const {
-    return {(Sender &&) sender, std::move(func)};
+    return {(Sender&&)sender, std::move(func)};
   }
   template <typename Func>
   _BinderBack<let_value_t, Func> operator()(Func func) const {

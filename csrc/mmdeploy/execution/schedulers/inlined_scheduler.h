@@ -27,7 +27,7 @@ struct _Sender {
 
   template <typename Receiver>
   friend auto tag_invoke(connect_t, _Sender, Receiver&& receiver) -> operation_t<Receiver> {
-    return {(Receiver &&) receiver};
+    return {(Receiver&&)receiver};
   }
 };
 
@@ -51,14 +51,14 @@ struct _Receiver<Sender>::type {
   std::optional<completion_signatures_of_t<Sender>>* data_;
   template <typename... As>
   friend void tag_invoke(set_value_t, type&& r, As&&... as) noexcept {
-    r.data_->emplace((As &&) as...);
+    r.data_->emplace((As&&)as...);
   }
 };
 
 template <typename Sender>
 completion_signatures_of_t<Sender> tag_invoke(sync_wait_t, InlineScheduler, Sender&& sender) {
   std::optional<completion_signatures_of_t<Sender>> data;
-  auto op_state = Connect(((Sender &&) sender), _inline_sched::receiver_t<Sender>{&data});
+  auto op_state = Connect(((Sender&&)sender), _inline_sched::receiver_t<Sender>{&data});
   Start(op_state);
   return std::move(data).value();
 }

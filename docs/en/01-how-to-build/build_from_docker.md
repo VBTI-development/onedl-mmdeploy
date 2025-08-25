@@ -35,7 +35,7 @@ docker pull $TAG
 If the prebuilt docker images do not meet your requirements,
 then you can build your own image by running the following script.
 The docker file is `docker/Release/Dockerfile`and its building argument is `MMDEPLOY_VERSION`,
-which can be a [tag](https://github.com/open-mmlab/mmdeploy/tags) or a branch from [mmdeploy](https://github.com/open-mmlab/mmdeploy).
+which can be a [tag](https://github.com/vbti-development/onedl-mmdeploy/tags) or a branch from [mmdeploy](https://github.com/vbti-development/onedl-mmdeploy).
 
 ```shell
 export MMDEPLOY_VERSION=main

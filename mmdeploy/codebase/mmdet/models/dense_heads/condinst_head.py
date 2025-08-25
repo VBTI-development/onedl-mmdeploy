@@ -164,7 +164,7 @@ def condinst_mask_head__predict_by_feat(self,
 
 
 def _parse_dynamic_params(self, params: Tensor):
-    """parse the dynamic params for dynamic conv."""
+    """Parse the dynamic params for dynamic conv."""
     batch_size = params.shape[0]
     num_insts = params.shape[1]
     params = params.permute(1, 0, 2)
@@ -188,7 +188,7 @@ def _parse_dynamic_params(self, params: Tensor):
 
 def _dynamic_conv_forward(features: Tensor, weights: List[Tensor],
                           biases: List[Tensor]):
-    """dynamic forward, each layer follow a relu."""
+    """Dynamic forward, each layer follow a relu."""
     n_layers = len(weights)
     x = features.flatten(0, 1).flatten(2)
     for i, (w, b) in enumerate(zip(weights, biases)):

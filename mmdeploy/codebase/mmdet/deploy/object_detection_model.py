@@ -953,7 +953,7 @@ class RKNNModel(End2EndModel):
             deploy_cfg=self.deploy_cfg)
 
     def _get_bboxes(self, outputs: List[Tensor], metainfos: Any):
-        """get bboxes from output by meta infos.
+        """Get bboxes from output by meta infos.
 
         Args:
             outputs (List[Tensor]): The backend wrapper outputs.

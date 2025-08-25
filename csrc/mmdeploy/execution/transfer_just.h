@@ -16,13 +16,13 @@ namespace _transfer_just {
 struct transfer_just_t {
   template <typename Scheduler, typename... As,
             std::enable_if_t<tag_invocable<transfer_just_t, Scheduler, As...>, int> = 0>
-  auto operator()(Scheduler&& scheduler, As&&... as) const {
-    return tag_invoke(transfer_just_t{}, (Scheduler &&) scheduler, (As &&) as...);
+  auto operator()(Scheduler &&scheduler, As &&...as) const {
+    return tag_invoke(transfer_just_t{}, (Scheduler &&)scheduler, (As &&)as...);
   }
   template <typename Scheduler, typename... As,
             std::enable_if_t<!tag_invocable<transfer_just_t, Scheduler, As...>, int> = 0>
-  auto operator()(Scheduler&& scheduler, As&&... as) const {
-    return Transfer(Just((As &&) as...), (Scheduler &&) scheduler);
+  auto operator()(Scheduler &&scheduler, As &&...as) const {
+    return Transfer(Just((As &&)as...), (Scheduler &&)scheduler);
   }
 };
 

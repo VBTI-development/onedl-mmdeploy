@@ -16,7 +16,7 @@ b) Convert model
 
 ```bash
 export MODEL_CONFIG=/path/to/mmpretrain/configs/resnet/resnet18_8xb32_in1k.py
-export MODEL_PATH=https://download.openmmlab.com/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth
+export MODEL_PATH=https://mmassets.onedl.ai/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth
 
 # Convert the model
 cd /path/to/mmdeploy

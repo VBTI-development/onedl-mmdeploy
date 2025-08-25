@@ -32,7 +32,7 @@ struct _Receiver<SharedState>::type {
   template <typename... As>
   friend void tag_invoke(set_value_t, type&& self, As&&... as) noexcept {
     auto& state = self.shared_state_;
-    state.data_.emplace((As &&) as...);
+    state.data_.emplace((As&&)as...);
     state._Notify();
   }
 };
@@ -47,8 +47,7 @@ struct _SharedState {
 
   std::atomic<void*> head_{nullptr};
 
-  explicit _SharedState(Sender& sender)
-      : op_state2_(Connect((Sender &&) sender, Receiver{*this})) {}
+  explicit _SharedState(Sender& sender) : op_state2_(Connect((Sender&&)sender, Receiver{*this})) {}
 
   void _Notify() noexcept {
     void* const completion_state = static_cast<void*>(this);
@@ -130,7 +129,7 @@ struct _Sender<Sender>::type {
 
   template <typename Self, typename Receiver, _decays_to<Self, type, int> = 0>
   friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver) -> _operation_t<Receiver> {
-    return _operation_t<Receiver>((Receiver &&) receiver, self.shared_state_);
+    return _operation_t<Receiver>((Receiver&&)receiver, self.shared_state_);
   }
 };
 
@@ -141,7 +140,7 @@ struct split_t {
           _is_sender<Sender> && _tag_invocable_with_completion_scheduler<split_t, Sender>, int> = 0>
   auto operator()(Sender&& sender) const {
     auto scheduler = GetCompletionScheduler(sender);
-    return tag_invoke(split_t{}, std::move(scheduler), (Sender &&) sender);
+    return tag_invoke(split_t{}, std::move(scheduler), (Sender&&)sender);
   }
 
   template <typename Sender,
@@ -150,7 +149,7 @@ struct split_t {
                                  tag_invocable<split_t, Sender>,
                              int> = 0>
   auto operator()(Sender&& sender) const {
-    return tag_invoke(split_t{}, (Sender &&) sender);
+    return tag_invoke(split_t{}, (Sender&&)sender);
   }
 
   template <typename Sender,
@@ -159,7 +158,7 @@ struct split_t {
                                  !tag_invocable<split_t, Sender>,
                              int> = 0>
   sender_t<Sender> operator()(Sender&& sender) const {
-    return sender_t<Sender>{(Sender &&) sender};
+    return sender_t<Sender>{(Sender&&)sender};
   }
   _BinderBack<split_t> operator()() const { return {{}, {}, {}}; }
 };

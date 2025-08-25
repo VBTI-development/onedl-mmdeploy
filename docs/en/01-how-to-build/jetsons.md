@@ -113,7 +113,7 @@ cmake --version
 
 ## Install Dependencies
 
-The Model Converter of MMDeploy on Jetson platforms depends on [MMCV](https://github.com/open-mmlab/mmcv) and the inference engine [TensorRT](https://developer.nvidia.com/tensorrt).
+The Model Converter of MMDeploy on Jetson platforms depends on [MMCV](https://github.com/vbti-development/onedl-mmcv) and the inference engine [TensorRT](https://developer.nvidia.com/tensorrt).
 While MMDeploy C/C++ Inference SDK relies on [spdlog](https://github.com/gabime/spdlog), OpenCV and [ppl.cv](https://github.com/openppl-public/ppl.cv) and so on, as well as TensorRT.
 Thus, in the following sections, we will describe how to prepare TensorRT.
 And then, we will present the way to install dependencies of Model Converter and C/C++ Inference SDK respectively.
@@ -158,11 +158,11 @@ conda activate mmdeploy
 
 #### Install MMCV
 
-[MMCV](https://github.com/open-mmlab/mmcv) has not provided prebuilt package for Jetson platforms, so we have to build it from source.
+[MMCV](https://github.com/vbti-development/onedl-mmcv) has not provided prebuilt package for Jetson platforms, so we have to build it from source.
 
 ```shell
 sudo apt-get install -y libssl-dev
-git clone --branch 2.x https://github.com/open-mmlab/mmcv.git
+git clone --branch 2.x https://github.com/vbti-development/onedl-mmcv.git
 cd mmcv
 MMCV_WITH_OPS=1 pip install -e .
 ```
@@ -236,7 +236,7 @@ sudo apt-get install -y libspdlog-dev
 [ppl.cv](https://github.com/openppl-public/ppl.cv) is a high-performance image processing library of [openPPL](https://openppl.ai/home)
 
 ```shell
-git clone https://github.com/openppl-public/ppl.cv.git
+git clone https://github.com/VBTI-development/ppl.cv.git
 cd ppl.cv
 export PPLCV_DIR=$(pwd)
 echo -e '\n# set environment variable for ppl.cv' >> ~/.bashrc
@@ -251,7 +251,7 @@ It takes about 15 minutes to install ppl.cv on a Jetson Nano. So, please be pati
 ## Install MMDeploy
 
 ```shell
-git clone -b main --recursive https://github.com/open-mmlab/mmdeploy.git
+git clone -b main --recursive https://github.com/vbti-development/onedl-mmdeploy.git
 cd mmdeploy
 export MMDEPLOY_DIR=$(pwd)
 ```
@@ -306,12 +306,12 @@ It takes about 9 minutes to build SDK libraries on a Jetson Nano. So, please be 
 
 Before running this demo, you need to convert model files to be able to use with this SDK.
 
-1. Install [MMDetection](https://github.com/open-mmlab/mmdetection) which is needed for model conversion
+1. Install [MMDetection](https://github.com/vbti-development/onedl-mmdetection) which is needed for model conversion
 
 MMDetection is an open source object detection toolbox based on PyTorch
 
 ```shell
-git clone -b 3.x https://github.com/open-mmlab/mmdetection.git
+git clone -b 3.x https://github.com/vbti-development/onedl-mmdetection.git
 cd mmdetection
 pip install -r requirements/build.txt
 pip install -v -e .  # or "python setup.py develop"
@@ -319,7 +319,7 @@ pip install -v -e .  # or "python setup.py develop"
 
 2. Follow [this document](../02-how-to-run/convert_model.md) on how to convert model files.
 
-For this example, we have used [retinanet_r18_fpn_1x_coco.py](https://github.com/open-mmlab/mmdetection/blob/3.x/configs/retinanet/retinanet_r18_fpn_1x_coco.py) as the model config, and [this file](https://download.openmmlab.com/mmdetection/v2.0/retinanet/retinanet_r18_fpn_1x_coco/retinanet_r18_fpn_1x_coco_20220407_171055-614fd399.pth) as the corresponding checkpoint file. Also for deploy config, we have used [detection_tensorrt_dynamic-320x320-1344x1344.py](https://github.com/open-mmlab/mmdeploy/tree/main/configs/mmdet/detection/detection_tensorrt_dynamic-320x320-1344x1344.py)
+For this example, we have used [retinanet_r18_fpn_1x_coco.py](https://github.com/vbti-development/onedl-mmdetection/blob/main/configs/retinanet/retinanet_r18_fpn_1x_coco.py) as the model config, and [this file](https://mmassets.onedl.ai/mmdetection/v2.0/retinanet/retinanet_r18_fpn_1x_coco/retinanet_r18_fpn_1x_coco_20220407_171055-614fd399.pth) as the corresponding checkpoint file. Also for deploy config, we have used [detection_tensorrt_dynamic-320x320-1344x1344.py](https://github.com/vbti-development/onedl-mmdeploy/tree/main/configs/mmdet/detection/detection_tensorrt_dynamic-320x320-1344x1344.py)
 
 ```shell
 python ./tools/deploy.py \
@@ -364,7 +364,7 @@ The above inference is done on a [Seeed reComputer built with Jetson Nano module
 - `#assertion/root/workspace/mmdeploy/csrc/backend_ops/tensorrt/batched_nms/trt_batched_nms.cpp,98` or `pre_top_k need to be reduced for devices with arch 7.2`
 
   1. Set `MAX N` mode and perform `sudo nvpmodel -m 0 && sudo jetson_clocks`.
-  2. Reduce the number of `pre_top_k` in deploy config file like [mmdet pre_top_k](https://github.com/open-mmlab/mmdeploy/blob/34879e638cc2db511e798a376b9a4b9932660fe1/configs/mmdet/_base_/base_static.py#L13) does, e.g., `1000`.
+  2. Reduce the number of `pre_top_k` in deploy config file like [mmdet pre_top_k](https://github.com/vbti-development/onedl-mmdeploy/blob/34879e638cc2db511e798a376b9a4b9932660fe1/configs/mmdet/_base_/base_static.py#L13) does, e.g., `1000`.
   3. Convert the model again and try SDK demo again.
 
 ### FAQ

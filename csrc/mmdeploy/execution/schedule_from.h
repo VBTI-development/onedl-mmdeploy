@@ -55,7 +55,7 @@ struct _Receiver1<Scheduler, CvrefSender, Receiver>::type {
 
   template <typename... As>
   friend void tag_invoke(set_value_t, type&& self, As&&... as) noexcept {
-    self.op_state_->data_.emplace((As &&) as...);
+    self.op_state_->data_.emplace((As&&)as...);
     auto sender = Schedule(self.op_state_->scheduler_);
     auto& op_state2 = self.op_state_->op_state2_.emplace(
         __conv{[&] { return Connect(std::move(sender), _receiver2_t{self.op_state_}); }});
@@ -77,8 +77,8 @@ struct _Operation1<Scheduler, CvrefSender, Receiver>::type {
   template <class Receiver2>
   type(Scheduler sched, CvrefSender&& sender, Receiver2&& receiver)
       : scheduler_(sched),
-        receiver_((Receiver2 &&) receiver),
-        op_state1_(Connect((CvrefSender &&) sender, _receiver1_t{this})) {}
+        receiver_((Receiver2&&)receiver),
+        op_state1_(Connect((CvrefSender&&)sender, _receiver1_t{this})) {}
 
   type(const type&) = delete;
   type(_Operation1&&) noexcept = delete;
@@ -105,7 +105,7 @@ struct _Sender<Scheduler, Sender>::type {
   template <typename Self, typename Receiver, _decays_to<Self, type, int> = 0>
   friend auto tag_invoke(connect_t, Self&& self, Receiver&& receiver)
       -> operation1_t<Scheduler, _copy_cvref_t<Self, Sender>, remove_cvref_t<Receiver>> {
-    return {self.scheduler_, ((Self &&) self).sender_, (Receiver &&) receiver};
+    return {self.scheduler_, ((Self&&)self).sender_, (Receiver&&)receiver};
   }
 
   friend Scheduler tag_invoke(get_completion_scheduler_t, const type& self) noexcept {
@@ -119,14 +119,14 @@ struct schedule_from_t {
                 _is_sender<Sender> && tag_invocable<schedule_from_t, Scheduler, Sender>, int> = 0>
   auto operator()(Scheduler&& scheduler, Sender&& sender) const
       -> tag_invoke_result_t<schedule_from_t, Scheduler, Sender> {
-    return tag_invoke(schedule_from_t{}, (Scheduler &&) scheduler, (Sender &&) sender);
+    return tag_invoke(schedule_from_t{}, (Scheduler&&)scheduler, (Sender&&)sender);
   }
 
   template <typename Scheduler, typename Sender,
             std::enable_if_t<
                 _is_sender<Sender> && !tag_invocable<schedule_from_t, Scheduler, Sender>, int> = 0>
   sender_t<Scheduler, Sender> operator()(Scheduler&& scheduler, Sender&& sender) const {
-    return {(Scheduler &&) scheduler, (Sender &&) sender};
+    return {(Scheduler&&)scheduler, (Sender&&)sender};
   }
 };
 

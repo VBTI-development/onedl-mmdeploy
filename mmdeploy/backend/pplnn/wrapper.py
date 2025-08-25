@@ -15,6 +15,7 @@ from .utils import create_runtime, register_engines
 @BACKEND_WRAPPER.register_module(Backend.PPLNN.value)
 class PPLNNWrapper(BaseWrapper):
     """PPLNN wrapper for inference.
+
     Args:
         onnx_file (str): Path of input ONNX model file.
         algo_file (str): Path of PPLNN algorithm file.

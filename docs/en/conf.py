@@ -16,7 +16,6 @@ import subprocess
 import sys
 
 import pytorch_sphinx_theme
-from m2r import MdInclude
 from recommonmark.transform import AutoStructify
 from sphinx.builders.html import StandaloneHTMLBuilder
 
@@ -30,7 +29,7 @@ __version__ = locals()['__version__']
 # -- Project information -----------------------------------------------------
 
 project = 'mmdeploy'
-copyright = '2021-2024, OpenMMLab'
+copyright = '2025, VBTI'
 author = 'MMDeploy Authors'
 
 # The short X.Y version
@@ -121,12 +120,14 @@ html_theme_path = [pytorch_sphinx_theme.get_html_theme_path()]
 # documentation.
 #
 html_theme_options = {
-    'logo_url': 'https://mmdeploy.readthedocs.io/en/latest/',
+    'logo_url':
+    'https://onedl-mmdeploy.readthedocs.io/en/latest/',
     'menu': [{
         'name': 'GitHub',
-        'url': 'https://github.com/open-mmlab/mmdeploy'
+        'url': 'https://github.com/vbti-development/onedl-mmdeploy'
     }],
-    'menu_lang': 'en'
+    'menu_lang':
+    'en'
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -230,10 +231,6 @@ def setup(app):
     # Add hook for building doxygen xml when needed
     app.connect('builder-inited', generate_doxygen_xml)
     app.add_config_value('no_underscore_emphasis', False, 'env')
-    app.add_config_value('m2r_parse_relative_links', False, 'env')
-    app.add_config_value('m2r_anonymous_references', False, 'env')
-    app.add_config_value('m2r_disable_inline_math', False, 'env')
-    app.add_directive('mdinclude', MdInclude)
     app.add_config_value('recommonmark_config', {
         'auto_toc_tree_section': 'Contents',
         'enable_eval_rst': True,

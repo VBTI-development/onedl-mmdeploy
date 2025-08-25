@@ -284,7 +284,7 @@ std::tuple<float, float, vector<bool>> Tracker::GetTrackPoseSimilarity(Track& tr
     auto fcount = static_cast<float>(count);
     dist = dist / fcount - fcount / static_cast<float>(dists.size());
   } else {
-    dist = kInf;
+    dist = kInf;  // codespell:ignore
   }
 
   auto iou = intersection_over_union(track.predicted_bbox(), bbox);

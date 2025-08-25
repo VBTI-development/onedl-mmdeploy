@@ -5,7 +5,7 @@ ARG PYTHON_VERSION=3.8
 ARG TORCH_VERSION=1.10.0
 ARG TORCHVISION_VERSION=0.11.0
 ARG ONNXRUNTIME_VERSION=1.8.1
-ARG PPLCV_VERSION=0.7.0
+ARG PPLCV_VERSION=0.8.0
 ENV FORCE_CUDA="1"
 ARG MMCV_VERSION=">=2.0.0rc2"
 ARG MMENGINE_VERSION=">=0.3.0"
@@ -65,7 +65,7 @@ RUN cp -r /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tensorrt* /opt/co
 ENV ONNXRUNTIME_DIR=/root/workspace/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}
 ENV TENSORRT_DIR=/workspace/tensorrt
 ARG VERSION
-RUN git clone -b main https://github.com/open-mmlab/mmdeploy &&\
+RUN git clone -b main https://github.com/vbti-development/onedl-mmdeploy &&\
     cd mmdeploy &&\
     if [ -z ${VERSION} ] ; then echo "No MMDeploy version passed in, building on main" ; else git checkout tags/v${VERSION} -b tag_v${VERSION} ; fi &&\
     git submodule update --init --recursive &&\
@@ -77,7 +77,7 @@ RUN git clone -b main https://github.com/open-mmlab/mmdeploy &&\
     /opt/conda/bin/mim install -e .
 
 ### build sdk
-RUN git clone https://github.com/openppl-public/ppl.cv.git &&\
+RUN git clone https://github.com/VBTI-development/ppl.cv.git &&\
     cd ppl.cv &&\
     git checkout tags/v${PPLCV_VERSION} -b v${PPLCV_VERSION} &&\
     ./build.sh cuda

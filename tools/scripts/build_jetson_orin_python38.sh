@@ -100,7 +100,7 @@ install_mmcv_pycuda() {
     elif [ ! -e "mmcv" ];then
         # source build mmcv and pycuda
         sudo apt-get install -y libssl-dev
-        git clone https://github.com/open-mmlab/mmcv.git --branch v1.5.1 --depth=1
+        git clone https://github.com/vbti-development/onedl-mmcv.git --branch v1.5.1 --depth=1
         cd mmcv
         echo 'Building mmcv-full with MMCV_WITH_OPS=1 and pycuda, it may take an hour, please wait..'
         MMCV_WITH_OPS=1 python3 -m pip install -e .
@@ -114,7 +114,7 @@ install_mmcv_pycuda() {
 
 install_pplcv() {
     if [ ! -e "ppl.cv" ];then
-        git clone https://github.com/openppl-public/ppl.cv.git --depth=1 --recursive
+        git clone https://github.com/VBTI-development/ppl.cv.git --depth=1 --recursive
     fi
     cd ppl.cv
     ./build.sh cuda
@@ -129,7 +129,7 @@ install_mmdeploy() {
     python3 -m pip install versioned-hdf5
 
     # build and install mmdeploy
-    cd ../mmdeploy
+    cd ../onedl-mmdeploy
     git submodule init
     git submodule update
 

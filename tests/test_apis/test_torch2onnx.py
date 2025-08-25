@@ -59,8 +59,8 @@ def get_deploy_cfg(input_name, output_name, dynamic_axes):
             backend_config=dict(type='onnxruntime')))
 
 
-@pytest.mark.parametrize('input_name', [input_name])
-@pytest.mark.parametrize('output_name', [output_name])
+@pytest.mark.parametrize('input_name', [input_name], ids='0')
+@pytest.mark.parametrize('output_name', [output_name], ids='0')
 @pytest.mark.parametrize('dynamic_axes',
                          [dynamic_axes_dict, dynamic_axes_list])
 def test_torch2onnx(input_name, output_name, dynamic_axes):

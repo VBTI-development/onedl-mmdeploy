@@ -56,8 +56,9 @@ def create_extractor(model: onnx.ModelProto) -> onnx.utils.Extractor:
     """
     assert version.parse(onnx.__version__) >= version.parse('1.8.0')
     # patch extractor
-    onnx.utils.Extractor._dfs_search_reachable_nodes = \
-        _dfs_search_reachable_nodes_fast
+    if version.parse(onnx.__version__) < version.parse('1.15.0'):
+        onnx.utils.Extractor._dfs_search_reachable_nodes = \
+            _dfs_search_reachable_nodes_fast
 
     extractor = onnx.utils.Extractor(model)
     return extractor

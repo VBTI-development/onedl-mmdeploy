@@ -7,7 +7,7 @@ ARG TENSORRT_URL
 ARG CUDA_VERSION=11.8
 
 ARG OPENCV_VERSION=4.5.5
-ARG PPLCV_VERSION=0.7.0
+ARG PPLCV_VERSION=0.8.0
 ARG TENSORRT_VERSION=8.6.1.6
 ARG ONNXRUNTIME_VERSION=1.15.1
 
@@ -82,7 +82,7 @@ RUN wget https://github.com/opencv/opencv/archive/refs/tags/${OPENCV_VERSION}.ta
 
 ENV OpenCV_DIR=/root/workspace/opencv-${OPENCV_VERSION}/install/lib/cmake/opencv4
 
-RUN git clone --depth 1 --branch v${PPLCV_VERSION} https://github.com/openppl-public/ppl.cv.git  &&\
+RUN git clone --depth 1 --branch v${PPLCV_VERSION} https://github.com/VBTI-development/ppl.cv.git  &&\
     cd ppl.cv &&\
     ./build.sh cuda &&\
     mv cuda-build/install ./ &&\

@@ -59,7 +59,7 @@ namespace MMDeploy
 
     /// <summary>
     /// Single detection result of a picture.
-    /// A picture may contains multiple reuslts.
+    /// A picture may contains multiple results.
     /// </summary>
     public struct Detect
     {
@@ -125,7 +125,7 @@ namespace MMDeploy
         public List<Detect> Results;
 
         /// <summary>
-        /// Init Reuslts.
+        /// Init results.
         /// </summary>
         public void Init()
         {

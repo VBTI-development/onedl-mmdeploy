@@ -58,7 +58,7 @@ if [ $backend == "trt" ]; then
 fi
 
 # prepare dataset
-wget -P data/ https://github.com/open-mmlab/mmdeploy/releases/download/v0.1.0/imagenet-val100.zip
+wget -P data/ https://github.com/vbti-development/onedl-mmdeploy/releases/download/v0.1.0/imagenet-val100.zip
 unzip data/imagenet-val100.zip -d data/
 
 echo "Running test with $backend"

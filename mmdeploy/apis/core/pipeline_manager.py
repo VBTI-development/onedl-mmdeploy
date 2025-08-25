@@ -14,7 +14,7 @@ except Exception:
 
 
 def _get_func_name(func: Callable) -> str:
-    """get function name."""
+    """Get function name."""
     assert isinstance(func, Callable), f'{func} is not a Callable object.'
     _func_name = None
     if hasattr(func, '__qualname__'):
@@ -54,26 +54,26 @@ class PipelineCaller:
 
     @property
     def is_multiprocess_available(self) -> bool:
-        """check if multiprocess is available for this pipeline."""
+        """Check if multiprocess is available for this pipeline."""
         return self._is_multiprocess_available
 
     @property
     def is_multiprocess(self) -> bool:
-        """check if this pipeline is multiprocess."""
+        """Check if this pipeline is multiprocess."""
         return self._enable_multiprocess
 
     @property
     def input_hooks(self) -> List[Callable]:
-        """get input hooks."""
+        """Get input hooks."""
         return self._input_hooks
 
     @property
     def output_hooks(self) -> List[Callable]:
-        """get output hooks."""
+        """Get output hooks."""
         return self._output_hooks
 
     def pop_mp_output(self, call_id: int = None) -> Any:
-        """pop multiprocess output."""
+        """Pop multiprocess output."""
         assert self._mp_dict is not None, 'mp_dict is None.'
         call_id = self._call_id if call_id is None else call_id
         if call_id not in self._mp_dict:
@@ -127,7 +127,7 @@ class PipelineResult:
         return self._call_id
 
     def get(self) -> Any:
-        """get result."""
+        """Get result."""
         return self._manager.get_result_sync(self._call_id)
 
 
@@ -146,11 +146,11 @@ class PipelineManager:
 
     @property
     def mp_manager(self) -> Optional[mp.Manager]:
-        """get multiprocess manager."""
+        """Get multiprocess manager."""
         return self._mp_manager
 
     def get_caller(self, func_name: FUNC_NAME_TYPE) -> PipelineCaller:
-        """get caller of given function."""
+        """Get caller of given function."""
         if isinstance(func_name, Callable):
             func_name = _get_func_name(func_name)
         assert func_name in self._callers, \
@@ -161,7 +161,7 @@ class PipelineManager:
                          val_name: str,
                          val: Any,
                          func_name: Optional[FUNC_NAME_TYPE] = None) -> None:
-        """helper to set any caller value."""
+        """Helper to set any caller value."""
         if func_name is None:
             for func_name_ in self._callers:
                 setattr(self.get_caller(func_name_), val_name, val)
@@ -169,14 +169,14 @@ class PipelineManager:
             setattr(self.get_caller(func_name), val_name, val)
 
     def _create_mp_manager(self) -> None:
-        """create multiprocess manager if not exists."""
+        """Create multiprocess manager if not exists."""
         if self._mp_manager is None:
             self._mp_manager = mp.Manager()
 
     def _enable_multiprocess_single(self,
                                     val: bool,
                                     func_name: FUNC_NAME_TYPE = None) -> None:
-        """implement of enable_multiprocess."""
+        """Implement of enable_multiprocess."""
         pipe_caller = self.get_caller(func_name)
         # check if multiprocess is available for this function
         if not pipe_caller.is_multiprocess_available:
@@ -193,7 +193,7 @@ class PipelineManager:
         func_names: Optional[Union[FUNC_NAME_TYPE,
                                    Sequence[FUNC_NAME_TYPE]]] = None
     ) -> None:
-        """enable multiprocess for pipeline function.
+        """Enable multiprocess for pipeline function.
 
         Args:
             val (bool): enable or disable multiprocess.
@@ -214,7 +214,7 @@ class PipelineManager:
     def set_mp_async(self,
                      val: bool,
                      func_name: Optional[FUNC_NAME_TYPE] = None) -> None:
-        """set multiprocess async of the pipeline function.
+        """Set multiprocess async of the pipeline function.
 
         Args:
             val (bool): enable async call.
@@ -229,7 +229,7 @@ class PipelineManager:
         func_names: Optional[Union[FUNC_NAME_TYPE,
                                    Sequence[FUNC_NAME_TYPE]]] = None
     ) -> None:
-        """set log level of the pipeline function.
+        """Set log level of the pipeline function.
 
         Args:
             level (int): the log level.
@@ -242,7 +242,7 @@ class PipelineManager:
             self.__set_caller_val('_log_level', level, func_name)
 
     def get_input_hooks(self, func_name: FUNC_NAME_TYPE):
-        """get input hooks of given function name.
+        """Get input hooks of given function name.
 
         Args:
             func_name (str): function name.
@@ -251,7 +251,7 @@ class PipelineManager:
         return pipe_caller.input_hooks
 
     def get_output_hooks(self, func_name: FUNC_NAME_TYPE):
-        """get output hooks of given function name.
+        """Get output hooks of given function name.
 
         Args:
             func_name (str): function name.
@@ -261,7 +261,7 @@ class PipelineManager:
 
     def call_function_local(self, func_name: FUNC_NAME_TYPE, *args,
                             **kwargs) -> Any:
-        """call pipeline function.
+        """Call pipeline function.
 
         Args:
             func_name (str): function name to be called.
@@ -276,7 +276,7 @@ class PipelineManager:
 
     def call_function_async(self, func_name: FUNC_NAME_TYPE, *args,
                             **kwargs) -> int:
-        """call pipeline function.
+        """Call pipeline function.
 
         Args:
             func_name (str): function name to be called.
@@ -298,7 +298,7 @@ class PipelineManager:
         return call_id
 
     def get_result_sync(self, call_id: int):
-        """get result of async call."""
+        """Get result of async call."""
         assert call_id in self._proc_async, f'Unknown call id: {call_id}'
         func_name, proc = self._proc_async.pop(call_id)
         proc.join()
@@ -307,7 +307,7 @@ class PipelineManager:
         return ret
 
     def call_function(self, func_name: FUNC_NAME_TYPE, *args, **kwargs) -> Any:
-        """call pipeline function.
+        """Call pipeline function.
 
         Args:
             func_name (str): function name to be called.
@@ -328,7 +328,7 @@ class PipelineManager:
     def register_pipeline(self,
                           is_multiprocess_available: bool = True,
                           log_level: int = logging.DEBUG):
-        """register the pipeline function."""
+        """Register the pipeline function."""
 
         def _register(func):
             assert isinstance(func, Callable), f'{func} is not Callable.'

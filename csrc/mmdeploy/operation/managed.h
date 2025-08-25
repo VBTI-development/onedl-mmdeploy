@@ -103,13 +103,13 @@ inline Result<void> _check() { return success(); }
 
 template <typename T, typename... Ts>
 Result<void> _check(T&& x, Ts&&... xs) {
-  return _check((Ts &&) xs...);
+  return _check((Ts&&)xs...);
 }
 
 template <typename T, typename... Ts>
 Result<void> _check(Result<T>& x, Ts&&... xs) {
   OUTCOME_TRY(x);
-  return _check((Ts &&) xs...);
+  return _check((Ts&&)xs...);
 }
 
 template <typename Sig>
@@ -124,14 +124,14 @@ struct apply_impl<Ret (C::*)(Args...)> {
 
   template <typename Op, typename... As>
   Result<void> operator()(Op& op, As&&... as) const {
-    return apply(op, std::index_sequence_for<Args...>{}, (As &&) as...);
+    return apply(op, std::index_sequence_for<Args...>{}, (As&&)as...);
   }
 
   template <typename Op, typename... As, size_t... Is>
   Result<void> apply(Op& op, std::index_sequence<Is...>, As&&... as) const {
     // transform input args and store them in a tuple
     std::tuple<typename _handler<Args>::type...> tmps{
-        _handler<Args>::input((As &&) as, device, stream)...};
+        _handler<Args>::input((As&&)as, device, stream)...};
 
     // check if any copy operations are failed
     OUTCOME_TRY(_check(std::get<Is>(tmps)...));
@@ -148,7 +148,7 @@ struct apply_impl<Ret (C::*)(Args...)> {
 template <typename Op, typename... Args>
 Result<void> apply(Op& op, Args&&... args) {
   _apply::apply_impl<decltype(&Op::apply)> impl{op.device(), op.stream()};
-  return impl(op, (Args &&) args...);
+  return impl(op, (Args&&)args...);
 }
 
 }  // namespace _apply
@@ -163,12 +163,12 @@ class Managed {
   template <typename... Args>
   Result<void> Apply(Args&&... args) {
     assert(op_);
-    return _apply::apply(*op_, (Args &&) args...);
+    return _apply::apply(*op_, (Args&&)args...);
   }
 
   template <typename... Args>
   static Managed<Op> Create(Args&&... args) {
-    return Managed<Op>(operation::Create<Op>((Args &&) args...));
+    return Managed<Op>(operation::Create<Op>((Args&&)args...));
   }
 
  private:

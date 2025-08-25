@@ -14,7 +14,7 @@ A）Use pre-generated kernel code
 
 i) Download the kernel code from here，unzip it and copy the csrc folder to the mmdeploy root folder.
 
-[elena_kernel-20220823.tar.gz](https://github.com/open-mmlab/mmdeploy/files/9399795/elena_kernel-20220823.tar.gz)
+[elena_kernel-20220823.tar.gz](https://mmassets.onedl.ai/mmdeploy/files/elena_kernel-20220823.tar.gz)
 
 ii) Add option `-DMMDEPLOY_ELENA_FUSION=ON` when compile MMDeploy.
 
@@ -59,7 +59,7 @@ Add `--dump-info` argument when convert a model, this will generate files that S
 
 ```bash
 $ export MODEL_CONFIG=/path/to/mmpretrain/configs/resnet/resnet18_8xb32_in1k.py
-$ export MODEL_PATH=https://download.openmmlab.com/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth
+$ export MODEL_PATH=https://mmassets.onedl.ai/mmclassification/v0/resnet/resnet18_8xb32_in1k_20210831-fbbb1da6.pth
 
 $ python tools/deploy.py \
     configs/mmpretrain/classification_onnxruntime_static.py \
