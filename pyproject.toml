@@ -124,7 +124,8 @@ exclude_lines = [
 [tool.pytest.ini_options]
 addopts = [
     "--ignore=src",
-    "--ignore=third_party"
+    "--ignore=third_party",
+    "--ignore=docs",
 ]
 
 [tool.yapf]
