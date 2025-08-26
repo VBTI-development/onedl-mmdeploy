@@ -14,10 +14,9 @@ from mmdeploy.utils import Codebase, load_config
 from mmdeploy.utils.test import SwitchBackendWrapper
 
 try:
-    import_codebase(Codebase.MMAGIC)
+    import_codebase(Codebase.MMOCR)
 except ImportError:
-    pytest.skip(
-        f'{Codebase.MMAGIC} is not installed.', allow_module_level=True)
+    pytest.skip(f'{Codebase.MMOCR} is not installed.', allow_module_level=True)
 
 model_cfg_path = 'tests/test_codebase/test_mmocr/data/dbnet.py'
 model_cfg = load_config(model_cfg_path)[0]
