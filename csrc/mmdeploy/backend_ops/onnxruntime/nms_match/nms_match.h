@@ -16,8 +16,13 @@ struct NMSMatchKernel {
 
   void Compute(OrtKernelContext* context);
 
+#if ORT_API_VERSION >= 19
+  OrtStatusPtr ComputeV2(OrtKernelContext* context);
+#endif
+
  private:
-  Ort::CustomOpApi ort_;
+  // Ort::CustomOpApi ort_;
+  const OrtApi& ort_;
   const OrtKernelInfo* info_;
   Ort::AllocatorWithDefaultOptions allocator_;
 };
@@ -26,6 +31,13 @@ struct NMSMatchOp : Ort::CustomOpBase<NMSMatchOp, NMSMatchKernel> {
   void* CreateKernel(const OrtApi& api, const OrtKernelInfo* info) const {
     return new NMSMatchKernel(api, info);
   }
+#if ORT_API_VERSION >= 19
+  OrtStatusPtr CreateKernelV2(const OrtApi& api, const OrtKernelInfo* info,
+                              void** op_kernel) const {
+    *op_kernel = new NMSMatchKernel(api, info);
+    return nullptr;
+  };
+#endif
   const char* GetName() const { return "NMSMatch"; }
 
   size_t GetInputTypeCount() const { return 4; }

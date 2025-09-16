@@ -28,8 +28,8 @@ class TestModel(nn.Module):
 
 test_model = TestModel().eval().cuda()
 test_img = torch.rand([1, 3, 8, 8])
-input_name = get_random_name()
-output_name = get_random_name()
+input_name = get_random_name(seed=21120)
+output_name = get_random_name(seed=239)
 dynamic_axes_dict = {
     input_name: {
         0: 'batch',
@@ -59,8 +59,8 @@ def get_deploy_cfg(input_name, output_name, dynamic_axes):
             backend_config=dict(type='onnxruntime')))
 
 
-@pytest.mark.parametrize('input_name', [input_name], ids='0')
-@pytest.mark.parametrize('output_name', [output_name], ids='0')
+@pytest.mark.parametrize('input_name', [input_name])
+@pytest.mark.parametrize('output_name', [output_name])
 @pytest.mark.parametrize('dynamic_axes',
                          [dynamic_axes_dict, dynamic_axes_list])
 def test_torch2onnx(input_name, output_name, dynamic_axes):

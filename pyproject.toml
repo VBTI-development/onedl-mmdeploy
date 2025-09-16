@@ -46,6 +46,7 @@ tests = [
     "asynctest",
     "coverage",
     "openpyxl==3.0.9",
+    "opencv-python",
     "pandas",
     "pytest",
     "pyyaml",
@@ -75,17 +76,18 @@ codebases = [
 
 [project.optional-dependencies]
 backends = [
-    "onnxruntime>=1.8.0",
+    "onnxruntime>=1.8.0,<1.19.0",
     "openvino-dev==2022.3.0",
 ]
 mminstall =  [
     "onedl-mmengine",
+    "onedl-mmcv",
 ]
 optional = [
     "h5py",
     "tqdm"
 ]
-torch = [ "torch<2.6", "torchvision" ]
+torch = [ "torch", "torchvision" ]
 
 [project.urls]
 Homepage = "https://github.com/vbti-development/onedl-mmdeploy"

@@ -11,8 +11,13 @@ struct MMCVModulatedDeformConvKernel {
 
   void Compute(OrtKernelContext *context);
 
+#if ORT_API_VERSION >= 19
+  OrtStatusPtr ComputeV2(OrtKernelContext *context);
+#endif
+
  protected:
-  Ort::CustomOpApi ort_;
+  // Ort::CustomOpApi ort_;
+  const OrtApi &ort_;
   const OrtKernelInfo *info_;
   Ort::AllocatorWithDefaultOptions allocator_;
 
@@ -32,6 +37,13 @@ struct MMCVModulatedDeformConvOp
     return new MMCVModulatedDeformConvKernel(api, info);
   }
 
+#if ORT_API_VERSION >= 19
+  OrtStatusPtr CreateKernelV2(const OrtApi &api, const OrtKernelInfo *info,
+                              void **op_kernel) const {
+    *op_kernel = new MMCVModulatedDeformConvKernel(api, info);
+    return nullptr;
+  };
+#endif
   const char *GetName() const { return "MMCVModulatedDeformConv2d"; };
 
   size_t GetInputTypeCount() const { return 5; };

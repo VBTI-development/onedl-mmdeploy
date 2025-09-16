@@ -7,7 +7,7 @@
 using namespace mmdeploy;
 using namespace std;
 
-TEST_CASE("test collect constructor", "[collect]") {
+TEST_CASE("test collect constructor", "[Collect]") {
   Device device{"cpu"};
   Stream stream{device};
   Value cfg = {{"context", {{"device", device}, {"stream", stream}}}};

@@ -84,15 +84,22 @@ __device__ __forceinline__ scalar_t deformable_im2col_bilinear(const scalar_t* _
   const scalar_t v2 =
       (h_low >= 0 && w_high <= width - 1) ? input[w_high] : static_cast<scalar_t>(0.0f);
   const scalar_t lw = w - w_low;
-  const scalar_t v_low = fmaf(v2 - v1, lw, v1);
   input += width;
   const scalar_t v3 =
       (h_low <= height - 2 && w_low >= 0) ? input[w_low] : static_cast<scalar_t>(0.0f);
   const scalar_t v4 =
       (h_low <= height - 2 && w_high <= width - 1) ? input[w_high] : static_cast<scalar_t>(0.0f);
-  const scalar_t v_high = fmaf(v4 - v3, lw, v3);
+
   const scalar_t lh = h - h_low;
-  const scalar_t val = fmaf(v_high - v_low, lh, v_low);
+  const scalar_t hh = 1 - lh;
+  const scalar_t hw = 1 - lw;
+  const scalar_t w1 = hh * hw;
+  const scalar_t w2 = hh * lw;
+  const scalar_t w3 = lh * hw;
+  const scalar_t w4 = lh * lw;
+
+  const scalar_t val = w1 * v1 + w2 * v2 + w3 * v3 + w4 * v4;
+
   return val;
 }
 
@@ -136,13 +143,10 @@ __global__ void deformable_im2col_gpu_kernel(
 
   CUDA_1D_KERNEL_LOOP(index, n) {
     // index index of output matrix
-    int tmp_index = index;
-    const int w_col = tmp_index % width_col;
-    tmp_index /= width_col;
-    const int h_col = tmp_index % height_col;
-    tmp_index /= height_col;
-    const int b_col = tmp_index % batch_size;
-    const int c_im = tmp_index / batch_size;
+    const int w_col = index % width_col;
+    const int h_col = (index / width_col) % height_col;
+    const int b_col = (index / width_col / height_col) % batch_size;
+    const int c_im = (index / width_col / height_col) / batch_size;
     const int c_col = c_im * kernel_h * kernel_w;
 
     // compute deformable group index
@@ -150,18 +154,23 @@ __global__ void deformable_im2col_gpu_kernel(
 
     const int h_in = h_col * stride_h - pad_h;
     const int w_in = w_col * stride_w - pad_w;
-    scalar_t* __restrict__ data_col_ptr = data_col + c_col * data_col_step + index % data_col_step;
+    scalar_t* __restrict__ data_col_ptr =
+        data_col + ((c_col * batch_size + b_col) * height_col + h_col) * width_col + w_col;
     const scalar_t* __restrict__ data_im_ptr =
         data_im + (b_col * num_channels + c_im) * height * width;
+
     const scalar_t* __restrict__ data_offset_ptr =
-        data_offset +
-        ((b_col * deformable_group + deformable_group_index) << 1) * kernel_h * kernel_w * hw_col +
-        h_col * width_col + w_col;
+        data_offset + (b_col * deformable_group + deformable_group_index) * 2 * kernel_h *
+                          kernel_w * height_col * width_col;
+
     for (int i = 0; i < kernel_h; ++i) {
       for (int j = 0; j < kernel_w; ++j) {
-        const int data_offset_h = (i * kernel_w + j) * hw_col << 1;
+        const int data_offset_h =
+            ((2 * (i * kernel_w + j)) * height_col + h_col) * width_col + w_col;
+        const int data_offset_w =
+            ((2 * (i * kernel_w + j) + 1) * height_col + h_col) * width_col + w_col;
+
         const scalar_t offset_h = data_offset_ptr[data_offset_h];
-        const int data_offset_w = data_offset_h + hw_col;
         const scalar_t offset_w = data_offset_ptr[data_offset_w];
         const scalar_t h_im = h_in + i * dilation_h + (float)offset_h;
         const scalar_t w_im = w_in + j * dilation_w + (float)offset_w;

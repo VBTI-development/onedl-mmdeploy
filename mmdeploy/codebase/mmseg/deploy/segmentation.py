@@ -276,7 +276,7 @@ class Segmentation(BaseTask):
         assert preprocess[1].type == 'Resize'
         preprocess[1]['size'] = list(preprocess[1].pop('scale'))
         preprocess = preprocess[:2]
-        dp = self.model_cfg.data_preprocessor
+        dp = self.model_cfg.model.data_preprocessor
         preprocess.append(
             dict(
                 type='Normalize',

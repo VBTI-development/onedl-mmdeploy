@@ -874,7 +874,7 @@ class SDKEnd2EndModel(End2EndModel):
         result = InstanceData()
         if self.has_mask:
             segm_results = []
-            ori_h, ori_w = data_samples[0].ori_shape[:2]
+            ori_h, ori_w = data_samples[0].img_shape[:2]
             for bbox, mask in zip(dets, masks):
                 img_mask = np.zeros((ori_h, ori_w), dtype=np.uint8)
                 left, top = 0, 0

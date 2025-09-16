@@ -11,8 +11,8 @@ from mmdeploy.utils import IR, Backend
 from mmdeploy.utils.test import get_random_name
 
 ts_file = tempfile.NamedTemporaryFile(suffix='.pt').name
-input_name = get_random_name()
-output_name = get_random_name()
+input_name = get_random_name(seed=21120)
+output_name = get_random_name(seed=239)
 
 
 def get_deploy_cfg(input_name, output_name):
@@ -34,8 +34,8 @@ def get_model_cfg():
     return model_cfg
 
 
-@pytest.mark.parametrize('input_name', [input_name], ids='0')
-@pytest.mark.parametrize('output_name', [output_name], ids='0')
+@pytest.mark.parametrize('input_name', [input_name])
+@pytest.mark.parametrize('output_name', [output_name])
 @pytest.mark.skipif(
     not importlib.util.find_spec('mmagic'), reason='requires mmagic')
 def test_torch2torchscript(input_name, output_name):

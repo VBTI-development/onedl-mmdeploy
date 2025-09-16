@@ -72,8 +72,8 @@
 #include "common_cuda_helper.cuh"
 
 template <typename T>
-__device__ float mdcn_im2col_bilinear(const T *input, const int data_width, const int height,
-                                      const int width, float h, float w) {
+__device__ float mdcn_im2col_bilinear(const T *input, const int64_t data_width,
+                                      const int64_t height, const int64_t width, float h, float w) {
   int h_low = floorf(h);
   int w_low = floorf(w);
   int h_high = h_low + 1;
@@ -98,8 +98,9 @@ __device__ float mdcn_im2col_bilinear(const T *input, const int data_width, cons
   return float(val);
 }
 template <>
-__device__ float mdcn_im2col_bilinear<__half>(const __half *input, const int data_width,
-                                              const int height, const int width, float h, float w) {
+__device__ float mdcn_im2col_bilinear<__half>(const __half *input, const int64_t data_width,
+                                              const int64_t height, const int64_t width, float h,
+                                              float w) {
   int h_low = floorf(h);
   int w_low = floorf(w);
   int h_high = h_low + 1;
@@ -127,24 +128,25 @@ __device__ float mdcn_im2col_bilinear<__half>(const __half *input, const int dat
 
 template <typename T>
 __global__ void modulated_deformable_im2col_gpu_kernel(
-    const int n, const T *data_im, const T *data_offset, const T *data_mask, const int height,
-    const int width, const int kernel_h, const int kernel_w, const int pad_h, const int pad_w,
-    const int stride_h, const int stride_w, const int dilation_h, const int dilation_w,
-    const int channel_per_deformable_group, const int batch_size, const int num_channels,
-    const int deformable_group, const int height_col, const int width_col, T *data_col) {
+    const int n, const T *data_im, const T *data_offset, const T *data_mask, const int64_t height,
+    const int64_t width, const int64_t kernel_h, const int64_t kernel_w, const int64_t pad_h,
+    const int64_t pad_w, const int64_t stride_h, const int64_t stride_w, const int64_t dilation_h,
+    const int64_t dilation_w, const int64_t channel_per_deformable_group, const int64_t batch_size,
+    const int64_t num_channels, const int64_t deformable_group, const int64_t height_col,
+    const int64_t width_col, T *data_col) {
   CUDA_1D_KERNEL_LOOP(index, n) {
     // index index of output matrix
-    const int w_col = index % width_col;
-    const int h_col = (index / width_col) % height_col;
-    const int b_col = (index / width_col / height_col) % batch_size;
-    const int c_im = (index / width_col / height_col) / batch_size;
-    const int c_col = c_im * kernel_h * kernel_w;
+    const int64_t w_col = index % width_col;
+    const int64_t h_col = (index / width_col) % height_col;
+    const int64_t b_col = (index / width_col / height_col) % batch_size;
+    const int64_t c_im = (index / width_col / height_col) / batch_size;
+    const int64_t c_col = c_im * kernel_h * kernel_w;
 
     // compute deformable group index
-    const int deformable_group_index = c_im / channel_per_deformable_group;
+    const int64_t deformable_group_index = c_im / channel_per_deformable_group;
 
-    const int h_in = h_col * stride_h - pad_h;
-    const int w_in = w_col * stride_w - pad_w;
+    const int64_t h_in = h_col * stride_h - pad_h;
+    const int64_t w_in = w_col * stride_w - pad_w;
 
     T *data_col_ptr =
         data_col + ((c_col * batch_size + b_col) * height_col + h_col) * width_col + w_col;
@@ -155,13 +157,14 @@ __global__ void modulated_deformable_im2col_gpu_kernel(
     const T *data_mask_ptr = data_mask + (b_col * deformable_group + deformable_group_index) *
                                              kernel_h * kernel_w * height_col * width_col;
 
-    for (int i = 0; i < kernel_h; ++i) {
-      for (int j = 0; j < kernel_w; ++j) {
-        const int data_offset_h_ptr =
+    for (int64_t i = 0; i < kernel_h; ++i) {
+      for (int64_t j = 0; j < kernel_w; ++j) {
+        const int64_t data_offset_h_ptr =
             ((2 * (i * kernel_w + j)) * height_col + h_col) * width_col + w_col;
-        const int data_offset_w_ptr =
+        const int64_t data_offset_w_ptr =
             ((2 * (i * kernel_w + j) + 1) * height_col + h_col) * width_col + w_col;
-        const int data_mask_hw_ptr = ((i * kernel_w + j) * height_col + h_col) * width_col + w_col;
+        const int64_t data_mask_hw_ptr =
+            ((i * kernel_w + j) * height_col + h_col) * width_col + w_col;
         const T offset_h = data_offset_ptr[data_offset_h_ptr];
         const T offset_w = data_offset_ptr[data_offset_w_ptr];
         const T mask = data_mask_ptr[data_mask_hw_ptr];

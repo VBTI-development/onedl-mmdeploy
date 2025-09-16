@@ -114,6 +114,7 @@ if (MMDEPLOY_BUILD_SDK)
     endif ()
 
     if (MMDEPLOY_BUILD_TEST)
+        enable_testing()
         add_subdirectory(tests/test_csrc)
     endif ()
 

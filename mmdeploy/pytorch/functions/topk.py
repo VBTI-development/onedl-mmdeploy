@@ -54,6 +54,9 @@ def topk__tensorrt(input: torch.Tensor,
 
     if dim is None:
         dim = int(input.ndim - 1)
+    if dim < 0:
+        dim = dim + input.ndim
+
     size = input.shape[dim]
     if k > size:
         k = size
@@ -92,3 +95,24 @@ def topk__coreml(input: torch.Tensor,
     # Always keep topk op for dynamic input
     k = torch.where(k < size, k, size)
     return ctx.origin_func(input, k, dim=dim, largest=largest, sorted=sorted)
+
+
+@FUNCTION_REWRITER.register_rewriter(func_name='torch.max', backend='tensorrt')
+@FUNCTION_REWRITER.register_rewriter(
+    func_name='torch.Tensor.max', backend='tensorrt')
+def max__onnx_patch_negative_axis(input: torch.Tensor,
+                                  dim: Optional[int] = None,
+                                  keepdim: bool = False):
+    """Rewrite `max` for trt backend to patch negative axis in reduce op.
+
+    Converts negative axis to positive before exporting to trt.
+    """
+    ctx = FUNCTION_REWRITER.get_context()
+
+    if dim is None:
+        # Default behavior: flatten input and return max
+        return ctx.origin_func(input)
+    # Patch negative axis
+    if dim < 0:
+        dim = dim + input.ndim
+    return ctx.origin_func(input, dim=dim, keepdim=keepdim)

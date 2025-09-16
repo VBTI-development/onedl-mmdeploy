@@ -88,8 +88,8 @@ int ScaledDotProductAttentionTRT::enqueue(const nvinfer1::PluginTensorDesc *inpu
                                           const nvinfer1::PluginTensorDesc *outputDesc,
                                           const void *const *inputs, void *const *outputs,
                                           void *workSpace, cudaStream_t stream) TRT_NOEXCEPT {
-  if (CUDNN_STATUS_SUCCESS != cudnnSetStream(_cudnn_handle, stream)) return 1;
-  if (CUBLAS_STATUS_SUCCESS != cublasSetStream(_cublas_handle, stream)) return 1;
+  // if (CUDNN_STATUS_SUCCESS != cudnnSetStream(_cudnn_handle, stream)) return 1;
+  // if (CUBLAS_STATUS_SUCCESS != cublasSetStream(_cublas_handle, stream)) return 1;
   int B = inputDesc[0].dims.d[0];  // batch * heads
   int Nt = inputDesc[0].dims.d[1];
   int Ns = inputDesc[1].dims.d[1];

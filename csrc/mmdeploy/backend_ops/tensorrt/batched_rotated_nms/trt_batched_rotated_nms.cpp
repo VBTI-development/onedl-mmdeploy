@@ -119,8 +119,13 @@ bool TRTBatchedRotatedNMS::supportsFormatCombination(int pos,
                                                      const nvinfer1::PluginTensorDesc* ioDesc,
                                                      int nbInputs, int nbOutputs) TRT_NOEXCEPT {
   if (pos == 3) {
+#if NV_TENSORRT_MAJOR < 10
     return ioDesc[pos].type == nvinfer1::DataType::kINT32 &&
            ioDesc[pos].format == nvinfer1::TensorFormat::kLINEAR;
+#else
+    return ioDesc[pos].type == nvinfer1::DataType::kINT64 &&
+           ioDesc[pos].format == nvinfer1::TensorFormat::kLINEAR;
+#endif
   }
   return ioDesc[pos].type == nvinfer1::DataType::kFLOAT &&
          ioDesc[pos].format == nvinfer1::TensorFormat::kLINEAR;
@@ -144,7 +149,11 @@ nvinfer1::DataType TRTBatchedRotatedNMS::getOutputDataType(int index,
                                                            int nbInputs) const TRT_NOEXCEPT {
   ASSERT(index >= 0 && index < this->getNbOutputs());
   if (index == 1) {
+#if NV_TENSORRT_MAJOR < 10
     return nvinfer1::DataType::kINT32;
+#else
+    return nvinfer1::DataType::kINT64;
+#endif
   }
   return inputTypes[0];
 }

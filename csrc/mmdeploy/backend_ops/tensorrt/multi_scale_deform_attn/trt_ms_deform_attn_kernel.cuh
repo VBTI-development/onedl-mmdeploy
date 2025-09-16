@@ -130,6 +130,7 @@ __device__ __half ms_deform_attn_im2col_bilinear<__half>(
 
 #if 1
 template <typename scalar_t>
+
 __global__ void ms_deformable_im2col_gpu_kernel(
     int32_t const n, scalar_t const* dataValue, int32_t const* dataSpatialShapes,
     int32_t const* dataLevelStartIndex, scalar_t const* dataSamplingLoc,
@@ -211,8 +212,8 @@ __global__ void ms_deformable_im2col_gpu_kernel<__half>(
     __half col = kZERO;
 
     for (int32_t lCol = 0; lCol < numLevels; ++lCol) {
-      int32_t const levelStartId = dataLevelStartIndex[lCol];
       int32_t const spatialHPtr = lCol << 1;
+      int32_t const levelStartId = dataLevelStartIndex[lCol];
       int32_t const spatialH = dataSpatialShapes[spatialHPtr];
       int32_t const spatialW = dataSpatialShapes[spatialHPtr + 1];
       const __half spatialHHalf = __int2half_rd(spatialH);
