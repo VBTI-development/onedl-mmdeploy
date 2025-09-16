@@ -135,21 +135,12 @@ MMCVModulatedDeformConvKernel::MMCVModulatedDeformConvKernel(const OrtApi &api,
   group_ = custom_api.KernelInfoGetAttribute<int64_t>(info, "groups");
 #endif
 
-  // std::vector<int64_t> stride = ort_.KernelInfoGetAttribute<std::vector<int64_t>>(info,
-  // "stride");
   stride_height_ = stride[0];
   stride_width_ = stride[1];
-  // std::vector<int64_t> padding = ort_.KernelInfoGetAttribute<std::vector<int64_t>>(info,
-  // "padding");
   padding_height_ = padding[0];
   padding_width_ = padding[1];
-  // std::vector<int64_t> dilation =
-  // ort_.KernelInfoGetAttribute<std::vector<int64_t>>(info, "dilation");
   dilation_height_ = dilation[0];
   dilation_width_ = dilation[1];
-  // deformable_group_ = ort_.KernelInfoGetAttribute<int64_t>(info, "deform_groups");
-  // group_ = ort_.KernelInfoGetAttribute<int64_t>(info, "groups");
-
   // create allocator
   allocator_ = Ort::AllocatorWithDefaultOptions();
 }
@@ -164,23 +155,6 @@ void MMCVModulatedDeformConvKernel::Compute(OrtKernelContext *context) {
   const int64_t deformable_group = deformable_group_;
   const int64_t group = group_;
 
-  // const OrtValue *input = ort_.KernelContext_GetInput(context, 0);
-  // const float *input_data = reinterpret_cast<const float *>(ort_.GetTensorData<float>(input));
-
-  // const OrtValue *offset = ort_.KernelContext_GetInput(context, 1);
-  // const float *offset_data = reinterpret_cast<const float *>(ort_.GetTensorData<float>(offset));
-
-  // const OrtValue *mask = ort_.KernelContext_GetInput(context, 2);
-  // const float *mask_data = reinterpret_cast<const float *>(ort_.GetTensorData<float>(mask));
-
-  // const OrtValue *filter = ort_.KernelContext_GetInput(context, 3);
-  // const float *filter_data = reinterpret_cast<const float *>(ort_.GetTensorData<float>(filter));
-
-  // const OrtValue *bias = ort_.KernelContext_GetInput(context, 4);
-  // const float *bias_data = (bias != nullptr)
-  //                              ? reinterpret_cast<const float *>(ort_.GetTensorData<float>(bias))
-  //                              : nullptr;
-  // const float *bias_data = nullptr;
 #if ORT_API_VERSION >= 14
   const Ort::KernelContext ctx(context);
   const auto input = ctx.GetInput(0);
@@ -215,8 +189,6 @@ void MMCVModulatedDeformConvKernel::Compute(OrtKernelContext *context) {
   const float *mask_data = mask.GetTensorData<float>();
   const float *filter_data = filter.GetTensorData<float>();
 
-  // OrtTensorDimensions input_dims(ort_, input);
-  // OrtTensorDimensions filter_dims(ort_, filter);
   std::vector<int64_t> input_dims = input.GetTensorTypeAndShapeInfo().GetShape();
   std::vector<int64_t> filter_dims = filter.GetTensorTypeAndShapeInfo().GetShape();
   int64_t batch = input_dims[0];
@@ -235,9 +207,6 @@ void MMCVModulatedDeformConvKernel::Compute(OrtKernelContext *context) {
       (in_width + 2 * padding_width - dilation_width * (kernel_width - 1) - 1) / stride_width + 1);
 
   std::vector<int64_t> output_dims = {batch, num_output, out_height, out_width};
-  // OrtValue *output =
-  //     ort_.KernelContext_GetOutput(context, 0, output_dims.data(), output_dims.size());
-  // float *out_ptr = ort_.GetTensorMutableData<float>(output);
 
 #if ORT_API_VERSION >= 14
   auto output = ctx.GetOutput(0, output_dims.data(), output_dims.size());

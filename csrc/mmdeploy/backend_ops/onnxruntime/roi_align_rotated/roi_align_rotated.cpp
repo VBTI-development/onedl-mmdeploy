@@ -198,11 +198,6 @@ void ROIAlignRotatedForwardCPU(const int nthreads, const float *input, const flo
 
 void MMCVRoIAlignRotatedKernel::Compute(OrtKernelContext *context) {
   // Setup inputs
-  // const OrtValue *input_X = ort_.KernelContext_GetInput(context, 0);
-  // const float *X_data = reinterpret_cast<const float *>(ort_.GetTensorData<float>(input_X));
-  // const OrtValue *input_rois = ort_.KernelContext_GetInput(context, 1);
-  // const float *rois =
-  //     reinterpret_cast<const float *>(ort_.GetTensorData<const float *>(input_rois));
 #if ORT_API_VERSION >= 14
   const Ort::KernelContext ctx(context);
   const auto input_X = ctx.GetInput(0);
@@ -219,8 +214,6 @@ void MMCVRoIAlignRotatedKernel::Compute(OrtKernelContext *context) {
   const float *rois = input_rois.GetTensorData<float>();
 
   // Setup output
-  // OrtTensorDimensions out_dimensions(ort_, input_X);
-  // OrtTensorDimensions roi_dimensions(ort_, input_rois);
   std::vector<int64_t> out_dimensions = input_X.GetTensorTypeAndShapeInfo().GetShape();
   std::vector<int64_t> roi_dimensions = input_rois.GetTensorTypeAndShapeInfo().GetShape();
 
@@ -233,11 +226,6 @@ void MMCVRoIAlignRotatedKernel::Compute(OrtKernelContext *context) {
   out_dimensions.data()[2] = aligned_height_;
   out_dimensions.data()[3] = aligned_width_;
 
-  // OrtValue *output =
-  //     ort_.KernelContext_GetOutput(context, 0, out_dimensions.data(), out_dimensions.size());
-  // float *out = ort_.GetTensorMutableData<float>(output);
-  // OrtTensorTypeAndShapeInfo *output_info = ort_.GetTensorTypeAndShape(output);
-  // ort_.ReleaseTensorTypeAndShapeInfo(output_info);
 #if ORT_API_VERSION >= 14
   auto output = ctx.GetOutput(0, out_dimensions.data(), out_dimensions.size());
 #else

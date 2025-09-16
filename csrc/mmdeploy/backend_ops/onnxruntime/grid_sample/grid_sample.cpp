@@ -27,12 +27,6 @@ GridSampleKernel::GridSampleKernel(const OrtApi &api, const OrtKernelInfo *info)
   padding_mode_ = custom_api.KernelInfoGetAttribute<int64_t>(info, "padding_mode");
 #endif
 }
-//   align_corners_ = ort_.KernelInfoGetAttribute<int64_t>(info, "align_corners");
-//   interpolation_mode_ = ort_.KernelInfoGetAttribute<int64_t>(info, "interpolation_mode");
-//   padding_mode_ = ort_.KernelInfoGetAttribute<int64_t>(info, "padding_mode");
-
-//   allocator_ = Ort::AllocatorWithDefaultOptions();
-// }
 
 enum GridSamplerInterpolation { Bilinear = 0, Nearest = 1, Bicubic = 2 };
 enum GridSamplerPadding { Zeros = 0, Border = 1, Reflection = 2 };
