@@ -100,7 +100,7 @@ jobs:
           make -j2
           mkdir -p mmdeploy_test_resources/transform
           cp ../tests/data/tiger.jpeg mmdeploy_test_resources/transform/
-          ./bin/mmdeploy_tests
+          cd build/ && ctest --output-on-failure
           lcov --capture --directory . --output-file coverage.info
           ls -lah coverage.info
           cp coverage.info ../
