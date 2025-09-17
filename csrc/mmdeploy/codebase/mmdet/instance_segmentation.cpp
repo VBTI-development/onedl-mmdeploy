@@ -22,6 +22,8 @@ class ResizeInstanceMask : public ResizeBBox {
     operation::Context ctx(device_, stream_);
     warp_affine_ = operation::Managed<operation::WarpAffine>::Create("bilinear");
     permute_ = operation::Managed<::mmdeploy::operation::Permute>::Create();
+    resize_ = operation::Managed<::mmdeploy::operation::Resize>::Create("bilinear");
+    crop_ = operation::Managed<::mmdeploy::operation::Crop>::Create();
   }
 
   // TODO: remove duplication
@@ -29,14 +31,14 @@ class ResizeInstanceMask : public ResizeBBox {
     MMDEPLOY_DEBUG("prep_res: {}\ninfer_res: {}", prep_res, infer_res);
     try {
       DeviceGuard guard(device_);
-      auto dets = infer_res["dets"].get<Tensor>();
-      auto labels = infer_res["labels"].get<Tensor>();
-      auto masks = infer_res["masks"].get<Tensor>();
+
+      Tensor dets, labels;
+      std::vector<Tensor> outputs = GetDetsLabels(prep_res, infer_res);
+      dets = outputs[0];
+      labels = outputs[1];
 
       MMDEPLOY_DEBUG("dets.shape: {}", dets.shape());
       MMDEPLOY_DEBUG("labels.shape: {}", labels.shape());
-      MMDEPLOY_DEBUG("masks.shape: {}", masks.shape());
-
       // `dets` is supposed to have 3 dims. They are 'batch', 'bboxes_number'
       // and 'channels' respectively
       if (!(dets.shape().size() == 3 && dets.data_type() == DataType::kFLOAT)) {
@@ -53,6 +55,9 @@ class ResizeInstanceMask : public ResizeBBox {
         return Status(eNotSupported);
       }
 
+      auto masks = infer_res["masks"].get<Tensor>();
+      MMDEPLOY_DEBUG("masks.shape: {}", masks.shape());
+
       if (!(masks.shape().size() == 4 && masks.data_type() == DataType::kFLOAT)) {
         MMDEPLOY_ERROR("unsupported `mask` tensor, shape: {}, dtype: {}", masks.shape(),
                        (int)masks.data_type());
@@ -64,7 +69,7 @@ class ResizeInstanceMask : public ResizeBBox {
       // Note: `masks` are kept on device to avoid data copy overhead from device to host.
       // refer to https://github.com/open-mmlab/mmdeploy/issues/1849
       // OUTCOME_TRY(auto _masks, MakeAvailableOnDevice(masks, kHost, stream()));
-      // OUTCOME_TRY(stream().Wait());
+      OUTCOME_TRY(stream().Wait());
 
       OUTCOME_TRY(auto result, DispatchGetBBoxes(prep_res["img_metas"], _dets, _labels));
       auto ori_w = prep_res["img_metas"]["ori_shape"][2].get<int>();
@@ -138,27 +143,19 @@ class ResizeInstanceMask : public ResizeBBox {
       auto mask_channel = (int)d_mask.shape(0);
       auto mask_height = (int)d_mask.shape(1);
       auto mask_width = (int)d_mask.shape(2);
-      // (C, H, W) -> (H, W, C)
-      std::vector<int> axes = {1, 2, 0};
-      OUTCOME_TRY(permute_.Apply(d_mask, d_mask, axes));
-      Device host{"cpu"};
-      OUTCOME_TRY(auto cpu_mask, MakeAvailableOnDevice(d_mask, host, stream_));
-      OUTCOME_TRY(stream().Wait());
-      cv::Mat mask_mat(mask_height, mask_width, CV_32FC(mask_channel), cpu_mask.data());
       int resize_height = int(mask_height / scale_factor_[1] + 0.5);
       int resize_width = int(mask_width / scale_factor_[0] + 0.5);
-      // skip resize if scale_factor is 1.0
-      if (resize_height != mask_height || resize_width != mask_width) {
-        cv::resize(mask_mat, mask_mat, cv::Size(resize_width, resize_height), cv::INTER_LINEAR);
-      }
-      // crop masks
-      mask_mat = mask_mat(cv::Range(0, img_h), cv::Range(0, img_w)).clone();
 
       for (int i = 0; i < (int)result.size(); i++) {
-        cv::Mat mask_;
-        cv::extractChannel(mask_mat, mask_, i);
-        Tensor mask_t = cpu::CVMat2Tensor(mask_);
-        h_warped_masks.emplace_back(mask_t);
+        auto mask_t = d_mask.Slice(i);
+        mask_t.Reshape({1, mask_height, mask_width, 1});
+
+        if (resize_height != mask_height || resize_width != mask_width) {
+          OUTCOME_TRY(resize_.Apply(mask_t, mask_t, resize_height, resize_width));
+        }
+        Tensor& warped_mask = warped_masks.emplace_back();
+        OUTCOME_TRY(crop_.Apply(mask_t, warped_mask, 0, 0, img_h - 1, img_w - 1));
+        OUTCOME_TRY(CopyToHost(warped_mask, h_warped_masks.emplace_back()));
       }
     }
 
@@ -191,6 +188,8 @@ class ResizeInstanceMask : public ResizeBBox {
  private:
   operation::Managed<operation::WarpAffine> warp_affine_;
   ::mmdeploy::operation::Managed<::mmdeploy::operation::Permute> permute_;
+  operation::Managed<::mmdeploy::operation::Resize> resize_;
+  operation::Managed<::mmdeploy::operation::Crop> crop_;
   float mask_thr_binary_{.5f};
   bool is_rcnn_{true};
   bool is_resize_mask_{true};

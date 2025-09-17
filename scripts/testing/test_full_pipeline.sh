@@ -6,7 +6,7 @@ set -e
 backend=${1:-ort}
 device=${2:-cpu}
 current_dir=$(cd `dirname $0`; pwd)
-mmdeploy_dir=$current_dir/../../..
+mmdeploy_dir=$current_dir/../..
 cd $mmdeploy_dir
 
 work_dir=$mmdeploy_dir/work_dir
@@ -17,7 +17,7 @@ checkpoint=$work_dir/resnet18_8xb32_in1k_20210831-fbbb1da6.pth
 sdk_cfg=configs/mmpretrain/classification_sdk_dynamic.py
 input_img=tests/data/tiger.jpeg
 
-python3 -m mim download onedl-mmpretrain --config resnet18_8xb32_in1k --dest $work_dir
+python3 -m mim download mmpretrain --config resnet18_8xb32_in1k --dest $work_dir
 
 if [ $backend == "ort" ]; then
     deploy_cfg=configs/mmpretrain/classification_onnxruntime_dynamic.py
@@ -58,8 +58,8 @@ if [ $backend == "trt" ]; then
 fi
 
 # prepare dataset
-wget -P data/ https://github.com/vbti-development/onedl-mmdeploy/releases/download/v0.1.0/imagenet-val100.zip
-unzip data/imagenet-val100.zip -d data/
+wget -nc -P data/ https://github.com/open-mmlab/mmdeploy/releases/download/v0.1.0/imagenet-val100.zip
+unzip -n data/imagenet-val100.zip -d data/
 
 echo "Running test with $backend"
 
@@ -78,6 +78,17 @@ echo "Running test with sdk"
 
 # change topk for test
 sed -i 's/"topk": 5/"topk": 1000/g' work_dir/pipeline.json
+
+echo "python3 tools/test.py \
+  $sdk_cfg \
+  $model_cfg \
+  --model $work_dir \
+  --device $device \
+  --log2file $work_dir/test_sdk.log \
+  --speed-test \
+  --log-interval 50 \
+  --warmup 20 \
+  --batch-size 8"
 
 python3 tools/test.py \
   $sdk_cfg \

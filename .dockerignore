@@ -1,0 +1,52 @@
+# git
+**/.git
+**/.gitignore
+
+# generated files
+# python
+**/*.egg-info
+**/.eggs/
+**/pip-wheel-metadata
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+**/env
+**/pip-log.txt
+**/pip-delete-this-directory.txt
+**/.tox
+**/.coverage
+**/.coverage.*
+**/.cache
+**/nosetests.xml
+**/coverage.xml
+**/*.cover
+**/*.log
+**/.mypy_cache
+**/.pytest_cache
+**/.ruff_cache
+**/.hypothesis
+**/.venv
+
+
+# IDEs
+**/.run
+**/.vscode
+**/.idea
+
+
+# Caches
+**/.cache
+
+
+# Weights files
+**/*.pt
+**/*.pth
+**/*.ckpt
+**/*.engine
+**/*.onnx
+
+# Other
+**/tmp
+work_dir*/

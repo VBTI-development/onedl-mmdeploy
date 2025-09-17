@@ -11,8 +11,13 @@ __launch_bounds__(nthds_per_cta) __global__
     void gatherNMSOutputs_kernel(const bool shareLocation, const int numImages,
                                  const int numPredsPerClass, const int numClasses, const int topK,
                                  const int keepTopK, const int *indices, const T_SCORE *scores,
-                                 const T_BBOX *bboxData, T_BBOX *nmsedDets, int *nmsedLabels,
-                                 int *nmsedIndex, bool clipBoxes) {
+                                 const T_BBOX *bboxData, T_BBOX *nmsedDets,
+#if NV_TENSORRT_MAJOR < 10
+                                 int *nmsedLabels, int *nmsedIndex, bool clipBoxes
+#else
+                                 int64_t *nmsedLabels, int64_t *nmsedIndex, bool clipBoxes
+#endif
+    ) {
   if (keepTopK > topK) return;
   for (int i = blockIdx.x * nthds_per_cta + threadIdx.x; i < numImages * keepTopK;
        i += gridDim.x * nthds_per_cta) {
@@ -105,8 +110,13 @@ pluginStatus_t gatherNMSOutputs_gpu(cudaStream_t stream, const bool shareLocatio
   const int GS = 32;
   gatherNMSOutputs_kernel<T_BBOX, T_SCORE, rotated, BS><<<GS, BS, 0, stream>>>(
       shareLocation, numImages, numPredsPerClass, numClasses, topK, keepTopK, (int *)indices,
-      (T_SCORE *)scores, (T_BBOX *)bboxData, (T_BBOX *)nmsedDets, (int *)nmsedLabels,
-      (int *)nmsedIndex, clipBoxes);
+      (T_SCORE *)scores, (T_BBOX *)bboxData, (T_BBOX *)nmsedDets,
+
+#if NV_TENSORRT_MAJOR < 10
+      (int *)nmsedLabels, (int *)nmsedIndex, clipBoxes);
+#else
+      (int64_t *)nmsedLabels, (int64_t *)nmsedIndex, clipBoxes);
+#endif
 
   CSC(cudaGetLastError(), STATUS_FAILURE);
   return STATUS_SUCCESS;

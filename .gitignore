@@ -113,7 +113,6 @@ venv*
 
 data/
 data
-.vscode
 .idea
 .DS_Store
 
@@ -172,3 +171,7 @@ demo/csharp/*/Properties
 
 # doxygen
 docs/cppapi/docs
+work_dir*/
+
+# onnx
+*.onnx

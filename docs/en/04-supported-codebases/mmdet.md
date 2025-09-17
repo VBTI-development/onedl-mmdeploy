@@ -60,7 +60,7 @@ The command below shows an example about converting `Faster R-CNN` model to onnx
 ```shell
 cd mmdeploy
 # download faster r-cnn model from mmdet model zoo
-mim download mmdet --config faster-rcnn_r50_fpn_1x_coco --dest .
+mim download onedl-mmdetection --config faster-rcnn_r50_fpn_1x_coco --dest .
 # convert mmdet model to onnxruntime model with dynamic shape
 python tools/deploy.py \
     configs/mmdet/detection/detection_onnxruntime_dynamic.py \

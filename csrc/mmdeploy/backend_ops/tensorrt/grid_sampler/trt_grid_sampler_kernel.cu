@@ -348,6 +348,7 @@ __global__ void grid_sampler_3d_kernel(const int nthreads, const scalar_t *input
   }
 }
 
+#if NV_TENSORRT_MAJOR < 10
 void create_desc(const int *dims, int nb_dims, TensorDesc &desc) {
   memcpy(&desc.shape[0], dims, sizeof(int) * nb_dims);
   desc.stride[nb_dims - 1] = 1;
@@ -355,7 +356,17 @@ void create_desc(const int *dims, int nb_dims, TensorDesc &desc) {
     desc.stride[i] = desc.stride[i + 1] * desc.shape[i + 1];
   }
 }
+#else
+void create_desc(const long int *dims, int nb_dims, TensorDesc &desc) {
+  memcpy(&desc.shape[0], dims, sizeof(int) * nb_dims);
+  desc.stride[nb_dims - 1] = 1;
+  for (int i = nb_dims - 2; i >= 0; --i) {
+    desc.stride[i] = desc.stride[i + 1] * desc.shape[i + 1];
+  }
+}
+#endif
 
+#if NV_TENSORRT_MAJOR < 10
 template <typename T>
 void grid_sample(T *output, const T *input, const T *grid, int *output_dims, int *input_dims,
                  int *grid_dims, int nb_dims, GridSamplerInterpolation interp,
@@ -394,3 +405,45 @@ template void grid_sample<float>(float *output, const float *input, const float 
                                  int *output_dims, int *input_dims, int *grid_dims, int nb_dims,
                                  GridSamplerInterpolation interp, GridSamplerPadding padding,
                                  bool align_corners, cudaStream_t stream);
+#else
+template <typename T>
+void grid_sample(T *output, const T *input, const T *grid, long int *output_dims,
+                 long int *input_dims, long int *grid_dims, int nb_dims,
+                 GridSamplerInterpolation interp, GridSamplerPadding padding, bool align_corners,
+                 cudaStream_t stream) {
+  TensorDesc input_desc;
+  create_desc(input_dims, nb_dims, input_desc);
+
+  TensorDesc output_desc;
+  create_desc(output_dims, nb_dims, output_desc);
+
+  TensorDesc grid_desc;
+  create_desc(grid_dims, nb_dims, grid_desc);
+
+  int count = 1;
+  for (int i = 0; i < nb_dims; ++i) {
+    if (i == 1) {
+      continue;
+    }
+    count *= output_desc.shape[i];
+  }
+
+  if (nb_dims == 4) {
+    grid_sampler_2d_kernel<T><<<GET_BLOCKS(count), THREADS_PER_BLOCK, 0, stream>>>(
+        count, input, grid, output, input_desc, grid_desc, output_desc, interp, padding,
+        align_corners);
+  } else if (nb_dims == 5) {
+    grid_sampler_3d_kernel<T><<<GET_BLOCKS(count), THREADS_PER_BLOCK, 0, stream>>>(
+        count, input, grid, output, input_desc, grid_desc, output_desc, interp, padding,
+        align_corners);
+  } else {
+    printf("input and grid dims should be 4 or 5\n");
+  }
+}
+
+template void grid_sample<float>(float *output, const float *input, const float *grid,
+                                 long int *output_dims, long int *input_dims, long int *grid_dims,
+                                 int nb_dims, GridSamplerInterpolation interp,
+                                 GridSamplerPadding padding, bool align_corners,
+                                 cudaStream_t stream);
+#endif

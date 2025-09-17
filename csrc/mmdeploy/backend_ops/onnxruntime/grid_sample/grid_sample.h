@@ -11,8 +11,13 @@ struct GridSampleKernel {
 
   void Compute(OrtKernelContext *context);
 
+#if ORT_API_VERSION >= 19
+  OrtStatusPtr ComputeV2(OrtKernelContext *context);
+#endif
+
  protected:
-  Ort::CustomOpApi ort_;
+  // Ort::CustomOpApi ort_;
+  const OrtApi &ort_;
   const OrtKernelInfo *info_;
   Ort::AllocatorWithDefaultOptions allocator_;
 
@@ -24,21 +29,28 @@ struct GridSampleKernel {
 struct GridSampleOp : Ort::CustomOpBase<GridSampleOp, GridSampleKernel> {
   void *CreateKernel(const OrtApi &api, const OrtKernelInfo *info) const {
     return new GridSampleKernel(api, info);
-  };
+  }
 
-  const char *GetName() const { return "grid_sampler"; };
+#if ORT_API_VERSION >= 19
+  OrtStatusPtr CreateKernelV2(const OrtApi &api, const OrtKernelInfo *info,
+                              void **op_kernel) const {
+    *op_kernel = new GridSampleKernel(api, info);
+    return nullptr;
+  }
+#endif
+  const char *GetName() const { return "grid_sampler"; }
 
-  size_t GetInputTypeCount() const { return 2; };
+  size_t GetInputTypeCount() const { return 2; }
   ONNXTensorElementDataType GetInputType(size_t /*index*/) const {
     return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT;
-  };
+  }
 
-  size_t GetOutputTypeCount() const { return 1; };
+  size_t GetOutputTypeCount() const { return 1; }
   ONNXTensorElementDataType GetOutputType(size_t /*index*/) const {
     return ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT;
-  };
+  }
 
-  const char *GetExecutionProviderType() const { return "CPUExecutionProvider"; };
+  const char *GetExecutionProviderType() const { return "CPUExecutionProvider"; }
 };
 }  // namespace mmdeploy
 #endif

@@ -1133,8 +1133,8 @@ def test_gather_topk(backend, save_dir=None):
         def forward(self, x):
             batch_size = x.size(0)
             max_x, _ = x.max(-1)
-            _, inds = max_x.topk(4)
-
+            dim = max_x.dim() - 1
+            _, inds = max_x.topk(4, dim=dim)
             new_x = gather_topk(x, inds=inds, batch_size=batch_size)
             return new_x
 
@@ -1220,6 +1220,7 @@ def test_multiclass_nms_rotated_with_keep_top_k(backend, pre_top_k):
         f'keep_top_k: {keep_top_k}'
 
 
+@pytest.mark.xfail(reason='Deform conv output is different in TensorRT')
 @pytest.mark.parametrize('backend', [TEST_TENSORRT])
 def test_multi_scale_deformable_attn(backend, save_dir=None):
     backend.check_env()

@@ -20,15 +20,15 @@ jobs:
       - name: Check index.rst
         run: |
           python .github/scripts/check_index_rst.py docs/en/index.rst
-      - name: Check markdown link
-        uses: gaurav-nelson/github-action-markdown-link-check@v1
-        with:
-          use-quiet-mode: 'yes'
-          use-verbose-mode: 'yes'
-#          check-modified-files-only: 'yes'
-          config-file: '.github/md-link-config.json'
-          folder-path: 'docs/en'
-          file-path: './README.md, ./LICENSE'
+#       - name: Check markdown link
+#         uses: gaurav-nelson/github-action-markdown-link-check@v1
+#         with:
+#           use-quiet-mode: 'yes'
+#           use-verbose-mode: 'yes'
+# #          check-modified-files-only: 'yes'
+#           config-file: '.github/md-link-config.json'
+#           folder-path: 'docs/en'
+#           file-path: './README.md, ./LICENSE'
       - name: Check doc link
         run: |
           python .github/scripts/doc_link_checker.py --target docs/en

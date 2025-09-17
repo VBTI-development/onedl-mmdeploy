@@ -190,6 +190,7 @@ def test_flatten_cls_head():
     node, idx = _find_next_node(0, nodes, 'GlobalAveragePool')
     assert node is not None
 
+    # flatten is replaced by reshape in opset 13+
     node, idx = _find_next_node(idx + 1, nodes, 'Flatten')
     assert node is not None
 

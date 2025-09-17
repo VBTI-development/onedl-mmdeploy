@@ -11,5 +11,4 @@ int32_t ms_deform_attn_cuda_forward(const scalar_t* value, const int32_t* spatia
                                     int32_t mSpatialSize, int32_t mNumHeads, int32_t mChannels,
                                     int32_t mNumLevels, int32_t mNumQuery, int32_t mNumPoint,
                                     cudaStream_t stream);
-
 #endif

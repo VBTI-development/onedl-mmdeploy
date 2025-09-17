@@ -28,8 +28,8 @@ class TestModel(nn.Module):
 
 test_model = TestModel().eval().cuda()
 test_img = torch.rand([1, 3, 8, 8])
-input_name = get_random_name()
-output_name = get_random_name()
+input_name = get_random_name(seed=21120)
+output_name = get_random_name(seed=239)
 dynamic_axes_dict = {
     input_name: {
         0: 'batch',

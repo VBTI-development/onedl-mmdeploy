@@ -14,28 +14,28 @@ class ScaledDotProductAttentionTRT(torch.autograd.Function):
 
     @staticmethod
     def forward(ctx,
-                q: Tensor,
-                k: Tensor,
-                v: Tensor,
+                query: Tensor,
+                key: Tensor,
+                value: Tensor,
                 attn_mask: Optional[Tensor] = None):
         """Forward function."""
-        B, Nt, E = q.shape
-        q = q / math.sqrt(E)
+        B, Nt, E = query.shape
+        query = query / math.sqrt(E)
         # (B, Nt, E) x (B, E, Ns) -> (B, Nt, Ns)
-        attn = torch.bmm(q, k.transpose(-2, -1))
+        attn = torch.bmm(query, key.transpose(-2, -1))
         if attn_mask is not None:
             attn += attn_mask
 
         attn = attn.softmax(-1)
 
         # (B, Nt, Ns) x (B, Ns, E) -> (B, Nt, E)
-        output = torch.bmm(attn, v)
+        output = torch.bmm(attn, value)
         return output, attn
 
     @staticmethod
-    def symbolic(g, q, k, v, mask):
+    def symbolic(g, query, key, value, mask):
         """Symbolic function."""
-        inputs = [q, k, v]
+        inputs = [query, key, value]
         if mask is not None:
             inputs += [mask]
         return g.op(
@@ -43,16 +43,16 @@ class ScaledDotProductAttentionTRT(torch.autograd.Function):
 
 
 @FUNCTION_REWRITER.register_rewriter(
-    func_name='torch.nn.functional._scaled_dot_product_attention',
+    func_name='torch.nn.functional.scaled_dot_product_attention',
     backend=Backend.TENSORRT.value)
-def _scaled_dot_product_attention__tensorrt(q: Tensor,
-                                            k: Tensor,
-                                            v: Tensor,
-                                            attn_mask: Optional[Tensor] = None,
-                                            dropout_p: float = 0.0,
-                                            **kwargs) -> Tuple[Tensor, Tensor]:
+def scaled_dot_product_attention__tensorrt(query: Tensor,
+                                           key: Tensor,
+                                           value: Tensor,
+                                           attn_mask: Optional[Tensor] = None,
+                                           dropout_p: float = 0.0,
+                                           **kwargs) -> Tuple[Tensor, Tensor]:
     """Rewrite for custom ops."""
-    return ScaledDotProductAttentionTRT.apply(q, k, v, attn_mask)
+    return ScaledDotProductAttentionTRT.apply(query, key, value, attn_mask)
 
 
 @FUNCTION_REWRITER.register_rewriter(

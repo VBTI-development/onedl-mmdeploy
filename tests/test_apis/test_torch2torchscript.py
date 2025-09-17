@@ -11,8 +11,8 @@ from mmdeploy.utils import IR, Backend
 from mmdeploy.utils.test import get_random_name
 
 ts_file = tempfile.NamedTemporaryFile(suffix='.pt').name
-input_name = get_random_name()
-output_name = get_random_name()
+input_name = get_random_name(seed=21120)
+output_name = get_random_name(seed=239)
 
 
 def get_deploy_cfg(input_name, output_name):

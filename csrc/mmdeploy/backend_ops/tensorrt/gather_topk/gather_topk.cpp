@@ -54,8 +54,13 @@ bool GatherTopk::supportsFormatCombination(int pos, const nvinfer1::PluginTensor
               ioDesc[pos].format == nvinfer1::TensorFormat::kLINEAR);
     case 1:
       // indices
-      return ioDesc[pos].type == nvinfer1::DataType::kINT32 &&
-             ioDesc[pos].format == nvinfer1::TensorFormat::kLINEAR;
+#if NV_TENSORRT_MAJOR < 10
+      return (ioDesc[pos].type == nvinfer1::DataType::kINT32 &&
+              ioDesc[pos].format == nvinfer1::TensorFormat::kLINEAR);
+#else
+      return (ioDesc[pos].type == nvinfer1::DataType::kINT64 &&
+              ioDesc[pos].format == nvinfer1::TensorFormat::kLINEAR);
+#endif
     case 2:
       // output
       return ioDesc[pos].type == ioDesc[0].type && ioDesc[pos].format == ioDesc[0].format;
@@ -78,8 +83,14 @@ size_t GatherTopk::getWorkspaceSize(const nvinfer1::PluginTensorDesc *inputs, in
 int GatherTopk::enqueue(const nvinfer1::PluginTensorDesc *inputDesc,
                         const nvinfer1::PluginTensorDesc *outputDesc, const void *const *inputs,
                         void *const *outputs, void *workSpace, cudaStream_t stream) TRT_NOEXCEPT {
+#if NV_TENSORRT_MAJOR < 10
   const int *dims = &(inputDesc[0].dims.d[0]);
   const int *indices_dims = &(inputDesc[1].dims.d[0]);
+#else
+  const long int *dims = &(inputDesc[0].dims.d[0]);
+  const long int *indices_dims = &(inputDesc[1].dims.d[0]);
+#endif
+
   int nbDims = inputDesc[0].dims.nbDims;
   int indice_nbDims = inputDesc[1].dims.nbDims;
 
@@ -91,13 +102,23 @@ int GatherTopk::enqueue(const nvinfer1::PluginTensorDesc *inputDesc,
 
   switch (data_type) {
     case nvinfer1::DataType::kFLOAT:
-      gather_topk_impl<float>((float *)data, (int *)indices, dims, nbDims, indices_dims,
+#if NV_TENSORRT_MAJOR < 10
+      gather_topk_impl<float>((float *)data, (int32_t *)indices, dims, nbDims, indices_dims,
                               indice_nbDims, (float *)output, stream);
+#else
+      gather_topk_impl<float>((float *)data, (int64_t *)indices, dims, nbDims, indices_dims,
+                              indice_nbDims, (float *)output, stream);
+#endif
       break;
 
     case nvinfer1::DataType::kINT32:
-      gather_topk_impl<int>((int *)data, (int *)indices, dims, nbDims, indices_dims, indice_nbDims,
-                            (int *)output, stream);
+      gather_topk_impl<int>((int *)data, (int32_t *)indices, dims, nbDims, indices_dims,
+                            indice_nbDims, (int *)output, stream);
+#if NV_TENSORRT_MAJOR >= 10
+    case nvinfer1::DataType::kINT64:
+      gather_topk_impl<int>((int *)data, (int64_t *)indices, dims, nbDims, indices_dims,
+                            indice_nbDims, (int *)output, stream);
+#endif
       break;
     default:
       break;
