@@ -91,12 +91,7 @@ The currently supported codebases and models are as follows, and more will be in
 - [mmpretrain](docs/en/04-supported-codebases/mmpretrain.md)
 - [mmdet](docs/en/04-supported-codebases/mmdet.md)
 - [mmseg](docs/en/04-supported-codebases/mmseg.md)
-- [mmagic](docs/en/04-supported-codebases/mmagic.md)
-- [mmocr](docs/en/04-supported-codebases/mmocr.md)
-- [mmpose](docs/en/04-supported-codebases/mmpose.md)
-- [mmdet3d](docs/en/04-supported-codebases/mmdet3d.md)
 - [mmrotate](docs/en/04-supported-codebases/mmrotate.md)
-- [mmaction2](docs/en/04-supported-codebases/mmaction2.md)
 
 ### Multiple inference backends are available
 
