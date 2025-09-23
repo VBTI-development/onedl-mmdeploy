@@ -139,7 +139,7 @@ The backends in MMDeploy must support the ONNX. The backend loads the ".onnx" fi
         return ir_files
    ```
 
-6. Convert the models of OpenMMLab to backends (if necessary) and inference on backend engine. If you find some incompatible operators when testing, you can try to rewrite the original model for the backend following the [rewriter tutorial](support_new_model.md) or add custom operators.
+6. Convert the models of OneDL Lab to backends (if necessary) and inference on backend engine. If you find some incompatible operators when testing, you can try to rewrite the original model for the backend following the [rewriter tutorial](support_new_model.md) or add custom operators.
 
 7. Add docstring and unit tests for new code :).
 

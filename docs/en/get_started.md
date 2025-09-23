@@ -1,6 +1,6 @@
 # Get Started
 
-MMDeploy provides useful tools for deploying OpenMMLab models to various platforms and devices.
+MMDeploy provides useful tools for deploying OneDL Lab models to various platforms and devices.
 
 With the help of them, you can not only do model deployment using our pre-defined pipelines but also customize your own deployment pipeline.
 
@@ -12,7 +12,7 @@ In MMDeploy, the deployment pipeline can be illustrated by a sequential modules,
 
 ### Model Converter
 
-Model Converter aims at converting training models from OpenMMLab into backend models that can be run on target devices.
+Model Converter aims at converting training models from OneDL Lab into backend models that can be run on target devices.
 It is able to transform PyTorch model into IR model, i.e., ONNX, TorchScript, as well as convert IR model to backend model. By combining them together, we can achieve one-click **end-to-end** model deployment.
 
 ### MMDeploy Model
@@ -60,12 +60,12 @@ On GPU platform, please ensure that {cudatoolkit_version} matches your host CUDA
 
 We recommend that users follow our best practices installing MMDeploy.
 
-**Step 0.** Install [MMCV](https://github.com/vbti-development/onedl-mmcv).
+**Step 0.** Install [OneDL MMCV](https://github.com/vbti-development/onedl-mmcv).
 
 ```shell
-pip install -U openmim
-mim install mmengine
-mim install "mmcv>=2.0.0rc2"
+pip install -U onedl-mim
+mim install onedl-mmengine
+mim install "onedl-mmcv"
 ```
 
 **Step 1.** Install MMDeploy and inference engine
@@ -174,7 +174,7 @@ git clone -b main https://github.com/vbti-development/onedl-mmdeploy.git
 
 # clone mmdetection repo. We have to use the config file to build PyTorch nn module
 git clone -b 3.x https://github.com/vbti-development/onedl-mmdetection.git
-cd mmdetection
+cd onedl-mmdetection
 mim install -v -e .
 cd ..
 

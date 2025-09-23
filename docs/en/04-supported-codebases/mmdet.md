@@ -14,7 +14,7 @@
 
 ______________________________________________________________________
 
-[MMDetection](https://github.com/vbti-development/onedl-mmdetection) aka `mmdet` is an open source object detection toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+[MMDetection](https://github.com/vbti-development/onedl-mmdetection) aka `mmdet` is an open source object detection toolbox based on PyTorch. It is a part of the [OneDL Lab](https://github.com/vbti-development) project.
 
 ## Installation
 

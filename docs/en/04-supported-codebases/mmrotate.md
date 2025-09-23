@@ -13,7 +13,7 @@
 
 ______________________________________________________________________
 
-[MMRotate](https://github.com/vbti-development/onedl-mmrotate) is an open-source toolbox for rotated object detection based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+[MMRotate](https://github.com/vbti-development/onedl-mmrotate) is an open-source toolbox for rotated object detection based on PyTorch. It is a part of the [OneDL Lab](https://github.com/vbti-development) project.
 
 ## Installation
 

@@ -13,7 +13,7 @@
 
 ______________________________________________________________________
 
-[MMPretrain](https://github.com/vbti-development/onedl-mmpretrain) aka `mmpretrain` is an open-source image classification toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com) project.
+[MMPretrain](https://github.com/vbti-development/onedl-mmpretrain) aka `mmpretrain` is an open-source image classification toolbox based on PyTorch. It is a part of the [OneDL Lab](https://github.com/vbti-development) project.
 
 ## Installation
 

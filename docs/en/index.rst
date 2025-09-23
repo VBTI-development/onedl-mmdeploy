@@ -46,7 +46,7 @@ You can switch between Chinese and English documents in the lower-left corner of
 
 .. toctree::
    :maxdepth: 1
-   :caption: OpenMMLab Codebase Support
+   :caption: OneDL Lab Codebase Support
 
    04-supported-codebases/mmpretrain.md
    04-supported-codebases/mmdet.md

@@ -14,7 +14,7 @@ mkdir -p $work_dir $mmdeploy_dir/data/tiny_coco
 
 model_cfg=$work_dir/mask-rcnn_r50_fpn_1x_coco.py
 checkpoint=$work_dir/mask_rcnn_r50_fpn_1x_coco_20200205-d4b0c5d6.pth
-# https://download.openmmlab.com/mmdetection/v2.0/mask_rcnn/mask_rcnn_r50_fpn_1x_coco/mask_rcnn_r50_fpn_1x_coco_20200205-d4b0c5d6.pth
+# https://mmassets.onedl.ai/mmdetection/v2.0/mask_rcnn/mask_rcnn_r50_fpn_1x_coco/mask_rcnn_r50_fpn_1x_coco_20200205-d4b0c5d6.pth
 sdk_cfg=configs/mmdet/instance-seg/instance-seg_sdk_dynamic.py
 input_img=tests/data/tiger.jpeg
 

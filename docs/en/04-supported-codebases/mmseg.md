@@ -14,7 +14,7 @@
 
 ______________________________________________________________________
 
-[MMSegmentation](https://github.com/vbti-development/onedl-mmsegmentation/tree/main) aka `mmseg` is an open source semantic segmentation toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
+[MMSegmentation](https://github.com/vbti-development/onedl-mmsegmentation/tree/main) aka `mmseg` is an open source semantic segmentation toolbox based on PyTorch. It is a part of the [OneDL Lab](https://github.com/vbti-development) project.
 
 ## Installation
 

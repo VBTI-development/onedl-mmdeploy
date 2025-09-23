@@ -16,7 +16,7 @@ mkdir -p $work_dir $mmdeploy_dir/data/tiny_coco
 
 model_cfg=$work_dir/rtmdet-ins_s_8xb32-300e_coco.py
 checkpoint=$work_dir/rtmdet-ins_s_8xb32-300e_coco_20221121_212604-fdc5d7ec.pth
-# https://download.openmmlab.com/mmdetection/v3.0/rtmdet/rtmdet-ins_s_8xb32-300e_coco/rtmdet-ins_s_8xb32-300e_coco_20221121_212604-fdc5d7ec.pth
+# https://mmassets.onedl.ai/mmdetection/v3.0/rtmdet/rtmdet-ins_s_8xb32-300e_coco/rtmdet-ins_s_8xb32-300e_coco_20221121_212604-fdc5d7ec.pth
 sdk_cfg=configs/mmdet/instance-seg/instance-seg_sdk_dynamic.py
 input_img=tests/data/tiger.jpeg
 

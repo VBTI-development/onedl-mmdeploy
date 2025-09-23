@@ -4,7 +4,7 @@ Apart from `deploy.py`, there are other useful tools under the `tools/` director
 
 ## torch2onnx
 
-This tool can be used to convert PyTorch model from OpenMMLab to ONNX.
+This tool can be used to convert PyTorch model from OneDL Lab to ONNX.
 
 ### Usage
 
@@ -22,7 +22,7 @@ python tools/torch2onnx.py \
 ### Description of all arguments
 
 - `deploy_cfg` : The path of the deploy config file in MMDeploy codebase.
-- `model_cfg` : The path of model config file in OpenMMLab codebase.
+- `model_cfg` : The path of model config file in OneDL Lab codebase.
 - `checkpoint` : The path of the model checkpoint file.
 - `img` : The path of the image file used to convert the model.
 - `--work-dir` : Directory to save output ONNX models Default is `./work-dir`.
@@ -156,7 +156,7 @@ python tools/profiler.py \
 ### Description of all arguments
 
 - `deploy_cfg` : The path of the deploy config file in MMDeploy codebase.
-- `model_cfg` : The path of model config file in OpenMMLab codebase.
+- `model_cfg` : The path of model config file in OneDL Lab codebase.
 - `image_dir` : The directory to image files that used to test the model.
 - `--model` : The path of the model to be tested.
 - `--shape` : Input shape of the model by `HxW`, e.g., `800x1344`. If not specified, it would use `input_shape` from deploy config.
