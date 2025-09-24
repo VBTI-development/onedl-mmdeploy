@@ -1,10 +1,10 @@
 # How to convert model
 
-This tutorial briefly introduces how to export an OpenMMlab model to a specific backend using MMDeploy tools.
+This tutorial briefly introduces how to export an OneDL Lab model to a specific backend using MMDeploy tools.
 Notes:
 
 - Supported backends are [ONNXRuntime](../05-supported-backends/onnxruntime.md), [TensorRT](../05-supported-backends/tensorrt.md), [ncnn](../05-supported-backends/ncnn.md), [PPLNN](../05-supported-backends/pplnn.md), [OpenVINO](../05-supported-backends/openvino.md).
-- Supported codebases are [MMPretrain](../04-supported-codebases/mmpretrain.md), [MMDetection](../04-supported-codebases/mmdet.md), [MMSegmentation](../04-supported-codebases/mmseg.md), [MMOCR](../04-supported-codebases/mmocr.md), [MMagic](../04-supported-codebases/mmagic.md).
+- Supported codebases are [MMPretrain](../04-supported-codebases/mmpretrain.md), [MMDetection](../04-supported-codebases/mmdet.md), [MMSegmentation](../04-supported-codebases/mmseg.md).
 
 ## How to convert models from Pytorch to other backends
 

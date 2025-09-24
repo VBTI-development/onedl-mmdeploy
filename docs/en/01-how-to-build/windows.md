@@ -59,10 +59,10 @@ pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f htt
     <td>mmcv </td>
     <td>Install mmcv as follows. Refer to the <a href="https://github.com/vbti-development/onedl-mmcv/tree/2.x#installation">guide</a> for details.
 <pre><code>
-$env:cu_version="cu111"
-$env:torch_version="torch1.8.0"
-pip install -U openmim
-mim install "mmcv>=2.0.0rc1"
+$env:cu_version="cu129"
+$env:torch_version="torch2.8.0"
+pip install -U onedl-mim
+mim install "onedl-mmcv"
 </code></pre>
     </td>
   </tr>

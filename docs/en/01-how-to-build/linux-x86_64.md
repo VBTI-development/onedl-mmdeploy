@@ -72,11 +72,11 @@ conda install pytorch==1.8.0 torchvision==0.9.0 cudatoolkit=11.1 -c pytorch -c c
     <td>mmcv </td>
     <td>Install mmcv as follows. Refer to the <a href="https://github.com/vbti-development/onedl-mmcv/tree/2.x#installation">guide</a> for details.
 <pre><code>
-export cu_version=cu111 # cuda 11.1
-export torch_version=torch1.8
-pip install -U openmim
-mim install mmengine
-mim install "mmcv>=2.0.0rc2"
+export cu_version=cu129 # cuda 12.9
+export torch_version=torch2.8
+pip install -U onedl-mim
+mim install onedl-mmengine
+mim install "onedl-mmcv"
 </code></pre>
     </td>
   </tr>

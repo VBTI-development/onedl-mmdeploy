@@ -24,7 +24,7 @@ Please install TensorRT 8 follow [install-guide](https://docs.nvidia.com/deeplea
 
 ### Build custom ops
 
-Some custom ops are created to support models in OpenMMLab, and the custom ops can be built as follow:
+Some custom ops are created to support models in OneDL Lab, and the custom ops can be built as follow:
 
 ```bash
 cd ${MMDEPLOY_DIR} # To MMDeploy root directory
@@ -51,7 +51,7 @@ Since TensorRT supports INT8 mode, a custom dataset config can be given to calib
 ```python
 # calibration_dataset.py
 
-# dataset settings, same format as the codebase in OpenMMLab
+# dataset settings, same format as the codebase in OneDL Lab
 dataset_type = 'CalibrationDataset'
 data_root = 'calibration/dataset/root'
 img_norm_cfg = dict(

@@ -258,7 +258,7 @@ export MMDEPLOY_DIR=$(pwd)
 
 ### Install Model Converter
 
-Since some operators adopted by OpenMMLab codebases are not supported by TensorRT, we build the custom TensorRT plugins to make it up, such as `roi_align`, `scatternd`, etc.
+Since some operators adopted by OneDL Lab codebases are not supported by TensorRT, we build the custom TensorRT plugins to make it up, such as `roi_align`, `scatternd`, etc.
 You can find a full list of custom plugins from [here](../06-custom-ops/tensorrt.md).
 
 ```shell

@@ -14,7 +14,7 @@ mkdir -p $work_dir $mmdeploy_dir/data/tiny_coco
 
 model_cfg=$work_dir/deformable-detr_r50_16xb2-50e_coco.py
 checkpoint=$work_dir/deformable-detr_r50_16xb2-50e_coco_20221029_210934-6bc7d21b.pth
-# https://download.openmmlab.com/mmdetection/v3.0/deformable_detr/deformable-detr_r50_16xb2-50e_coco/deformable-detr_r50_16xb2-50e_coco_20221029_210934-6bc7d21b.pth
+# https://mmassets.onedl.ai/mmdetection/v3.0/deformable_detr/deformable-detr_r50_16xb2-50e_coco/deformable-detr_r50_16xb2-50e_coco_20221029_210934-6bc7d21b.pth
 sdk_cfg=configs/mmdet/detection/detection_sdk_dynamic.py
 input_img=tests/data/tiger.jpeg
 

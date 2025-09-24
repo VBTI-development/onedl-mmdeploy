@@ -158,8 +158,8 @@ def ensure_base_env(work_dir, dep_dir):
         except Exception:
             # install mmcv
             print('mmcv not found, try install mmcv ..', end='')
-            os.system('python3 -m pip install -U openmim')
-            os.system('mim install mmcv-full==1.5.1')
+            os.system('python3 -m pip install -U onedl-mim')
+            os.system('mim install onedl-mmcv==1.5.1')
     except Exception:
         pass
 
