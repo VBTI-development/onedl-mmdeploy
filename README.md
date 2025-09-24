@@ -28,21 +28,13 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/onedl-mmdeploy)](https://pypi.org/project/onedl-mmdeploy/)
 [![PyPI](https://img.shields.io/pypi/v/onedl-mmdeploy)](https://pypi.org/project/onedl-mmdeploy)
 
-[![Build Status](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml/badge.svg)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
-
-<!-- markdown-link-check-disable -->
-
-[![Build CPU convert](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/build_cpu_model_convert)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
-[![Build CPU SDK](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/build_cpu_sdk)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
-[![Build Cross AARCH64](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/cross_build_aarch64)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
-[![Build Cross AARCH64](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/build_cuda118)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml)
-
-<!-- markdown-link-check-enable -->
-
 [![open issues](https://isitmaintained.com/badge/open/VBTI-development/onedl-mmdeploy.svg)](https://github.com/VBTI-development/onedl-mmdeploy/issues)
 [![issue resolution](https://isitmaintained.com/badge/resolution/VBTI-development/onedl-mmdeploy.svg)](https://github.com/VBTI-development/onedl-mmdeploy/issues)
 
 <!-- markdown-link-check-disable -->
+| Build CPU convert | Build CPU SDK | Build cross AARCH 64 | Build CUDA 11.8 |
+|-------------------|---------------|----------------------|-----------------|
+| [![Build CPU convert](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml/badge.svg)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml) | [![Build CPU SDK](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/build_cpu_sdk)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml) | [![Build Cross AARCH64](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/cross_build_aarch64)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml) | [![Build CUDA 118](https://byob.yarr.is/VBTI-development/onedl-mmdeploy/build_cuda118)](https://github.com/VBTI-development/onedl-mmdeploy/actions/workflows/build.yml) |
 
 [📘 Documentation](https://onedl-mmdeploy.readthedocs.io/en/latest/) |
 [🛠️ Installation](https://onedl-mmdeploy.readthedocs.io/en/latest/get_started.html) |
