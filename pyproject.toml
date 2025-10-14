@@ -3,7 +3,7 @@ name = "onedl-mmdeploy"
 version = "1.4.0"
 description = "OneDL Model Deployment"
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = "LicenseRef-Apache-2.0"
 authors = [
     {name = "MMDeploy Contributors"},
     {name = "VBTI Software Team", email = "oss@vbti.nl"}
