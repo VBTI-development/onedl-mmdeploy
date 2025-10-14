@@ -37,7 +37,7 @@ jobs:
       - name: Install unit tests dependencies
         run: |
           uv pip install onedl-mim
-          mim install onedl-mmcv
+          mim install onedl-mmcv --only-binary=onedl-mmcv
           uv export --only-group codebases > codebases.txt && mim install -r codebases.txt
           uv pip install -r pyproject.toml --group tests --group build --extra backends
       # - name: Install mmyolo
@@ -152,6 +152,7 @@ jobs:
       image: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
     env:
       FORCE_CUDA: 1
+      UV_CACHE_DIR: /__w/_uv_cache
     steps:
       - uses: actions/checkout@v3
       - name: Install system dependencies
@@ -160,9 +161,11 @@ jobs:
           apt-get clean
           rm -rf /var/lib/apt/lists/*
       - name: Install uv and set the python version
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
+          activate-environment: true
           python-version: '3.10'
+          cache-local-path: /__w/_uv_cache
       - name: Install PyTorch
         run: |
           uv pip install torch==2.5.1 torchvision
@@ -180,7 +183,7 @@ jobs:
       - name: Install unit tests dependencies
         run: |
           uv pip install onedl-mim
-          mim install onedl-mmcv
+          mim install onedl-mmcv --only-binary=onedl-mmcv
           uv export --only-group codebases > codebases.txt && mim install -r codebases.txt
           uv pip install -r pyproject.toml --group tests --group build --extra backends
       - name: Build and install

@@ -1227,7 +1227,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/b0/33/fda71a316410b84e2
 
 [[package]]
 name = "onedl-mmdeploy"
-version = "1.4.0rc0"
+version = "1.4.0"
 source = { editable = "." }
 dependencies = [
     { name = "aenum" },
