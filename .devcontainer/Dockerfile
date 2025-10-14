@@ -63,5 +63,5 @@ ENV PYTHONPATH="/usr/local/lib/python3.10/dist-packages:$PYTHONPATH"
 
 RUN pip install "torch==2.5.1" torchvision --index-url https://download.pytorch.org/whl/cu124 && \
     pip install onedl-mim && \
-    FORCE_CUDA=1 python -m mim install onedl-mmcv && \
+    FORCE_CUDA=1 python -m mim install onedl-mmcv --only-binary=onedl-mmcv && \
     pip install onnxruntime==${ONNXRUNTIME_VERSION}

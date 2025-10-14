@@ -1,7 +1,7 @@
 [project]
 name = "onedl-mmdeploy"
-version = "1.4.0-rc.0"
-description = "OpenMMLab Model Deployment"
+version = "1.4.0"
+description = "OneDL Model Deployment"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 authors = [
