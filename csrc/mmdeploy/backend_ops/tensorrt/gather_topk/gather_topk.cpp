@@ -118,9 +118,6 @@ int GatherTopk::enqueue(const nvinfer1::PluginTensorDesc *inputDesc,
       break;
 #else
     case nvinfer1::DataType::kINT32:
-      gather_topk_impl<int>((int *)data, (int64_t *)indices, dims, nbDims, indices_dims,
-                            indice_nbDims, (int *)output, stream);
-      break;
     case nvinfer1::DataType::kINT64:
       gather_topk_impl<int>((int *)data, (int64_t *)indices, dims, nbDims, indices_dims,
                             indice_nbDims, (int *)output, stream);
