@@ -111,10 +111,14 @@ int GatherTopk::enqueue(const nvinfer1::PluginTensorDesc *inputDesc,
 #endif
       break;
 
+#if NV_TENSORRT_MAJOR < 10
     case nvinfer1::DataType::kINT32:
       gather_topk_impl<int>((int *)data, (int32_t *)indices, dims, nbDims, indices_dims,
                             indice_nbDims, (int *)output, stream);
-#if NV_TENSORRT_MAJOR >= 10
+#else
+    case nvinfer1::DataType::kINT32:
+      gather_topk_impl<int>((int *)data, (int64_t *)indices, dims, nbDims, indices_dims,
+                            indice_nbDims, (int *)output, stream);
     case nvinfer1::DataType::kINT64:
       gather_topk_impl<int>((int *)data, (int64_t *)indices, dims, nbDims, indices_dims,
                             indice_nbDims, (int *)output, stream);
