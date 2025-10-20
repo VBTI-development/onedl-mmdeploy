@@ -120,3 +120,8 @@ RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
 ENV LD_LIBRARY_PATH="$ONNXRUNTIME_DIR/lib:$BACKUP_LD_LIBRARY_PATH"
 ENV LD_LIBRARY_PATH="/workspace/onedl-mmdeploy/build/lib:${LD_LIBRARY_PATH}"
 ENV LD_LIBRARY_PATH="/usr/local/cuda/:$LD_LIBRARY_PATH"
+
+LABEL org.opencontainers.image.source=https://github.com/vbti-development/onedl-mmdeploy
+LABEL org.opencontainers.image.description="OneDL MMDeploy Docker Image with GPU support"
+LABEL org.opencontainers.image.licenses=Apache-2.0
+LABEL org.opencontainers.image.vendor="VBTI Products BV"
