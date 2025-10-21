@@ -1,0 +1,99 @@
+# syntax=docker/dockerfile:1.7-labs
+# use buildkit
+
+FROM nvcr.io/nvidia/l4t-jetpack:r36.3.0
+
+# This docker installs:
+    # - onedl-mim
+    # - onedl-mmcv and onedl-mmengine
+    # - ppl.cv
+    # - onedl-mmdeploy [cuda;cpu, ort;trt, mmpretrain;mmseg;mmdet;mmrotate]
+
+ARG PPLCV_VERSION=0.8.0
+
+ARG MMCV_VERSION=">=2.3.0"
+ARG MMENGINE_VERSION=">=0.10.8"
+ARG MMDEPLOY_VERSION
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_BREAK_SYSTEM_PACKAGES=1
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# set the timezone to Europe Amsterdam
+# and install libs
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ="Europe/Amsterdam"
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib \
+    apt-get update && \
+    apt-get install -yq tzdata && \
+    ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    apt-get install -y \
+        curl \
+        git python3-pip libopenmpi-dev libopenblas-dev libomp-dev libcusparselt0 libcusparselt-dev \
+        curl libspdlog-dev vim pkg-config cmake cudss \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# install torch, torchvision, onnx
+# https://pypi.jetson-ai-lab.dev/
+# TODO: copy to our own servers?
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip \
+    python3 -m pip install --upgrade pip; python3 -m pip install --no-cache \
+    https://mmwheels-bucket.onedl.ai/cu122-torch280/torch/torch-2.8.0-cp310-cp310-linux_aarch64.whl \
+    https://mmwheels-bucket.onedl.ai/cu122-torch280/torchvision/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl \
+    https://mmwheels-bucket.onedl.ai/cu122-torch280/onnxruntime-gpu/onnxruntime_gpu-1.17.3-cp310-cp310-linux_aarch64.whl
+
+
+# install and build pplc.cv
+WORKDIR /workspace
+RUN git clone -b v${PPLCV_VERSION} --single-branch https://github.com/VBTI-development/ppl.cv.git &&\
+    cd ppl.cv &&\
+    ./build.sh cuda
+ENV PPLCV_DIR=/workspace/ppl.cv
+
+WORKDIR /workspace
+# install onedl-mmcv
+RUN --mount=type=cache,target=/root/.cache/pip,id=pip \
+    python3 -m pip install --no-cache "onedl-mmcv${MMCV_VERSION}" "onedl-mmengine${MMENGINE_VERSION}"  --only-binary=onedl-mmcv -f https://mmwheels.onedl.ai/jp60-torch280/
+
+# ### install mmdeploy
+ENV TENSORRT_DIR=/workspace/tensorrt
+WORKDIR /workspace/
+
+ENV BACKUP_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/cuda/compat/lib.real/:$LD_LIBRARY_PATH
+
+RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
+        echo "Checking out MMDeploy version: ${MMDEPLOY_VERSION}" && \
+        MMDEPLOY_VERSION_=${MMDEPLOY_VERSION} ; \
+    else \
+        echo "Using main branch (no version specified)" && \
+        MMDEPLOY_VERSION_=main ; \
+    fi && \
+    git clone --single-branch -b ${MMDEPLOY_VERSION_} https://github.com/vbti-development/onedl-mmdeploy &&\
+    cd onedl-mmdeploy &&\
+    git submodule update --init --recursive &&\
+    mkdir -p build && cd build &&\
+    cmake .. \
+        -DMMDEPLOY_BUILD_SDK=ON \
+        -DMMDEPLOY_BUILD_SDK_PYTHON_API=ON \
+        -DMMDEPLOY_BUILD_EXAMPLES=OFF \
+        -DMMDEPLOY_TARGET_DEVICES="cuda;cpu" \
+        -DMMDEPLOY_TARGET_BACKENDS="trt" \
+        -DMMDEPLOY_CODEBASES="mmpretrain;mmdet;mmseg;mmrotate" \
+        -Dpplcv_DIR=${PPLCV_DIR}/cuda-build/install/lib/cmake/ppl &&\
+    make -j$(nproc) && make install &&\
+    export SPDLOG_LEVEL=debug &&\
+    if [ -z ${MMDEPLOY_VERSION} ] ; then echo "Built MMDeploy for Jetpack 6.0 devices successfully!" ; else echo "Built MMDeploy version v${MMDEPLOY_VERSION} for Jetpack 6.0 devices successfully!" ; fi &&\
+    cd ../ &&\
+    python3 -m mim install --config-settings editable_mode=compat -e .
+
+LABEL org.opencontainers.image.source=https://github.com/vbti-development/onedl-mmdeploy
+LABEL org.opencontainers.image.description="OneDL MMDeploy Docker Image with Jetpack 6.0 support"
+LABEL org.opencontainers.image.licenses=Apache-2.0
+LABEL org.opencontainers.image.vendor="VBTI Products BV"

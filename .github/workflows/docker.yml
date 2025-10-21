@@ -16,17 +16,40 @@ concurrency:
 
 env:
   REGISTRY: vbti
-  IMAGE_NAME: onedl-mmdeploy-gpu-cu124
 
 jobs:
+  extract_version:
+    name: Extract version information
+    runs-on: ubuntu-24.04
+    outputs:
+      tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+      version: ${{ steps.extract_tag.outputs.version }}
+    steps:
+      - name: Extract tag name
+        id: extract_tag
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG_NAME="${{ github.event.release.tag_name }}"
+          else
+            TAG_NAME="${{ github.event.inputs.tag }}"
+          fi
+          # Remove 'v' prefix if present for version
+          VERSION=${TAG_NAME#v}
+          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Building with tag: ${TAG_NAME}, version: ${VERSION}"
+
   build_docker_gpu:
     name: Push GPU Docker image to Docker Hub
     runs-on: ubuntu-24.04
+    needs: extract_version
     permissions:
         packages: write
         contents: read
         attestations: write
         id-token: write
+    env:
+      IMAGE_NAME: onedl-mmdeploy-gpu-cu124
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -41,20 +64,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Extract tag name
-        id: extract_tag
-        run: |
-          if [ "${{ github.event_name }}" = "release" ]; then
-            TAG_NAME="${{ github.event.release.tag_name }}"
-          else
-            TAG_NAME="${{ github.event.inputs.tag }}"
-          fi
-          # Remove 'v' prefix if present for version
-          VERSION=${TAG_NAME#v}
-          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          echo "Building with tag: ${TAG_NAME}, version: ${VERSION}"
 
       - name: Extract metadata
         id: meta
@@ -86,13 +95,13 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            MMDEPLOY_VERSION="${{ steps.extract_tag.outputs.version }}"
+            MMDEPLOY_VERSION="${{ needs.extract_version.outputs.version }}"
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Test Docker image
         run: |
-          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.version }} python3 -c "import mmdeploy; print('MMDeploy version:', mmdeploy.__version__)"
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.extract_version.outputs.version }} python3 -c "import mmdeploy; print('MMDeploy version:', mmdeploy.__version__)"
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3
@@ -107,6 +116,99 @@ jobs:
         with:
           NAME: docker_gpu_build
           LABEL: 'docker-gpu'
+          STATUS: ${{ steps.build.conclusion == 'success' && 'passing' || 'failing' }}
+          COLOR: ${{ steps.build.conclusion == 'success' && 'green' || 'red' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build_docker_jetson:
+    name: Push Jetson Docker images to Docker Hub
+    runs-on: ubuntu-24.04
+    needs: extract_version
+    permissions:
+        packages: write
+        contents: read
+        attestations: write
+        id-token: write
+    strategy:
+      matrix:
+        include:
+          - jetpack_version: "60"
+            image_name: onedl-mmdeploy-jetson-jp60
+            dockerfile: ./docker/GPU/Dockerfile.jetson60
+          - jetpack_version: "61"
+            image_name: onedl-mmdeploy-jetson-jp61
+            dockerfile: ./docker/GPU/Dockerfile.jetson61
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          submodules: 'recursive'
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ matrix.image_name }}
+          tags: |
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Check disk space
+        continue-on-error: true
+        run: |
+          df -h
+          docker system prune -f
+          df -h
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            MMDEPLOY_VERSION="${{ needs.extract_version.outputs.version }}"
+          cache-from: type=gha,scope=jetson-${{ matrix.jetpack_version }}
+          cache-to: type=gha,mode=max,scope=jetson-${{ matrix.jetpack_version }}
+
+      - name: Test Docker image
+        run: |
+          docker run --rm --platform linux/arm64 ${{ env.REGISTRY }}/${{ matrix.image_name }}:${{ needs.extract_version.outputs.version }} python3 -c "import mmdeploy; print('MMDeploy version:', mmdeploy.__version__)"
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: index.docker.io/${{ env.REGISTRY }}/${{ matrix.image_name }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
+      - name: Create badge
+        if: always()
+        uses: RubbaBoy/BYOB@v1.2.1
+        with:
+          NAME: docker_jetson_${{ matrix.jetpack_version }}_build
+          LABEL: 'docker-jetson-jp${{ matrix.jetpack_version }}'
           STATUS: ${{ steps.build.conclusion == 'success' && 'passing' || 'failing' }}
           COLOR: ${{ steps.build.conclusion == 'success' && 'green' || 'red' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
