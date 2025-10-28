@@ -4,7 +4,7 @@ This ReadMe is for developers who want to use this repo.
 
 There is a devcontainer that allows for development of both the C++ and the python code.
 The post-install-script will install the code bases (e.g. mmdet) you are developing for.
-Currently we only support mmdet and mmpretrain.
+Currently we only support mmdet and mmpretrain, mmsegmentation and mmrotate.
 
 If another code base is added the post-install script should install it.
 Furthermore the buildcmd.sh should be updated to build mmdeploy for that code base too,

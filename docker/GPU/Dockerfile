@@ -1,106 +1,127 @@
-FROM nvcr.io/nvidia/tensorrt:22.04-py3
+# syntax=docker/dockerfile:1.7-labs
+# use buildkit
+FROM nvcr.io/nvidia/tensorrt:24.04-py3 AS runtime
 
-ARG CUDA=11.3
-ARG PYTHON_VERSION=3.8
-ARG TORCH_VERSION=1.10.0
-ARG TORCHVISION_VERSION=0.11.0
-ARG ONNXRUNTIME_VERSION=1.8.1
+# This docker installs:
+    # - ONNX
+    # - TensorRT
+    # - onedl-mim
+    # - onedl-mmcv and onedl-mmengine
+    # - ppl.cv
+    # - onedl-mmdeploy [cuda;cpu, ort;trt, mmpretrain;mmseg;mmdet;mmrotate]
+
+ARG PYTHON_VERSION=3.10
+ARG CUDA_VERSION=12.4
+ARG TORCH_VERSION=2.5.1
+ARG ONNXRUNTIME_VERSION=1.19.2
 ARG PPLCV_VERSION=0.8.0
 ENV FORCE_CUDA="1"
-ARG MMCV_VERSION=">=2.0.0rc2"
-ARG MMENGINE_VERSION=">=0.3.0"
+
+ARG MMCV_VERSION=">=2.3.0"
+ARG MMENGINE_VERSION=">=0.10.8"
+ARG MMDEPLOY_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-### change the system source for installing libs
-ARG USE_SRC_INSIDE=false
-RUN if [ ${USE_SRC_INSIDE} == true ] ; \
-    then \
-        sed -i s/archive.ubuntu.com/mirrors.aliyun.com/g /etc/apt/sources.list ; \
-        sed -i s/security.ubuntu.com/mirrors.aliyun.com/g /etc/apt/sources.list ; \
-        echo "Use aliyun source for installing libs" ; \
-    else \
-        echo "Keep the download source unchanged" ; \
-    fi
+# set the timezone to Europe Amsterdam
+# and install libs
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ="Europe/Amsterdam"
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib \
+    apt-get update && \
+    apt-get install -yq tzdata && \
+    ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    apt-get install -y \
+        curl \
+        ffmpeg \
+        git \
+        libc6 \
+        libgl1 \
+        libgl1-mesa-glx \
+        libglib2.0-0 \
+        libopencv-dev \
+        libsm6 \
+        libspdlog-dev \
+        libssl-dev \
+        libxext6 \
+        libxrender-dev \
+        ninja-build \
+        wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-### update apt and install libs
-RUN apt-get update &&\
-    apt-get install -y vim libsm6 libxext6 libxrender-dev libgl1-mesa-glx git wget libssl-dev libopencv-dev libspdlog-dev --no-install-recommends &&\
-    rm -rf /var/lib/apt/lists/*
+# This directory is not part of official OpenCV releases and is likely leftover
+# from an old install or a third-party package.
+RUN rm -rf /usr/local/lib/python3.10/dist-packages/cv2/typing
 
-RUN curl -fsSL -v -o ~/miniconda.sh -O  https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh  && \
-    chmod +x ~/miniconda.sh && \
-    bash ~/miniconda.sh -b -p /opt/conda && \
-    rm ~/miniconda.sh && \
-    /opt/conda/bin/conda install -y python=${PYTHON_VERSION} conda-build pyyaml numpy ipython cython typing typing_extensions mkl mkl-include ninja && \
-    /opt/conda/bin/conda clean -ya
+# install necessary python packages
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install pyyaml numpy ipython cython typing typing_extensions mkl mkl-include ninja onedl-mim
 
-### change the pip source for installing packages
-RUN if [ ${USE_SRC_INSIDE} == true ] ; \
-    then \
-        /opt/conda/bin/pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple; \
-        echo "pip using tsinghua source" ; \
-    else \
-        echo "Keep pip the download source unchanged" ; \
-    fi
-
-### install pytorch openmim
-RUN /opt/conda/bin/conda install pytorch==${TORCH_VERSION} torchvision==${TORCHVISION_VERSION} cudatoolkit=${CUDA} -c pytorch -c conda-forge -y \
-    && /opt/conda/bin/pip install --no-cache-dir openmim
-
-### pytorch mmcv onnxruntime
-RUN /opt/conda/bin/mim install --no-cache-dir "mmcv"${MMCV_VERSION} onnxruntime-gpu==${ONNXRUNTIME_VERSION} mmengine${MMENGINE_VERSION}
-
-ENV PATH /opt/conda/bin:$PATH
-WORKDIR /root/workspace
+# install torch
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install torch==${TORCH_VERSION} torchvision --extra-index-url https://download.pytorch.org/whl/${CUDA_VERSION/.//}
 
 ### get onnxruntime
+WORKDIR /workspace/
 RUN wget https://github.com/microsoft/onnxruntime/releases/download/v${ONNXRUNTIME_VERSION}/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}.tgz \
     && tar -zxvf onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}.tgz
+ENV ONNXRUNTIME_DIR=/workspace/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}
 
-### cp trt from pip to conda
-RUN cp -r /usr/local/lib/python${PYTHON_VERSION}/dist-packages/tensorrt* /opt/conda/lib/python${PYTHON_VERSION}/site-packages/
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python3 -m mim install onnxruntime-gpu==${ONNXRUNTIME_VERSION}
 
-### install mmdeploy
-ENV ONNXRUNTIME_DIR=/root/workspace/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}
-ENV TENSORRT_DIR=/workspace/tensorrt
-ARG VERSION
-RUN git clone -b main https://github.com/vbti-development/onedl-mmdeploy &&\
-    cd mmdeploy &&\
-    if [ -z ${VERSION} ] ; then echo "No MMDeploy version passed in, building on main" ; else git checkout tags/v${VERSION} -b tag_v${VERSION} ; fi &&\
-    git submodule update --init --recursive &&\
-    mkdir -p build &&\
-    cd build &&\
-    cmake -DMMDEPLOY_TARGET_BACKENDS="ort;trt" .. &&\
-    make -j$(nproc) &&\
-    cd .. &&\
-    /opt/conda/bin/mim install -e .
+### install onedl-mm dependencies
+RUN python3 -m mim install --no-cache "onedl-mmcv${MMCV_VERSION}" "onedl-mmengine${MMENGINE_VERSION}"  --only-binary=onedl-mmcv
 
-### build sdk
-RUN git clone https://github.com/VBTI-development/ppl.cv.git &&\
+### install pplcv sdk
+WORKDIR /workspace/
+RUN git clone -b v${PPLCV_VERSION} --single-branch https://github.com/VBTI-development/ppl.cv.git &&\
     cd ppl.cv &&\
-    git checkout tags/v${PPLCV_VERSION} -b v${PPLCV_VERSION} &&\
     ./build.sh cuda
+
+# ### install mmdeploy
+ENV TENSORRT_DIR=/workspace/tensorrt
+WORKDIR /workspace/
 
 ENV BACKUP_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=/usr/local/cuda/compat/lib.real/:$LD_LIBRARY_PATH
 
-RUN cd /root/workspace/mmdeploy &&\
-    rm -rf build/CM* build/cmake-install.cmake build/Makefile build/csrc &&\
+RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
+        echo "Checking out MMDeploy version: ${MMDEPLOY_VERSION}" && \
+        MMDEPLOY_VERSION_=${MMDEPLOY_VERSION} ; \
+    else \
+        echo "Using main branch (no version specified)" && \
+        MMDEPLOY_VERSION_=main ; \
+    fi && \
+    git clone --single-branch -b ${MMDEPLOY_VERSION_} https://github.com/vbti-development/onedl-mmdeploy &&\
+    cd onedl-mmdeploy &&\
+    git submodule update --init --recursive &&\
     mkdir -p build && cd build &&\
     cmake .. \
-        -DMMDEPLOY_BUILD_SDK=ON \
-        -DMMDEPLOY_BUILD_EXAMPLES=ON \
-        -DCMAKE_CXX_COMPILER=g++ \
-        -Dpplcv_DIR=/root/workspace/ppl.cv/cuda-build/install/lib/cmake/ppl \
-        -DTENSORRT_DIR=${TENSORRT_DIR} \
-        -DONNXRUNTIME_DIR=${ONNXRUNTIME_DIR} \
-        -DMMDEPLOY_BUILD_SDK_PYTHON_API=ON \
-        -DMMDEPLOY_TARGET_DEVICES="cuda;cpu" \
-        -DMMDEPLOY_TARGET_BACKENDS="ort;trt" \
-        -DMMDEPLOY_CODEBASES=all &&\
+    -DMMDEPLOY_BUILD_SDK=ON \
+    -DMMDEPLOY_BUILD_EXAMPLES=ON \
+    -DCMAKE_CXX_COMPILER=g++ \
+    -Dpplcv_DIR=/workspace/ppl.cv/cuda-build/install/lib/cmake/ppl \
+    -DTENSORRT_DIR=${TENSORRT_DIR} \
+    -DONNXRUNTIME_DIR=${ONNXRUNTIME_DIR} \
+    -DMMDEPLOY_BUILD_SDK_PYTHON_API=ON \
+    -DMMDEPLOY_TARGET_DEVICES="cuda;cpu" \
+    -DMMDEPLOY_TARGET_BACKENDS="ort;trt" \
+    -DMMDEPLOY_CODEBASES="mmpretrain;mmseg;mmdet;mmrotate" &&\
     make -j$(nproc) && make install &&\
-    export SPDLOG_LEVEL=warn &&\
-    if [ -z ${VERSION} ] ; then echo "Built MMDeploy for GPU devices successfully!" ; else echo "Built MMDeploy version v${VERSION} for GPU devices successfully!" ; fi
+    export SPDLOG_LEVEL=debug &&\
+    if [ -z ${MMDEPLOY_VERSION} ] ; then echo "Built MMDeploy for GPU devices successfully!" ; else echo "Built MMDeploy version v${MMDEPLOY_VERSION} for GPU devices successfully!" ; fi &&\
+    cd ../ &&\
+    python3 -m mim install --config-settings editable_mode=compat -e .
 
-ENV LD_LIBRARY_PATH="/root/workspace/mmdeploy/build/lib:${BACKUP_LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="$ONNXRUNTIME_DIR/lib:$BACKUP_LD_LIBRARY_PATH"
+ENV LD_LIBRARY_PATH="/workspace/onedl-mmdeploy/build/lib:${LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/:$LD_LIBRARY_PATH"
+
+LABEL org.opencontainers.image.source=https://github.com/vbti-development/onedl-mmdeploy
+LABEL org.opencontainers.image.description="OneDL MMDeploy Docker Image with GPU support"
+LABEL org.opencontainers.image.licenses=Apache-2.0
+LABEL org.opencontainers.image.vendor="VBTI Products BV"

@@ -4,6 +4,8 @@ MMDeploy provides useful tools for deploying OneDL Lab models to various platfor
 
 With the help of them, you can not only do model deployment using our pre-defined pipelines but also customize your own deployment pipeline.
 
+These instructions may be outdated since version 1.4.0, especially the non-linux versions.
+
 ## Introduction
 
 In MMDeploy, the deployment pipeline can be illustrated by a sequential modules, i.e., Model Converter, MMDeploy Model and Inference SDK.
@@ -27,33 +29,26 @@ It supports FFI such as C, C++, Python, C#, Java and so on.
 
 ## Prerequisites
 
-In order to do an end-to-end model deployment, MMDeploy requires Python 3.6+ and PyTorch 1.8+.
+In order to do an end-to-end model deployment, MMDeploy requires Python 3.10+ and PyTorch 2.2+.
 
-**Step 0.** Download and install Miniconda from the [official website](https://docs.conda.io/en/latest/miniconda.html).
+**Step 0.** Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
-**Step 1.** Create a conda environment and activate it.
-
-```shell
-conda create --name mmdeploy python=3.8 -y
-conda activate mmdeploy
-```
-
-**Step 2.** Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/), e.g.
+**Step 1.** Install PyTorch following [official instructions](https://pytorch.org/get-started/locally/), e.g.
 
 On GPU platforms:
 
 ```shell
-conda install pytorch=={pytorch_version} torchvision=={torchvision_version} cudatoolkit={cudatoolkit_version} -c pytorch -c conda-forge
+uv pip install --torch-backend={cuda_version} torch=={pytorch_version} torchvision
 ```
 
 On CPU platforms:
 
 ```shell
-conda install pytorch=={pytorch_version} torchvision=={torchvision_version} cpuonly -c pytorch
+uv pip install --torch-backend=cpu torch=={pytorch_version} torchvision
 ```
 
 ```{note}
-On GPU platform, please ensure that {cudatoolkit_version} matches your host CUDA toolkit version. Otherwise, it probably brings in conflicts when deploying model with TensorRT.
+On GPU platform, please ensure that {cuda_version} matches your host CUDA toolkit version. Otherwise, it probably brings in conflicts when deploying model with TensorRT.
 ```
 
 ## Installation
@@ -65,7 +60,7 @@ We recommend that users follow our best practices installing MMDeploy.
 ```shell
 pip install -U onedl-mim
 mim install onedl-mmengine
-mim install "onedl-mmcv"
+mim install onedl-mmcv
 ```
 
 **Step 1.** Install MMDeploy and inference engine
@@ -117,40 +112,34 @@ Take the latest precompiled package as example, you can install it as follows:
 <summary><b>Linux-x86_64</b></summary>
 
 ```shell
-# 1. install MMDeploy model converter
-pip install mmdeploy==1.3.1
-
-# 2. install MMDeploy sdk inference
-# you can install one to install according whether you need gpu inference
-# 2.1 support onnxruntime
-pip install mmdeploy-runtime==1.3.1
-# 2.2 support onnxruntime-gpu, tensorrt
-pip install mmdeploy-runtime-gpu==1.3.1
+# 1. install MMDeploy model converter with sdk inference
+# This will check which torch version is installed and install the correct CPU/GPU version automatically.
+mim install mmdeploy
 
 # 3. install inference engine
 # 3.1 install TensorRT
 # !!! If you want to convert a tensorrt model or inference with tensorrt,
-# download TensorRT-8.2.3.0 CUDA 11.x tar package from NVIDIA, and extract it to the current directory
-pip install TensorRT-8.2.3.0/python/tensorrt-8.2.3.0-cp38-none-linux_x86_64.whl
+# download TensorRT-8 (CUDA<12.9) or TensorRT 10 (CUDA>=12.9) from NVIDIA
+pip install TensorRT-8.6.3.0/python/tensorrt-8.6.3.0-cp10-none-linux_x86_64.whl
 pip install pycuda
-export TENSORRT_DIR=$(pwd)/TensorRT-8.2.3.0
+export TENSORRT_DIR=$(pwd)/TensorRT-8.6.3.0
 export LD_LIBRARY_PATH=${TENSORRT_DIR}/lib:$LD_LIBRARY_PATH
-# !!! Moreover, download cuDNN 8.2.1 CUDA 11.x tar package from NVIDIA, and extract it to the current directory
+# !!! Moreover, download cuDNN 8.6.1 CUDA 11.x tar package from NVIDIA, and extract it to the current directory
 export CUDNN_DIR=$(pwd)/cuda
 export LD_LIBRARY_PATH=$CUDNN_DIR/lib64:$LD_LIBRARY_PATH
 
 # 3.2 install ONNX Runtime
 # you can install one to install according whether you need gpu inference
 # 3.2.1 onnxruntime
-wget https://github.com/microsoft/onnxruntime/releases/download/v1.8.1/onnxruntime-linux-x64-1.8.1.tgz
-tar -zxvf onnxruntime-linux-x64-1.8.1.tgz
-export ONNXRUNTIME_DIR=$(pwd)/onnxruntime-linux-x64-1.8.1
+wget https://github.com/microsoft/onnxruntime/releases/download/v1.19.2/onnxruntime-linux-x64-1.19.2.tgz
+tar -zxvf onnxruntime-linux-x64-1.19.2.tgz
+export ONNXRUNTIME_DIR=$(pwd)/onnxruntime-linux-x64-1.19.2
 export LD_LIBRARY_PATH=$ONNXRUNTIME_DIR/lib:$LD_LIBRARY_PATH
 # 3.2.2 onnxruntime-gpu
-pip install onnxruntime-gpu==1.8.1
-wget https://github.com/microsoft/onnxruntime/releases/download/v1.8.1/onnxruntime-linux-x64-gpu-1.8.1.tgz
-tar -zxvf onnxruntime-linux-x64-gpu-1.8.1.tgz
-export ONNXRUNTIME_DIR=$(pwd)/onnxruntime-linux-x64-gpu-1.8.1
+pip install onnxruntime-gpu==1.19.2
+wget https://github.com/microsoft/onnxruntime/releases/download/v1.19.2/onnxruntime-linux-x64-gpu-1.19.2.tgz
+tar -zxvf onnxruntime-linux-x64-gpu-1.19.2.tgz
+export ONNXRUNTIME_DIR=$(pwd)/onnxruntime-linux-x64-gpu-1.19.2
 export LD_LIBRARY_PATH=$ONNXRUNTIME_DIR/lib:$LD_LIBRARY_PATH
 ```
 

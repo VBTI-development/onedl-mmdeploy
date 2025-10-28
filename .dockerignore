@@ -29,16 +29,13 @@
 **/.hypothesis
 **/.venv
 
-
 # IDEs
 **/.run
 **/.vscode
 **/.idea
 
-
 # Caches
 **/.cache
-
 
 # Weights files
 **/*.pt
@@ -50,3 +47,20 @@
 # Other
 **/tmp
 work_dir*/
+data/
+demo/
+build/
+resources/
+docker/
+
+# codestyle files
+.clang-format
+.codespell_ignore.txt
+.pre-commit-config.yaml
+.pylintrc
+.readthedocs.yaml
+
+# docs
+docs/
+**/README.md
+**/README*.md
