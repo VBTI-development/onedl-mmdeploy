@@ -26,7 +26,5 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${PROJECT_NAME}_obj)
 mmdeploy_add_rpath(${PROJECT_NAME})
 add_library(mmdeploy::onnxruntime::ops ALIAS ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE fmt)
-
 set(_ORT_OPS_DIR ${CMAKE_SOURCE_DIR}/mmdeploy/lib)
 install(TARGETS ${PROJECT_NAME} DESTINATION ${_ORT_OPS_DIR})

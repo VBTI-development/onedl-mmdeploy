@@ -5,7 +5,6 @@
 #include <thread>
 #include <vector>
 
-#include "mmdeploy/core/logger.h"
 #include "modulated_deform_conv/modulated_deform_conv_cpu.h"
 #include "ort_utils.h"
 
