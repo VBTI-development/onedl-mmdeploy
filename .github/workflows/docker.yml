@@ -110,7 +110,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            MMDEPLOY_VERSION="${{ needs.extract_version.outputs.version }}"
+            MMDEPLOY_VERSION="${{ needs.extract_version.outputs.tag_name }}"
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -218,7 +218,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            MMDEPLOY_VERSION="${{ needs.extract_version.outputs.version }}"
+            MMDEPLOY_VERSION="${{ needs.extract_version.outputs.tag_name }}"
           cache-from: type=gha,scope=jetson-${{ matrix.jetpack_version }}
           cache-to: type=gha,mode=max,scope=jetson-${{ matrix.jetpack_version }}
 
