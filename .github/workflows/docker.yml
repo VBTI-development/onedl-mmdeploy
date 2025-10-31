@@ -89,10 +89,11 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=tag
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{version}},value=${{ needs.extract_version.outputs.tag_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.extract_version.outputs.tag_name }}
+            type=semver,pattern={{major}},value=${{ needs.extract_version.outputs.tag_name }}
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ needs.extract_version.outputs.version }}
 
       - name: Check disk space
         continue-on-error: true
@@ -198,10 +199,11 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ matrix.image_name }}
           tags: |
             type=ref,event=tag
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{version}},value=${{ needs.extract_version.outputs.tag_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.extract_version.outputs.tag_name }}
+            type=semver,pattern={{major}},value=${{ needs.extract_version.outputs.tag_name }}
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ needs.extract_version.outputs.version }}
 
       - name: Check disk space
         continue-on-error: true
