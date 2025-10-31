@@ -66,9 +66,11 @@ jobs:
           large-packages: true
           docker-images: false
           swap-storage: true
-      - name: Checkout repository
+
+      - name: Checkout repository at specific tag
         uses: actions/checkout@v5
         with:
+          ref: ${{ needs.extract_version.outputs.tag_name }}
           submodules: 'recursive'
 
       - name: Set up Docker Buildx
@@ -87,10 +89,11 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=tag
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{version}},value=${{ needs.extract_version.outputs.tag_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.extract_version.outputs.tag_name }}
+            type=semver,pattern={{major}},value=${{ needs.extract_version.outputs.tag_name }}
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ needs.extract_version.outputs.version }}
 
       - name: Check disk space
         continue-on-error: true
@@ -109,8 +112,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            MMDEPLOY_VERSION="${{ needs.extract_version.outputs.tag_name }}"
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -170,9 +171,11 @@ jobs:
           large-packages: true
           docker-images: false
           swap-storage: true
-      - name: Checkout repository
+
+      - name: Checkout repository at specific tag
         uses: actions/checkout@v5
         with:
+          ref: ${{ needs.extract_version.outputs.tag_name }}
           submodules: 'recursive'
 
       - name: Set up QEMU
@@ -196,10 +199,11 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ matrix.image_name }}
           tags: |
             type=ref,event=tag
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{version}},value=${{ needs.extract_version.outputs.tag_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.extract_version.outputs.tag_name }}
+            type=semver,pattern={{major}},value=${{ needs.extract_version.outputs.tag_name }}
             type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ needs.extract_version.outputs.version }}
 
       - name: Check disk space
         continue-on-error: true
@@ -218,8 +222,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            MMDEPLOY_VERSION="${{ needs.extract_version.outputs.tag_name }}"
           cache-from: type=gha,scope=jetson-${{ matrix.jetpack_version }}
           cache-to: type=gha,mode=max,scope=jetson-${{ matrix.jetpack_version }}
 

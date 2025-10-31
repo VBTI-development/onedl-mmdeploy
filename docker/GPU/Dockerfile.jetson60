@@ -13,7 +13,6 @@ ARG PPLCV_VERSION=0.8.0
 
 ARG MMCV_VERSION=">=2.3.0"
 ARG MMENGINE_VERSION=">=0.10.8"
-ARG MMDEPLOY_VERSION
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -60,16 +59,8 @@ WORKDIR /workspace/
 ENV BACKUP_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=/usr/local/cuda/compat/lib.real/:$LD_LIBRARY_PATH
 
-RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
-        echo "Checking out MMDeploy version: ${MMDEPLOY_VERSION}" && \
-        MMDEPLOY_VERSION_=${MMDEPLOY_VERSION} ; \
-    else \
-        echo "Using main branch (no version specified)" && \
-        MMDEPLOY_VERSION_=main ; \
-    fi && \
-    git clone -b ${MMDEPLOY_VERSION_} --depth 1 https://github.com/vbti-development/onedl-mmdeploy && \
-    cd onedl-mmdeploy && \
-    git submodule update --init --recursive && \
+COPY . /workspace/onedl-mmdeploy
+RUN cd onedl-mmdeploy && \
     mkdir -p build && cd build &&\
     cmake .. \
         -DMMDEPLOY_BUILD_SDK=ON \
@@ -81,7 +72,7 @@ RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
         -Dpplcv_DIR=${PPLCV_DIR}/cuda-build/install/lib/cmake/ppl &&\
     make -j$(nproc) && make install &&\
     export SPDLOG_LEVEL=debug &&\
-    if [ -z ${MMDEPLOY_VERSION} ] ; then echo "Built MMDeploy for Jetpack 6.0 devices successfully!" ; else echo "Built MMDeploy version v${MMDEPLOY_VERSION} for Jetpack 6.0 devices successfully!" ; fi &&\
+    echo "Built MMDeploy version for Jetpack 6.0 devices successfully!" && \
     cd ../ &&\
     python3 -m mim install --config-settings editable_mode=compat -e .
 
