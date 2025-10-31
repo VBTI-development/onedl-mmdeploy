@@ -136,6 +136,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build_docker_jetson:
+    fail-fast: false
     name: Push Jetson Docker images to Docker Hub
     runs-on: ubuntu-24.04
     needs: extract_version

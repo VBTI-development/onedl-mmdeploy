@@ -96,9 +96,13 @@ RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
         echo "Using main branch (no version specified)" && \
         MMDEPLOY_VERSION_=main ; \
     fi && \
-    git clone --depth 1 --branch ${MMDEPLOY_VERSION_} https://github.com/vbti-development/onedl-mmdeploy &&\
-    cd onedl-mmdeploy &&\
-    git submodule update --init --recursive &&\
+    git clone --depth 1 https://github.com/vbti-development/onedl-mmdeploy && \
+    cd onedl-mmdeploy && \
+    if [ "${MMDEPLOY_VERSION_}" != "main" ] ; then \
+        git fetch --depth 1 origin tag ${MMDEPLOY_VERSION_} && \
+        git checkout ${MMDEPLOY_VERSION_} ; \
+    fi && \
+    git submodule update --init --recursive && \
     mkdir -p build && cd build &&\
     cmake .. \
     -DMMDEPLOY_BUILD_SDK=ON \
