@@ -96,7 +96,7 @@ RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
         echo "Using main branch (no version specified)" && \
         MMDEPLOY_VERSION_=main ; \
     fi && \
-    git clone --single-branch -b ${MMDEPLOY_VERSION_} https://github.com/vbti-development/onedl-mmdeploy &&\
+    git clone --depth 1 --branch ${MMDEPLOY_VERSION_} https://github.com/vbti-development/onedl-mmdeploy &&\
     cd onedl-mmdeploy &&\
     git submodule update --init --recursive &&\
     mkdir -p build && cd build &&\
@@ -113,7 +113,7 @@ RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
     -DMMDEPLOY_CODEBASES="mmpretrain;mmseg;mmdet;mmrotate" &&\
     make -j$(nproc) && make install &&\
     export SPDLOG_LEVEL=debug &&\
-    if [ -z ${MMDEPLOY_VERSION} ] ; then echo "Built MMDeploy for GPU devices successfully!" ; else echo "Built MMDeploy version v${MMDEPLOY_VERSION} for GPU devices successfully!" ; fi &&\
+    if [ -z ${MMDEPLOY_VERSION} ] ; then echo "Built MMDeploy for GPU devices successfully!" ; else echo "Built MMDeploy version ${MMDEPLOY_VERSION} for GPU devices successfully!" ; fi &&\
     cd ../ &&\
     python3 -m mim install --config-settings editable_mode=compat -e .
 

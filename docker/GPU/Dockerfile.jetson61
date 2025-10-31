@@ -21,6 +21,7 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_BREAK_SYSTEM_PACKAGES=1
 
 # and install libs
+ADD https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb .
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib \
     dpkg -i cuda-keyring_1.1-1_all.deb && apt-get update \
@@ -65,7 +66,7 @@ RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
         echo "Using main branch (no version specified)" && \
         MMDEPLOY_VERSION_=main ; \
     fi && \
-    git clone --single-branch -b ${MMDEPLOY_VERSION_} https://github.com/vbti-development/onedl-mmdeploy &&\
+    git clone --depth 1 --branch ${MMDEPLOY_VERSION_} https://github.com/vbti-development/onedl-mmdeploy &&\
     cd onedl-mmdeploy &&\
     git submodule update --init --recursive &&\
     mkdir -p build && cd build &&\
