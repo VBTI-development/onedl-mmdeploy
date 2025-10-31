@@ -59,16 +59,8 @@ WORKDIR /workspace/
 ENV BACKUP_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=/usr/local/cuda/compat/lib.real/:$LD_LIBRARY_PATH
 
-RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
-        echo "Checking out MMDeploy version: ${MMDEPLOY_VERSION}" && \
-        MMDEPLOY_VERSION_=${MMDEPLOY_VERSION} ; \
-    else \
-        echo "Using main branch (no version specified)" && \
-        MMDEPLOY_VERSION_=main ; \
-    fi && \
-    git clone -b ${MMDEPLOY_VERSION_} --depth 1 https://github.com/vbti-development/onedl-mmdeploy && \
-    cd onedl-mmdeploy && \
-    git submodule update --init --recursive && \
+COPY . /workspace/onedl-mmdeploy
+RUN cd onedl-mmdeploy && \
     mkdir -p build && cd build &&\
     cmake .. \
         -DMMDEPLOY_BUILD_SDK=ON \
