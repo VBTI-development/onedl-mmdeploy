@@ -7,12 +7,12 @@ endif ()
 find_path(
     CUDNN_INCLUDE_DIR cudnn.h
     HINTS ${CUDNN_DIR} ${CUDA_TOOLKIT_ROOT_DIR}
-    PATH_SUFFIXES include)
+    PATH_SUFFIXES include include/12.9)
 
 find_library(
     CUDNN_LIBRARY_CUDNN_PATH cudnn
     HINTS ${CUDNN_DIR} ${CUDA_TOOLKIT_ROOT_DIR}
-    PATH_SUFFIXES lib lib64 lib/x64)
+    PATH_SUFFIXES lib lib64 lib/x64 lib/12.9/x64)
 
 if (NOT (CUDNN_INCLUDE_DIR AND CUDNN_LIBRARY_CUDNN_PATH))
     message(FATAL_ERROR "Couldn't find cuDNN in CUDNN_DIR: ${CUDNN_DIR}, "
