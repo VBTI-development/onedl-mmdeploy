@@ -77,7 +77,10 @@ Result<unique_ptr<Node>> Builder::Build() {
   OUTCOME_TRY(SetInputs());
   OUTCOME_TRY(SetOutputs());
   OUTCOME_TRY(auto node, BuildImpl());
-
+  if (!node) {
+    MMDEPLOY_ERROR("failed to build node: {}", name_);
+    return Status(eFail);
+  }
   // use Throttle to constraint resource usage
   if (auto throttle = config_.value("throttle", 0)) {
     MMDEPLOY_ERROR("Throttle is not implemented yet");
