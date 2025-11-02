@@ -87,12 +87,8 @@ int GatherTopk::enqueue(const nvinfer1::PluginTensorDesc *inputDesc,
   const int *dims = &(inputDesc[0].dims.d[0]);
   const int *indices_dims = &(inputDesc[1].dims.d[0]);
 #else
-  //const long int *dims = &(inputDesc[0].dims.d[0]);
-  //const long int *indices_dims = &(inputDesc[1].dims.d[0]);
   const long int *dims = reinterpret_cast<const long int*>(&(inputDesc[0].dims.d[0]));
   const long int *indices_dims = reinterpret_cast<const long int*>(&(inputDesc[1].dims.d[0]));
-  //const int64_t *dims = &(inputDesc[0].dims.d[0]);
-  //const int64_t *indices_dims = &(inputDesc[1].dims.d[0]);
 #endif
 
   int nbDims = inputDesc[0].dims.nbDims;
