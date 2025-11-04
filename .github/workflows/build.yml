@@ -147,7 +147,6 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       contents: write
-      pull-requests: write
     container:
       image: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
     env:
@@ -203,12 +202,6 @@ jobs:
           format: markdown
           output: both
           hide_branch_rate: false
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md
       - name: create badge
         if: always()
         uses: RubbaBoy/BYOB@v1.2.1
