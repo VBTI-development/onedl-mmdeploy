@@ -19,20 +19,11 @@ ENV FORCE_CUDA="1"
 
 ARG MMCV_VERSION=">=2.3.0"
 ARG MMENGINE_VERSION=">=0.10.8"
-ARG MMDEPLOY_VERSION
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-# set the timezone to Europe Amsterdam
 # and install libs
-ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ="Europe/Amsterdam"
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib \
     apt-get update && \
-    apt-get install -yq tzdata && \
-    ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata && \
     apt-get install -y \
         curl \
         ffmpeg \
@@ -89,16 +80,8 @@ WORKDIR /workspace/
 ENV BACKUP_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=/usr/local/cuda/compat/lib.real/:$LD_LIBRARY_PATH
 
-RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
-        echo "Checking out MMDeploy version: ${MMDEPLOY_VERSION}" && \
-        MMDEPLOY_VERSION_=${MMDEPLOY_VERSION} ; \
-    else \
-        echo "Using main branch (no version specified)" && \
-        MMDEPLOY_VERSION_=main ; \
-    fi && \
-    git clone --single-branch -b ${MMDEPLOY_VERSION_} https://github.com/vbti-development/onedl-mmdeploy &&\
-    cd onedl-mmdeploy &&\
-    git submodule update --init --recursive &&\
+COPY . /workspace/onedl-mmdeploy
+RUN cd onedl-mmdeploy && \
     mkdir -p build && cd build &&\
     cmake .. \
     -DMMDEPLOY_BUILD_SDK=ON \
@@ -113,7 +96,7 @@ RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
     -DMMDEPLOY_CODEBASES="mmpretrain;mmseg;mmdet;mmrotate" &&\
     make -j$(nproc) && make install &&\
     export SPDLOG_LEVEL=debug &&\
-    if [ -z ${MMDEPLOY_VERSION} ] ; then echo "Built MMDeploy for GPU devices successfully!" ; else echo "Built MMDeploy version v${MMDEPLOY_VERSION} for GPU devices successfully!" ; fi &&\
+    echo "Built MMDeploy for GPU devices successfully!" ; \
     cd ../ &&\
     python3 -m mim install --config-settings editable_mode=compat -e .
 

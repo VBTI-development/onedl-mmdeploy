@@ -13,29 +13,20 @@ ARG PPLCV_VERSION=0.8.0
 
 ARG MMCV_VERSION=">=2.3.0"
 ARG MMENGINE_VERSION=">=0.10.8"
-ARG MMDEPLOY_VERSION
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_BREAK_SYSTEM_PACKAGES=1
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-# set the timezone to Europe Amsterdam
 # and install libs
-ARG DEBIAN_FRONTEND=noninteractive
-ENV TZ="Europe/Amsterdam"
+ADD https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/arm64/cuda-keyring_1.1-1_all.deb .
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib \
-    apt-get update && \
-    apt-get install -yq tzdata && \
-    ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    dpkg-reconfigure -f noninteractive tzdata && \
-    apt-get install -y \
-        curl \
-        git python3-pip libopenmpi-dev libopenblas-dev libomp-dev libcusparselt0 libcusparselt-dev \
-        curl libspdlog-dev vim pkg-config cmake cudss \
+    dpkg -i cuda-keyring_1.1-1_all.deb && apt-get update \
+    && apt-get install -y --no-install-recommends \
+    git python3-pip libopenmpi-dev libopenblas-dev libomp-dev libcusparselt0 libcusparselt-dev \
+    curl libspdlog-dev vim pkg-config cmake cudss \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -44,9 +35,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
 # TODO: copy to our own servers?
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip \
     python3 -m pip install --upgrade pip; python3 -m pip install --no-cache \
-    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/590/92ab729aee2b8/torch-2.8.0-cp310-cp310-linux_aarch64.whl#sha256=59092ab729aee2b8937d80cc1b35d1128275bd02a7e1bc911e7efa375bd97226 \
-    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/1c0/3de08a69e9554/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl#sha256=1c03de08a69e95542024477e0cde95fab3436804917133d3f00e67629d3fe902 \
-    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/e1e/9e3dc2f4d5551/onnxruntime_gpu-1.23.0-cp310-cp310-linux_aarch64.whl#sha256=e1e9e3dc2f4d5551c5f0b5554cf490d141cd0d339a5a7f4826ac0e04f20a35fc
+    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/62a/1beee9f2f1470/torch-2.8.0-cp310-cp310-linux_aarch64.whl#sha256=62a1beee9f2f147076a974d2942c90060c12771c94740830327cae705b2595fc \
+    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/907/c4c1933789645/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl#sha256=907c4c1933789645ebb20dd9181d40f8647978e6bd30086ae7b01febb937d2d1 \
+    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/4eb/e6a8902dc7708/onnxruntime_gpu-1.23.0-cp310-cp310-linux_aarch64.whl#sha256=4ebe6a8902dc7708434b2e1541b3fe629ebf434e16ab5537d1d6a622b42c622b
 
 # install and build pplc.cv
 WORKDIR /workspace
@@ -67,16 +58,8 @@ WORKDIR /workspace/
 ENV BACKUP_LD_LIBRARY_PATH=$LD_LIBRARY_PATH
 ENV LD_LIBRARY_PATH=/usr/local/cuda/compat/lib.real/:$LD_LIBRARY_PATH
 
-RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
-        echo "Checking out MMDeploy version: ${MMDEPLOY_VERSION}" && \
-        MMDEPLOY_VERSION_=${MMDEPLOY_VERSION} ; \
-    else \
-        echo "Using main branch (no version specified)" && \
-        MMDEPLOY_VERSION_=main ; \
-    fi && \
-    git clone --single-branch -b ${MMDEPLOY_VERSION_} https://github.com/vbti-development/onedl-mmdeploy &&\
-    cd onedl-mmdeploy &&\
-    git submodule update --init --recursive &&\
+COPY . /workspace/onedl-mmdeploy
+RUN cd onedl-mmdeploy && \
     mkdir -p build && cd build &&\
     cmake .. \
         -DMMDEPLOY_BUILD_SDK=ON \
@@ -88,7 +71,7 @@ RUN if [ -n "${MMDEPLOY_VERSION}" ] ; then \
         -Dpplcv_DIR=${PPLCV_DIR}/cuda-build/install/lib/cmake/ppl &&\
     make -j$(nproc) && make install &&\
     export SPDLOG_LEVEL=debug &&\
-    if [ -z ${MMDEPLOY_VERSION} ] ; then echo "Built MMDeploy for Jetpack 6.1 devices successfully!" ; else echo "Built MMDeploy version v${MMDEPLOY_VERSION} for Jetpack 6.1 devices successfully!" ; fi &&\
+    echo "Built MMDeploy version for Jetpack 6.1 devices successfully!" && \
     cd ../ &&\
     python3 -m mim install --config-settings editable_mode=compat -e .
 
