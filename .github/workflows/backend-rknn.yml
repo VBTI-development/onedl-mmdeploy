@@ -1,6 +1,7 @@
 name: backend-rknn
 
 on:
+  workflow_dispatch:
   pull_request:
     paths-ignore:
       - "csrc/**"
