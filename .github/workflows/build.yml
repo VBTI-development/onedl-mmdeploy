@@ -1,7 +1,6 @@
 name: build
 
 on:
-  workflow_dispatch:
   pull_request:
     paths-ignore:
       - ".github/scripts/**"
@@ -208,75 +207,6 @@ jobs:
         uses: RubbaBoy/BYOB@v1.2.1
         with:
           NAME: build_cuda118
-          LABEL: 'build'
-          STATUS: ${{ steps.badge_status.conclusion == 'success' && 'passing' || 'failing' }}
-          COLOR: ${{ steps.badge_status.conclusion == 'success' && 'green' || 'red' }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
-  build_cuda128:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-    container:
-      image: nvidia/cuda:12.8.0-cudnn-devel-ubuntu22.04
-    env:
-      FORCE_CUDA: 1
-      UV_CACHE_DIR: /__w/_uv_cache
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install system dependencies
-        run: |
-          apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libxrender-dev
-          apt-get clean
-          rm -rf /var/lib/apt/lists/*
-      - name: Install uv and set the python version
-        uses: astral-sh/setup-uv@v6
-        with:
-          activate-environment: true
-          python-version: '3.10'
-          cache-local-path: /__w/_uv_cache
-      - name: Install PyTorch
-        run: |
-          uv pip install torch==2.5.1 torchvision
-      - name: Check disk space
-        continue-on-error: true
-        run: |
-          df -h
-          rm -rf /__t/go
-          rm -rf /__t/node
-          rm -rf /__t/Ruby
-          rm -rf /__t/CodeQL
-          cat /proc/cpuinfo  | grep -ic proc
-          free
-          df -h
-      - name: Install unit tests dependencies
-        run: |
-          uv pip install onedl-mim
-          mim install onedl-mmcv --only-binary=onedl-mmcv
-          uv export --only-group codebases > codebases.txt && mim install -r codebases.txt
-          uv pip install -r pyproject.toml --group tests --group build --extra backends
-      - name: Build and install
-        run: |
-          rm -rf .eggs && python -m pip install -e .
-          python tools/check_env.py
-      - name: Run unittests and generate coverage report
-        id: badge_status
-        run: |
-          coverage run --branch --source mmdeploy -m pytest -rsE tests
-          coverage xml
-          coverage report -m
-      - name: Code Coverage Summary Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: coverage.xml
-          format: markdown
-          output: both
-          hide_branch_rate: false
-      - name: create badge
-        if: always()
-        uses: RubbaBoy/BYOB@v1.2.1
-        with:
-          NAME: build_cuda128
           LABEL: 'build'
           STATUS: ${{ steps.badge_status.conclusion == 'success' && 'passing' || 'failing' }}
           COLOR: ${{ steps.badge_status.conclusion == 'success' && 'green' || 'red' }}

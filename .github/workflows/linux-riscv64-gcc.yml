@@ -1,7 +1,6 @@
 name: build_riscv64_gcc
 
 on:
-  workflow_dispatch:
   pull_request:
     paths:
       - "csrc/**"

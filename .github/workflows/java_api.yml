@@ -1,7 +1,6 @@
 name: java_api
 
 on:
-  workflow_dispatch:
   pull_request:
     paths-ignore:
       - "tools/**"
