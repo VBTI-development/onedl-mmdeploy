@@ -1,9 +1,10 @@
 // Copyright (c) OpenMMLab. All rights reserved.
 
+#include <thrust/execution_policy.h>
+
 #include "mmdeploy/codebase/mmocr/cuda/utils.h"
 #include "thrust/iterator/counting_iterator.h"
 #include "thrust/transform.h"
-
 namespace mmdeploy {
 
 namespace mmocr {

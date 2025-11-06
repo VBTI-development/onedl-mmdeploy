@@ -112,6 +112,11 @@ Sender<Value> StaticRouter::Process(Sender<Value> args) {
 
   State state(use_count_, std::move(args));
   for (size_t i = 0; i < nodes_.size(); ++i) {
+    if (!nodes_[i]) {
+      MMDEPLOY_ERROR("node {} is null, not allow to processing.", i);
+      // to avoid null node processing that may casuse memory access violation
+      throw_exception(eNotSupported);
+    }
     auto input = state.Collect(input_coords_[i]);
     auto output = nodes_[i]->Process(std::move(input));
     state.Write(static_cast<int>(i), std::move(output));

@@ -3,12 +3,13 @@
 // implementation based on "A new Direct Connected Component Labeling and Analysis Algorithms for
 // GPUs"
 // https://ieeexplore.ieee.org/document/8596835
+#include <thrust/execution_policy.h>
+
 #include <vector>
 
 #include "connected_component.h"
 #include "thrust/for_each.h"
 #include "thrust/iterator/counting_iterator.h"
-
 namespace mmdeploy {
 
 __device__ int start_distance(unsigned pixels, int tx) {
