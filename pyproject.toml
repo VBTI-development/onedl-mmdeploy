@@ -157,4 +157,5 @@ skip = [
 ignore-words = ".codespell_ignore.txt"
 
 [tool.uv]
+compile-bytecode = true
 no-build-isolation-package = ["torch", "onedl-mmdeploy"]
