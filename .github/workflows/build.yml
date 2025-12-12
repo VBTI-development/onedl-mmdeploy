@@ -240,6 +240,7 @@ jobs:
           file: ./docker/GPU/Dockerfile
           platforms: linux/amd64
           push: false
+          load: true
           tags: vbti/onedl-mmdeploy:test
           cache-from: type=gha
           cache-to: type=gha,mode=max
