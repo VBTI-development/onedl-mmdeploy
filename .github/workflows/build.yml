@@ -187,7 +187,7 @@ jobs:
           uv pip install onedl-mim
           mim install onedl-mmcv --only-binary=onedl-mmcv
           uv export --only-group codebases > codebases.txt && mim install -r codebases.txt
-          uv pip install -r pyproject.toml --group tests --group build --extra backends
+          uv pip install -r pyproject.toml --group tests --group build
       - name: Build and install
         run: |
           rm -rf .eggs && python -m pip install -e .
