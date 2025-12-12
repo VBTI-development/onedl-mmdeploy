@@ -145,8 +145,9 @@ jobs:
 
   build_cuda:
     runs-on: ubuntu-22.04
-    matrix:
-      image: ['nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04', 'nvidia/cuda:12.9.1-cudnn-devel-ubuntu22.04']
+    strategy:
+      matrix:
+        image: ['nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04', 'nvidia/cuda:12.9.1-cudnn-devel-ubuntu22.04']
     permissions:
       contents: write
     container:
