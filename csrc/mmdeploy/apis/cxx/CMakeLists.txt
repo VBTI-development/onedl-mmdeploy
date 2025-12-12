@@ -37,8 +37,11 @@ endif ()
 mmdeploy_export_impl(${PROJECT_NAME})
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/mmdeploy/common.hpp
         DESTINATION include/mmdeploy)
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/demo/csrc/ DESTINATION example/cpp
+
+if (MMDEPLOY_BUILD_EXAMPLES)
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/demo/csrc/ DESTINATION example/cpp
         FILES_MATCHING
         PATTERN "*.cxx"
         PATTERN "*.h"
         )
+endif ()

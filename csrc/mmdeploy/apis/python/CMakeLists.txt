@@ -52,4 +52,7 @@ endif ()
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/..
         ${CMAKE_CURRENT_SOURCE_DIR})
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/demo/python/ DESTINATION example/python)
+
+if (MMDEPLOY_BUILD_EXAMPLES)
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/demo/python/ DESTINATION example/python)
+endif ()
