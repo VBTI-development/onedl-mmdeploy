@@ -144,7 +144,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build_cuda:
-    runs-on: ubuntu-22.04
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     strategy:
       matrix:
         image: ['nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04', 'nvidia/cuda:12.9.1-cudnn-devel-ubuntu22.04']
