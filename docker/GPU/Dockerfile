@@ -85,7 +85,7 @@ RUN cd onedl-mmdeploy && \
     mkdir -p build && cd build &&\
     cmake .. \
     -DMMDEPLOY_BUILD_SDK=ON \
-    -DMMDEPLOY_BUILD_EXAMPLES=ON \
+    -DMMDEPLOY_BUILD_EXAMPLES=OFF \
     -DCMAKE_CXX_COMPILER=g++ \
     -Dpplcv_DIR=/workspace/ppl.cv/cuda-build/install/lib/cmake/ppl \
     -DTENSORRT_DIR=${TENSORRT_DIR} \
