@@ -49,7 +49,7 @@ ENV PPLCV_DIR=/workspace/ppl.cv
 WORKDIR /workspace
 # install onedl-mmcv
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip \
-    python3 -m pip install --no-cache "onedl-mmcv${MMCV_VERSION}" "onedl-mmengine${MMENGINE_VERSION}"  --only-binary=onedl-mmcv -f https://mmwheels.onedl.ai/jp61-torch280/
+    python3 -m pip install --no-cache "onedl-mmcv${MMCV_VERSION}" "onedl-mmengine${MMENGINE_VERSION}"  --only-binary=onedl-mmcv -f https://mmwheels.onedl.ai/jetpack61-torch280/
 
 # ### install mmdeploy
 ENV TENSORRT_DIR=/workspace/tensorrt
