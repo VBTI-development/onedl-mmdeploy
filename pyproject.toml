@@ -1,6 +1,6 @@
 [project]
 name = "onedl-mmdeploy"
-version = "1.4.1"
+version = "1.4.2"
 description = "OneDL Model Deployment"
 readme = "README.md"
 license = "LicenseRef-Apache-2.0"
