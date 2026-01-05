@@ -1245,7 +1245,7 @@ dependencies = [
 [package.optional-dependencies]
 backends = [
     { name = "onnxruntime" },
-    { name = "openvino-dev" },
+    { name = "openvino-dev", marker = "python_full_version < '3.11'" },
 ]
 mminstall = [
     { name = "onedl-mmcv" },
@@ -1313,7 +1313,7 @@ requires-dist = [
     { name = "onedl-mmengine", marker = "extra == 'mminstall'" },
     { name = "onnx", specifier = ">=1.13.0" },
     { name = "onnxruntime", marker = "extra == 'backends'", specifier = ">=1.8.0,<1.19.0" },
-    { name = "openvino-dev", marker = "extra == 'backends'", specifier = "==2022.3.0" },
+    { name = "openvino-dev", marker = "python_full_version == '3.10.*' and extra == 'backends'", specifier = "==2022.3.0" },
     { name = "prettytable" },
     { name = "protobuf", specifier = "<=3.20.2" },
     { name = "six" },
@@ -1531,7 +1531,7 @@ name = "openvino"
 version = "2022.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy" },
+    { name = "numpy", marker = "python_full_version < '3.11'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/47/99/2c47cb4d6a26e03a1c67816b17426f5f3a303627293ec7e6a62357aa00d0/openvino-2022.3.0-9052-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:e71ee05c3b36df446fa33f0eca8b57855e83266cafc1f2cdbb89d4c6730cfa5f", size = 24798723, upload-time = "2022-12-21T10:09:28.754Z" },
@@ -1545,21 +1545,21 @@ name = "openvino-dev"
 version = "2022.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "addict" },
-    { name = "defusedxml" },
-    { name = "jstyleson" },
-    { name = "networkx" },
-    { name = "numpy" },
-    { name = "opencv-python" },
-    { name = "openvino" },
-    { name = "openvino-telemetry" },
-    { name = "pandas" },
-    { name = "pillow" },
-    { name = "pyyaml" },
-    { name = "requests" },
-    { name = "scipy" },
-    { name = "texttable" },
-    { name = "tqdm" },
+    { name = "addict", marker = "python_full_version < '3.11'" },
+    { name = "defusedxml", marker = "python_full_version < '3.11'" },
+    { name = "jstyleson", marker = "python_full_version < '3.11'" },
+    { name = "networkx", marker = "python_full_version < '3.11'" },
+    { name = "numpy", marker = "python_full_version < '3.11'" },
+    { name = "opencv-python", marker = "python_full_version < '3.11'" },
+    { name = "openvino", marker = "python_full_version < '3.11'" },
+    { name = "openvino-telemetry", marker = "python_full_version < '3.11'" },
+    { name = "pandas", marker = "python_full_version < '3.11'" },
+    { name = "pillow", marker = "python_full_version < '3.11'" },
+    { name = "pyyaml", marker = "python_full_version < '3.11'" },
+    { name = "requests", marker = "python_full_version < '3.11'" },
+    { name = "scipy", marker = "python_full_version < '3.11'" },
+    { name = "texttable", marker = "python_full_version < '3.11'" },
+    { name = "tqdm", marker = "python_full_version < '3.11'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/89/6e/7182cdeb006f163f4f2527d8b30730ea4b2387c4092e18a137b51a310bc2/openvino_dev-2022.3.0-9052-py3-none-any.whl", hash = "sha256:f86cb3433c0b78fe78c11c3ca043eb66e46f66c727ca057059decfd927bb2a29", size = 5841398, upload-time = "2022-12-21T10:13:37.886Z" },
