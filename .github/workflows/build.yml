@@ -206,7 +206,7 @@ jobs:
           output: both
           hide_branch_rate: false
 
-  test_docker_gpu:
+  test_docker_image:
     runs-on: ubuntu-24.04
     steps:
       - name: Free Disk Space (Ubuntu)
@@ -247,4 +247,4 @@ jobs:
 
       - name: Test Docker image
         run: |
-          docker run --rm --gpus all vbti/onedl-mmdeploy:test cd onedl-mmdeploy && pip install pytest openpyxl && pytest
+          docker run --rm vbti/onedl-mmdeploy:test cd onedl-mmdeploy && pip install pytest openpyxl && pytest
