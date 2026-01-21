@@ -25,6 +25,4 @@ def test_trt_batched_nms_basic():
     assert dets.shape[2] == 5
     assert labels.shape[0] == 1
     assert indices.shape[0] == 1
-    print('dets:', dets)
-    print('labels:', labels)
-    print('indices:', indices)
+

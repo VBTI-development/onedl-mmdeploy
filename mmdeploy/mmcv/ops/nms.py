@@ -186,8 +186,11 @@ class TRTBatchedNMSop(torch.autograd.Function):
         # Shape inference:
         # [batch, keep_topk, 5] for dets,
         # [batch, keep_topk] for labels, [batch, keep_topk] for indices
-        batch = boxes.type().sizes()[0] if hasattr(boxes, 'type') and hasattr(
-            boxes.type(), 'sizes') else None
+        batch = None
+        if hasattr(boxes, 'type'):
+            boxes_type = boxes.type()
+            if hasattr(boxes_type, 'sizes'):
+                batch = boxes_type.sizes()[0]
         keep_topk = after_topk
         dets_shape = [batch, keep_topk, 5]
         labels_shape = [batch, keep_topk]
