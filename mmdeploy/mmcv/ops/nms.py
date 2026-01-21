@@ -166,8 +166,9 @@ class TRTBatchedNMSop(torch.autograd.Function):
                  score_threshold: float,
                  background_label_id: int = -1,
                  return_index: bool = False):
-        """Symbolic function for mmdeploy::TRTBatchedNMS."""
-        return g.op(
+        """Symbolic function for TRTBatchedNMS with shape inference."""
+        outputs = 3 if return_index else 2
+        nms_node = g.op(
             'mmdeploy::TRTBatchedNMS',
             boxes,
             scores,
@@ -180,7 +181,27 @@ class TRTBatchedNMSop(torch.autograd.Function):
             is_normalized_i=False,
             clip_boxes_i=False,
             return_index_i=return_index,
-            outputs=3 if return_index else 2)
+            outputs=outputs)
+
+        # Shape inference:
+        # [batch, keep_topk, 5] for dets,
+        # [batch, keep_topk] for labels, [batch, keep_topk] for indices
+        batch = None
+        if hasattr(boxes, 'type'):
+            boxes_type = boxes.type()
+            if hasattr(boxes_type, 'sizes'):
+                batch = boxes_type.sizes()[0]
+        keep_topk = after_topk
+        dets_shape = [batch, keep_topk, 5]
+        labels_shape = [batch, keep_topk]
+        indices_shape = [batch, keep_topk]
+
+        if return_index:
+            sym_help._set_output_shapes(
+                nms_node, [dets_shape, labels_shape, indices_shape])
+        else:
+            sym_help._set_output_shapes(nms_node, [dets_shape, labels_shape])
+        return nms_node
 
 
 def _select_nms_index(scores: torch.Tensor,
