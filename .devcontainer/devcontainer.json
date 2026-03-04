@@ -14,17 +14,17 @@
 			"autoPull": true,
 			"version": "latest"
 		},
-		"ghcr.io/devcontainers/features/nvidia-cuda:2": {
-			"installCudnn": true,
-			"installCudnnDev": true,
-			"installToolkit": true,
-			"cudaVersion": "12.4",
-			"cudnnVersion": "automatic"
-		},
-		"ghcr.io/devcontainers/features/python:1": {
-			"installTools": true,
-			"version": "3.10"
-		},
+		// "ghcr.io/devcontainers/features/nvidia-cuda:2": {
+		// 	"installCudnn": true,
+		// 	"installCudnnDev": true,
+		// 	"installToolkit": true,
+		// 	"cudaVersion": "12.4",
+		// 	"cudnnVersion": "automatic"
+		// },
+		// "ghcr.io/devcontainers/features/python:1": {
+		// 	"installTools": true,
+		// 	"version": "3.10"
+		// },
 		"ghcr.io/va-h/devcontainers-features/uv:1": {
 			"shellautocompletion": true,
 			"version": "latest"
@@ -42,7 +42,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "gcc -v",
+	"postCreateCommand": "uv pip install -r pyproject.toml --extra backends --extra optional --group build --group tests && uv pip install -e .",
 
 	// Configure tool-specific properties.
 	// Configure tool-specific properties.
@@ -65,5 +65,5 @@
 	},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	"remoteUser": "vscode"
+	// "remoteUser": "vscode"
 }
