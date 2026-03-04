@@ -51,9 +51,18 @@ class OpenVINOWrapper(BaseWrapper):
                                                 self.device.upper())
         self.infer_request = self.compiled.create_infer_request()
 
-        # TODO: Check if output_names can be read
+        # In OpenVINO >= 2023.x get_any_name() may return internal IR node
+        # paths (e.g. '/model/Unsqueeze_output_0') instead of the original
+        # ONNX output names.  Prefer the first friendly name that does NOT
+        # look like an internal path; fall back to get_any_name() only if
+        # no such name exists.
         if output_names is None:
-            output_names = [out.get_any_name() for out in self.model.outputs]
+            output_names = []
+            for out in self.model.outputs:
+                names = list(out.names)  # all aliases for this output
+                friendly = next((n for n in names if '/' not in n), None)
+                output_names.append(
+                    friendly if friendly is not None else out.get_any_name())
 
         super().__init__(output_names)
 
@@ -148,8 +157,12 @@ class OpenVINOWrapper(BaseWrapper):
         """
         np_inputs = {name: data.numpy() for name, data in inputs.items()}
         self.infer_request.infer(np_inputs)
+        # Use positional mapping so that internal IR names such as
+        # '/model/Unsqueeze_output_0' (introduced in OpenVINO >= 2023.x)
+        # are transparently replaced by the user-visible output_names.
         outputs = {
-            out.get_any_name(): self.infer_request.get_tensor(out).data.copy()
-            for out in self.compiled.outputs
+            self.output_names[i]:
+            self.infer_request.get_tensor(out).data.copy()
+            for i, out in enumerate(self.compiled.outputs)
         }
         return outputs
