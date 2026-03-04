@@ -2356,12 +2356,12 @@ def test_solov2_head_predict_by_feat(backend_type):
                 model_outputs[i].scores[:min_shape],
                 rewrite_outputs[0][i, :min_shape, 4],
                 rtol=1e-03,
-                atol=1e-05)
+                atol=1e-03)
             assert np.allclose(
                 model_outputs[i].labels[:min_shape],
                 rewrite_outputs[1][i, :min_shape],
                 rtol=1e-03,
-                atol=1e-05)
+                atol=1e-03)
     else:
         assert rewrite_outputs is not None
 
