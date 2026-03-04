@@ -119,8 +119,11 @@ def test_shufflenetv2_backbone__forward(backend_type: Backend):
         model_output = model_output.cpu().numpy()
         if isinstance(rewrite_output, torch.Tensor):
             rewrite_output = rewrite_output.cpu().numpy()
-        assert np.allclose(
-            model_output, rewrite_output, rtol=1e-03, atol=1e-05)
+
+        # openvino now converts to FP16 to tolerance needs to be larger
+        atol = 1e-05 if not backend_type == Backend.OPENVINO else 1e-03
+        rtol = 1e-03 if not backend_type == Backend.OPENVINO else 1e-03
+        assert np.allclose(model_output, rewrite_output, rtol=rtol, atol=atol)
 
 
 @pytest.mark.parametrize('backend_type', [Backend.NCNN])

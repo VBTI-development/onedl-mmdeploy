@@ -63,16 +63,14 @@ class ONNXRuntimeManager(BaseBackendManager):
         if not cls.is_available():
             return 'None'
         else:
-            import pkg_resources
+            from importlib.metadata import PackageNotFoundError, version
             try:
-                ort_version = pkg_resources.get_distribution(
-                    'onnxruntime').version
-            except Exception:
+                ort_version = version('onnxruntime')
+            except PackageNotFoundError:
                 ort_version = 'None'
             try:
-                ort_gpu_version = pkg_resources.get_distribution(
-                    'onnxruntime-gpu').version
-            except Exception:
+                ort_gpu_version = version('onnxruntime-gpu')
+            except PackageNotFoundError:
                 ort_gpu_version = 'None'
 
             if ort_gpu_version != 'None':
@@ -87,7 +85,7 @@ class ONNXRuntimeManager(BaseBackendManager):
         Returns:
             str: Info about the environment.
         """
-        import pkg_resources
+        from importlib.metadata import PackageNotFoundError, version
 
         try:
             if cls.is_available():
@@ -96,14 +94,12 @@ class ONNXRuntimeManager(BaseBackendManager):
                     if ops_available else 'NotAvailable'
 
                 try:
-                    ort_version = pkg_resources.get_distribution(
-                        'onnxruntime').version
-                except Exception:
+                    ort_version = version('onnxruntime')
+                except PackageNotFoundError:
                     ort_version = 'None'
                 try:
-                    ort_gpu_version = pkg_resources.get_distribution(
-                        'onnxruntime-gpu').version
-                except Exception:
+                    ort_gpu_version = version('onnxruntime-gpu')
+                except PackageNotFoundError:
                     ort_gpu_version = 'None'
 
                 ort_info = f'ONNXRuntime:\t{ort_version}'

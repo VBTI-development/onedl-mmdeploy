@@ -77,10 +77,10 @@ class NCNNManager(BaseBackendManager):
         if not cls.is_available():
             return 'None'
         else:
-            import pkg_resources
+            from importlib.metadata import PackageNotFoundError, version
             try:
-                return pkg_resources.get_distribution('ncnn').version
-            except Exception:
+                return version('ncnn')
+            except PackageNotFoundError:
                 return 'None'
 
     @classmethod

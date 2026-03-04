@@ -1,6 +1,6 @@
 [project]
 name = "onedl-mmdeploy"
-version = "1.4.2.post1"
+version = "1.4.3"
 description = "OneDL Model Deployment"
 readme = "README.md"
 license = "LicenseRef-Apache-2.0"
@@ -76,8 +76,8 @@ codebases = [
 
 [project.optional-dependencies]
 backends = [
-    "onnxruntime>=1.8.0,<1.19.0",
-    "openvino-dev==2022.3.0; python_version=='3.10'",
+    "onnxruntime==1.19.2",
+    "openvino-dev; python_version=='3.10'",
 ]
 mminstall =  [
     "onedl-mmengine",

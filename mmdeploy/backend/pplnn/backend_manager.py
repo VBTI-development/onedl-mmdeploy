@@ -56,10 +56,10 @@ class PPLNNManager(BaseBackendManager):
         if not cls.is_available():
             return 'None'
         else:
-            import pkg_resources
+            from importlib.metadata import PackageNotFoundError, version
             try:
-                return pkg_resources.get_distribution('pyppl').version
-            except Exception:
+                return version('pyppl')
+            except PackageNotFoundError:
                 return 'None'
 
     @classmethod

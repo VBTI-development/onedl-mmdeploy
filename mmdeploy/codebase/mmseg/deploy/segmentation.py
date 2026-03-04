@@ -41,7 +41,8 @@ def process_model_config(model_cfg: mmengine.Config,
     # remove some training related pipeline
     removed_indices = []
     for i in range(len(cfg.test_pipeline)):
-        if cfg.test_pipeline[i]['type'] in ['LoadAnnotations']:
+        if cfg.test_pipeline[i]['type'].rsplit(
+                '.', 1)[-1] in ['LoadAnnotations', 'LoadOneDLAnnotations']:
             removed_indices.append(i)
     for i in reversed(removed_indices):
         cfg.test_pipeline.pop(i)

@@ -159,3 +159,57 @@ def test_get_postprocess():
 def test_get_model_name():
     name = task_processor.get_model_name()
     assert isinstance(name, str)
+
+
+@pytest.mark.parametrize('annotation_type', [
+    'LoadAnnotations',
+    'LoadOneDLAnnotations',
+    'mmseg.LoadAnnotations',
+])
+def test_process_model_config_removes_annotation_loader(annotation_type):
+    """process_model_config must strip every annotation-loader step from the
+    test pipeline, regardless of whether the type is plain or namespaced."""
+    from mmdeploy.codebase.mmseg.deploy.segmentation import \
+        process_model_config
+
+    cfg = copy.deepcopy(model_cfg)
+    cfg.test_pipeline = [
+        dict(type='LoadImageFromFile'),
+        dict(type=annotation_type),
+        dict(type='Resize', scale=img_shape, keep_ratio=False),
+        dict(type='PackSegInputs'),
+    ]
+    # Confirm the loader is present in the original pipeline
+    raw_types = [s['type'] for s in cfg.test_pipeline]
+    assert annotation_type in raw_types
+
+    processed_cfg = process_model_config(cfg, [tiger_img_path])
+    assert not any(
+        'LoadAnnotations' in s['type'] for s in processed_cfg.test_pipeline), (
+            f'LoadAnnotations was not removed when type={annotation_type!r}')
+    assert not any(
+        'LoadOneDLAnnotations' in s['type']
+        for s in processed_cfg.test_pipeline
+    ), (f'LoadOneDLAnnotations was not removed when type={annotation_type!r}')
+
+
+def test_process_model_config_removes_both_annotation_loaders():
+    """process_model_config must strip LoadAnnotations *and*
+    LoadOneDLAnnotations when both appear in the same pipeline."""
+    from mmdeploy.codebase.mmseg.deploy.segmentation import \
+        process_model_config
+
+    cfg = copy.deepcopy(model_cfg)
+    cfg.test_pipeline = [
+        dict(type='LoadImageFromFile'),
+        dict(type='LoadAnnotations'),
+        dict(type='LoadOneDLAnnotations'),
+        dict(type='PackSegInputs'),
+    ]
+    processed_cfg = process_model_config(cfg, [tiger_img_path])
+    pipeline_types = [s['type'] for s in processed_cfg.test_pipeline]
+
+    assert 'LoadAnnotations' not in pipeline_types
+    assert 'LoadOneDLAnnotations' not in pipeline_types
+    # Only LoadImageFromFile and PackSegInputs remain
+    assert len(processed_cfg.test_pipeline) == 2

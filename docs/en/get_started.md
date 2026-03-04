@@ -64,98 +64,15 @@ mim install onedl-mmcv
 ```
 
 **Step 1.** Install MMDeploy and inference engine
+We currently don't provide prebuilt packages.
 
-We recommend using MMDeploy precompiled package as our best practice. Currently, we support model converter and sdk inference pypi package, and the sdk c/cpp library is provided [here](https://github.com/vbti-development/onedl-mmdeploy/releases). You can download them according to your target platform and device.
-
-The supported platform and device matrix is presented as following:
-
-<table>
-<thead>
-  <tr>
-    <th>OS-Arch</th>
-    <th>Device</th>
-    <th>ONNX Runtime</th>
-    <th>TensorRT</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td rowspan="2">Linux-x86_64</td>
-    <td>CPU</td>
-    <td>Y</td>
-    <td>N/A</td>
-  </tr>
-  <tr>
-    <td>CUDA</td>
-    <td>Y</td>
-    <td>Y</td>
-  </tr>
-  <tr>
-    <td rowspan="2">Windows-x86_64</td>
-    <td>CPU</td>
-    <td>Y</td>
-    <td>N/A</td>
-  </tr>
-  <tr>
-    <td>CUDA</td>
-    <td>Y</td>
-    <td>Y</td>
-  </tr>
-</tbody>
-</table>
-
-**Note: if MMDeploy prebuilt package doesn't meet your target platforms or devices, please [build MMDeploy from source](01-how-to-build/build_from_source.md)**
-
-Take the latest precompiled package as example, you can install it as follows:
-
-<details open>
-<summary><b>Linux-x86_64</b></summary>
-
-```shell
-# 1. install MMDeploy model converter with sdk inference
-# This will check which torch version is installed and install the correct CPU/GPU version automatically.
-mim install mmdeploy
-
-# 3. install inference engine
-# 3.1 install TensorRT
-# !!! If you want to convert a tensorrt model or inference with tensorrt,
-# download TensorRT-8 (CUDA<12.9) or TensorRT 10 (CUDA>=12.9) from NVIDIA
-pip install TensorRT-8.6.3.0/python/tensorrt-8.6.3.0-cp10-none-linux_x86_64.whl
-pip install pycuda
-export TENSORRT_DIR=$(pwd)/TensorRT-8.6.3.0
-export LD_LIBRARY_PATH=${TENSORRT_DIR}/lib:$LD_LIBRARY_PATH
-# !!! Moreover, download cuDNN 8.6.1 CUDA 11.x tar package from NVIDIA, and extract it to the current directory
-export CUDNN_DIR=$(pwd)/cuda
-export LD_LIBRARY_PATH=$CUDNN_DIR/lib64:$LD_LIBRARY_PATH
-
-# 3.2 install ONNX Runtime
-# you can install one to install according whether you need gpu inference
-# 3.2.1 onnxruntime
-wget https://github.com/microsoft/onnxruntime/releases/download/v1.19.2/onnxruntime-linux-x64-1.19.2.tgz
-tar -zxvf onnxruntime-linux-x64-1.19.2.tgz
-export ONNXRUNTIME_DIR=$(pwd)/onnxruntime-linux-x64-1.19.2
-export LD_LIBRARY_PATH=$ONNXRUNTIME_DIR/lib:$LD_LIBRARY_PATH
-# 3.2.2 onnxruntime-gpu
-pip install onnxruntime-gpu==1.19.2
-wget https://github.com/microsoft/onnxruntime/releases/download/v1.19.2/onnxruntime-linux-x64-gpu-1.19.2.tgz
-tar -zxvf onnxruntime-linux-x64-gpu-1.19.2.tgz
-export ONNXRUNTIME_DIR=$(pwd)/onnxruntime-linux-x64-gpu-1.19.2
-export LD_LIBRARY_PATH=$ONNXRUNTIME_DIR/lib:$LD_LIBRARY_PATH
-```
-
-</details>
-
-<details open>
-<summary><b>Windows-x86_64</b></summary>
-</details>
-
-Please learn its prebuilt package from [this](02-how-to-run/prebuilt_package_windows.md) guide.
+**Note: Please [build MMDeploy from source](01-how-to-build/build_from_source.md)**
 
 ## Convert Model
 
 After the installation, you can enjoy the model deployment journey starting from converting PyTorch model to backend model by running `tools/deploy.py`.
 
-Based on the above settings, we provide an example to convert the Faster R-CNN in [MMDetection](https://github.com/vbti-development/onedl-mmdetection) to TensorRT as below:
+Based on the above settings, we provide an example to convert the Faster R-CNN in [OneDL-MMDetection](https://github.com/vbti-development/onedl-mmdetection) to TensorRT as below:
 
 ```shell
 # clone mmdeploy to get the deployment config. `--recursive` is not necessary
@@ -182,7 +99,7 @@ python mmdeploy/tools/deploy.py \
 ```
 
 The converted model and its meta info will be found in the path specified by `--work-dir`.
-And they make up of MMDeploy Model that can be fed to MMDeploy SDK to do model inference.
+And they make up of OneDL MMDeploy Model that can be fed to OneDL MMDeploy SDK to do model inference.
 
 For more details about model conversion, you can read [how_to_convert_model](02-how-to-run/convert_model.md). If you want to customize the conversion pipeline, you can edit the config file by following [this](02-how-to-run/write_config.md) tutorial.
 
@@ -216,7 +133,7 @@ result = inference_model(
 
 ### Inference by SDK
 
-You can directly run MMDeploy demo programs in the precompiled package to get inference results.
+You can directly run OneDL MMDeploy demo programs in the precompiled package to get inference results.
 
 ```shell
 wget https://github.com/vbti-development/onedl-mmdeploy/releases/download/v1.3.1/mmdeploy-1.3.1-linux-x86_64-cuda11.8.tar.gz

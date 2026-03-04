@@ -1,5 +1,4 @@
 # Copyright (c) OpenMMLab. All rights reserved.
-import os.path as osp
 from typing import Dict, Optional, Sequence
 
 import numpy as np
@@ -36,24 +35,34 @@ class OpenVINOWrapper(BaseWrapper):
                  output_names: Optional[Sequence[str]] = None,
                  **kwargs):
 
-        from openvino.inference_engine import IECore
-        self.ie = IECore()
-        bin_path = osp.splitext(ir_model_file)[0] + '.bin'
-        self.net = self.ie.read_network(ir_model_file, bin_path)
-        for input in self.net.input_info.values():
-            batch_size = input.input_data.shape[0]
-            dims = len(input.input_data.shape)
+        from openvino import Core
+        self.core = Core()
+        self.model = self.core.read_model(ir_model_file)
+        for inp in self.model.inputs:
+            shape = inp.shape
+            dims = len(shape)
+            batch_size = shape[0]
             # if input is a image, it has (B,C,H,W) channels,
             # need batch_size==1
             assert not dims == 4 or batch_size == 1, \
                 'Only batch 1 is supported.'
         self.device = 'cpu'
-        self.sess = self.ie.load_network(
-            network=self.net, device_name=self.device.upper(), num_requests=1)
+        self.compiled = self.core.compile_model(self.model,
+                                                self.device.upper())
+        self.infer_request = self.compiled.create_infer_request()
 
-        # TODO: Check if output_names can be read
+        # In OpenVINO >= 2023.x get_any_name() may return internal IR node
+        # paths (e.g. '/model/Unsqueeze_output_0') instead of the original
+        # ONNX output names.  Prefer the first friendly name that does NOT
+        # look like an internal path; fall back to get_any_name() only if
+        # no such name exists.
         if output_names is None:
-            output_names = [name for name in self.net.outputs]
+            output_names = []
+            for out in self.model.outputs:
+                names = list(out.names)  # all aliases for this output
+                friendly = next((n for n in names if '/' not in n), None)
+                output_names.append(
+                    friendly if friendly is not None else out.get_any_name())
 
         super().__init__(output_names)
 
@@ -84,16 +93,15 @@ class OpenVINOWrapper(BaseWrapper):
         input_shapes = {name: data.shape for name, data in inputs.items()}
         reshape_needed = False
         for input_name, input_shape in input_shapes.items():
-            blob_shape = self.net.input_info[input_name].input_data.shape
+            blob_shape = tuple(self.model.input(input_name).shape)
             if not np.array_equal(input_shape, blob_shape):
                 reshape_needed = True
                 break
         if reshape_needed:
-            self.net.reshape(input_shapes)
-            self.sess = self.ie.load_network(
-                network=self.net,
-                device_name=self.device.upper(),
-                num_requests=1)
+            self.model.reshape(input_shapes)
+            self.compiled = self.core.compile_model(self.model,
+                                                    self.device.upper())
+            self.infer_request = self.compiled.create_infer_request()
 
     def __process_outputs(
             self, outputs: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
@@ -139,7 +147,7 @@ class OpenVINOWrapper(BaseWrapper):
     @TimeCounter.count_time(Backend.OPENVINO.value)
     def __openvino_execute(
             self, inputs: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
-        """Run inference with OpenVINO IE.
+        """Run inference with OpenVINO runtime.
 
         Args:
             inputs (Dict[str, torch.Tensor]): The input name and tensor pairs.
@@ -147,5 +155,17 @@ class OpenVINOWrapper(BaseWrapper):
         Returns:
             Dict[str, numpy.ndarray]: The output name and tensor pairs.
         """
-        outputs = self.sess.infer(inputs)
+        np_inputs = {
+            name: data.detach().cpu().numpy()
+            for name, data in inputs.items()
+        }
+        self.infer_request.infer(np_inputs)
+        # Use positional mapping so that internal IR names such as
+        # '/model/Unsqueeze_output_0' (introduced in OpenVINO >= 2023.x)
+        # are transparently replaced by the user-visible output_names.
+        outputs = {
+            self.output_names[i]:
+            self.infer_request.get_tensor(out).data.copy()
+            for i, out in enumerate(self.compiled.outputs)
+        }
         return outputs

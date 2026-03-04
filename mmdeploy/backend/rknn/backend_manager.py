@@ -61,18 +61,16 @@ class RKNNManager(BaseBackendManager):
         if not cls.is_available():
             return 'None'
         else:
-            import pkg_resources
+            from importlib.metadata import PackageNotFoundError, version
             rknn_version = None
             rknn2_version = None
             try:
-                rknn_version = pkg_resources.get_distribution(
-                    'rknn-toolkit').version
-            except Exception:
+                rknn_version = version('rknn-toolkit')
+            except PackageNotFoundError:
                 pass
             try:
-                rknn2_version = pkg_resources.get_distribution(
-                    'rknn-toolkit2').version
-            except Exception:
+                rknn2_version = version('rknn-toolkit2')
+            except PackageNotFoundError:
                 pass
             if rknn2_version is not None:
                 return rknn2_version
@@ -87,19 +85,17 @@ class RKNNManager(BaseBackendManager):
         Returns:
             str: Info about the environment.
         """
-        import pkg_resources
+        from importlib.metadata import PackageNotFoundError, version
         try:
             rknn_version = 'None'
             rknn2_version = 'None'
             try:
-                rknn_version = pkg_resources.get_distribution(
-                    'rknn-toolkit').version
-            except Exception:
+                rknn_version = version('rknn-toolkit')
+            except PackageNotFoundError:
                 pass
             try:
-                rknn2_version = pkg_resources.get_distribution(
-                    'rknn-toolkit2').version
-            except Exception:
+                rknn2_version = version('rknn-toolkit2')
+            except PackageNotFoundError:
                 pass
 
             rknn_info = f'rknn-toolkit:\t{rknn_version}'
