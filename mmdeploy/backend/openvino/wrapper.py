@@ -155,7 +155,10 @@ class OpenVINOWrapper(BaseWrapper):
         Returns:
             Dict[str, numpy.ndarray]: The output name and tensor pairs.
         """
-        np_inputs = {name: data.numpy() for name, data in inputs.items()}
+        np_inputs = {
+            name: data.detach().cpu().numpy()
+            for name, data in inputs.items()
+        }
         self.infer_request.infer(np_inputs)
         # Use positional mapping so that internal IR names such as
         # '/model/Unsqueeze_output_0' (introduced in OpenVINO >= 2023.x)
