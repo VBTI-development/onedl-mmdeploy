@@ -14,13 +14,17 @@ from mmdeploy.utils.config_utils import get_backend_config
 
 def rknn_package_info():
     """Get the rknn package information."""
-    import pkg_resources
-    toolkit = pkg_resources.working_set.by_key.get('rknn-toolkit', None)
-    toolkit = pkg_resources.working_set.by_key.get('rknn-toolkit2', toolkit)
-    if toolkit is None:
+    from importlib.metadata import PackageNotFoundError, metadata
+    result = None
+    for pkg_name in ('rknn-toolkit', 'rknn-toolkit2'):
+        try:
+            result = metadata(pkg_name)
+        except PackageNotFoundError:
+            pass
+    if result is None:
         return dict(name=None, version=None)
     else:
-        return dict(name=toolkit.project_name, version=toolkit.version)
+        return dict(name=result['Name'], version=result['Version'])
 
 
 def onnx2rknn(onnx_model: str,

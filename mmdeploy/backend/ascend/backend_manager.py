@@ -50,10 +50,10 @@ class AscendManager(BaseBackendManager):
         if not cls.is_available():
             return 'None'
         else:
-            import pkg_resources
+            from importlib.metadata import PackageNotFoundError, version
             try:
-                return pkg_resources.get_distribution('acl').version
-            except Exception:
+                return version('acl')
+            except PackageNotFoundError:
                 return 'None'
 
     @classmethod
