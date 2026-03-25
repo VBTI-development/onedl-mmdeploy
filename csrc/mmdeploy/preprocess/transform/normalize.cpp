@@ -42,7 +42,28 @@ class Normalize : public Transform {
     for (auto& v : args["std"]) {
       std_.push_back(v.get<float>());
     }
-    to_rgb_ = args.value("to_rgb", to_rgb_);
+    // `to_rgb` may arrive as a JSON boolean (true/false) or, when generated
+    // by older pipeline.json writers, as a JSON string ("true"/"false").
+    // Only the literal JSON boolean `true` / `false` should be used; a string
+    // value of "false" must NOT be treated as truthy.
+    if (args.contains("to_rgb")) {
+      const auto& v = args["to_rgb"];
+      if (v.is_boolean()) {
+        to_rgb_ = v.get<bool>();
+      } else if (v.is_string()) {
+        const auto s = v.get<std::string>();
+        if (s == "true" || s == "True" || s == "1") {
+          to_rgb_ = true;
+        } else {
+          to_rgb_ = false;  // "false", "False", "0", or any other string
+        }
+        MMDEPLOY_WARN(
+            "Normalize transform: 'to_rgb' was stored as a string \"{}\" in "
+            "pipeline.json. Use a bare JSON boolean (true/false) to avoid "
+            "ambiguity. Interpreted as {}.",
+            s, to_rgb_ ? "true" : "false");
+      }
+    }
     to_float_ = args.value("to_float", to_float_);
 
     if (!to_float_) {
