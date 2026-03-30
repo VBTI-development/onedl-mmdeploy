@@ -17,14 +17,14 @@ extern "C" {
 #endif
 
 typedef struct mmdeploy_segmentation_t {
-  int height;    ///< height of \p mask that equals to the input image's height
-  int width;     ///< width of \p mask that equals to the input image's width
-  int classes;   ///< the number of labels in \p mask
-  int* mask;     ///< segmentation mask of the input image, in which mask[i * width + j] indicates
-                 ///< the label id of pixel at (i, j), this field might be null
-  float* score;  ///< segmentation score map of the input image in CHW format, in which
-                 ///< score[height * width * k + i * width + j] indicates the score
-                 ///< of class k at pixel (i, j), this field might be null
+  int height;        ///< height of \p mask that equals to the input image's height
+  int width;         ///< width of \p mask that equals to the input image's width
+  int classes;       ///< the number of labels in \p mask
+  const void* mask;  ///< segmentation mask pointer (int32_t* or int64_t*), this field might be null
+  int mask_dtype;    ///< 0: unknown, 1: int32, 2: int64
+  const float* score;  ///< segmentation score map of the input image in CHW format, in which
+                       ///< score[height * width * k + i * width + j] indicates the score
+                       ///< of class k at pixel (i, j), this field might be null
 } mmdeploy_segmentation_t;
 
 typedef struct mmdeploy_segmentor* mmdeploy_segmentor_t;

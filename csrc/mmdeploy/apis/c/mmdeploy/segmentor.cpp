@@ -106,8 +106,20 @@ int mmdeploy_segmentor_get_result(mmdeploy_value_t output, mmdeploy_segmentation
       auto& score = segmentor_output.score;
       results_ptr->mask = nullptr;
       results_ptr->score = nullptr;
+      results_ptr->mask_dtype = 0;  // 0: unknown, 1: int32, 2: int64
       if (mask.shape().size()) {
-        results_ptr->mask = mask.data<int>();
+        int mask_size = mask.size();
+        if (mask.data_type() == DataType::kINT32) {
+          auto mask_ptr = mask.data<int32_t>();
+          results_ptr->mask = mask_ptr;
+          results_ptr->mask_dtype = 1;
+        } else if (mask.data_type() == DataType::kINT64) {
+          auto mask_ptr = mask.data<int64_t>();
+          results_ptr->mask = mask_ptr;
+          results_ptr->mask_dtype = 2;
+        } else {
+          MMDEPLOY_ERROR("Unsupported mask dtype: {}", mask.data_type());
+        }
         buffers[i] = mask.buffer();
       } else {
         results_ptr->score = score.data<float>();

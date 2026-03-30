@@ -34,26 +34,28 @@ class PySegmentor {
     }
     using Sptr = std::shared_ptr<mmdeploy_segmentation_t>;
     Sptr holder(segm, [n = mats.size()](auto p) { mmdeploy_segmentor_release_result(p, n); });
+    // Create a single capsule for all arrays to ensure correct buffer lifetime
+    py::capsule cap(new Sptr(holder), [](void* p) { delete reinterpret_cast<Sptr*>(p); });
 
     std::vector<py::array> rets(mats.size());
     for (size_t i = 0; i < mats.size(); ++i) {
       if (segm[i].mask != nullptr) {
-        rets[i] = {
-            {segm[i].height, segm[i].width},                                 // shape
-            segm[i].mask,                                                    // mask
-            py::capsule(new Sptr(holder),                                    // handle
-                        [](void* p) { delete reinterpret_cast<Sptr*>(p); })  //
-        };
+        if (segm[i].mask_dtype == 1) {  // int32
+          rets[i] = py::array_t<int32_t>({segm[i].height, segm[i].width},
+                                         static_cast<const int32_t*>(segm[i].mask), cap);
+        } else if (segm[i].mask_dtype == 2) {  // int64
+          rets[i] = py::array_t<int64_t>({segm[i].height, segm[i].width},
+                                         static_cast<const int64_t*>(segm[i].mask), cap);
+        } else {
+          throw std::runtime_error("Unsupported mask dtype in Python binding");
+        }
       }
       if (segm[i].score != nullptr) {
-        rets[i] = {
-            {segm[i].classes, segm[i].height, segm[i].width},                // shape
-            segm[i].score,                                                   // score
-            py::capsule(new Sptr(holder),                                    // handle
-                        [](void* p) { delete reinterpret_cast<Sptr*>(p); })  //
-        };
+        rets[i] = py::array_t<float>({segm[i].classes, segm[i].height, segm[i].width},
+                                     segm[i].score, cap);
       }
     }
+
     return rets;
   }
 
