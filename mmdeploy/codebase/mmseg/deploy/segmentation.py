@@ -290,8 +290,21 @@ class Segmentation(BaseTask):
                 mean=dp.get('mean', [0, 0, 0]),
                 std=dp.get('std', [1, 1, 1]),
                 to_rgb=coerce_bool(dp.get('bgr_to_rgb', False))))
-        preprocess.append(
-            dict(type='Pad', size_divisor=dp.get('pad_size_divisor', 1)))
+
+        pad_cfg = dict(type='Pad')
+        size = dp.get('size', None)
+        if size is not None:
+            # normalize size to json serializable format
+            if isinstance(size, int):
+                size = [size, size]
+            size = list(size)
+            pad_cfg['size'] = size
+        size_divisor = dp.get('size_divisor', 1)
+        if size_divisor != 1:
+            pad_cfg['size_divisor'] = size_divisor
+        if len(pad_cfg) > 1:
+            preprocess.append(pad_cfg)
+
         preprocess.append(dict(type='DefaultFormatBundle'))
         preprocess.append(
             dict(
