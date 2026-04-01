@@ -13,7 +13,7 @@ from mmengine.model import BaseDataPreprocessor
 from mmengine.registry import Registry
 
 from mmdeploy.codebase.base import CODEBASE, BaseTask, MMCodebase
-from mmdeploy.utils import (Codebase, Task, get_codebase_config,
+from mmdeploy.utils import (Codebase, Task, coerce_bool, get_codebase_config,
                             get_input_shape, get_root_logger)
 
 
@@ -60,7 +60,7 @@ def process_model_config(
             type='Normalize',
             mean=data_preprocessor.mean,
             std=data_preprocessor.std,
-            to_rgb=data_preprocessor.get('bgr_to_rgb', False)))
+            to_rgb=coerce_bool(data_preprocessor.get('bgr_to_rgb'), False)))
     test_pipeline.append(dict(type='ImageToTensor', keys=['img']))
     test_pipeline.append(
         dict(

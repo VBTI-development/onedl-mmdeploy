@@ -13,7 +13,7 @@ from mmengine.model import BaseDataPreprocessor
 from mmengine.registry import Registry
 
 from mmdeploy.codebase.base import CODEBASE, BaseTask, MMCodebase
-from mmdeploy.utils import (Codebase, Task, get_codebase_config,
+from mmdeploy.utils import (Codebase, Task, coerce_bool, get_codebase_config,
                             get_input_shape, get_root_logger)
 
 
@@ -270,21 +270,42 @@ class Segmentation(BaseTask):
             dict: Composed of the preprocess information.
         """
         input_shape = get_input_shape(self.deploy_cfg)
-        load_from_file = self.model_cfg.test_pipeline[0]
         model_cfg = process_model_config(self.model_cfg, [''], input_shape)
         preprocess = model_cfg.test_pipeline
-        preprocess[0] = load_from_file
-        assert preprocess[1].type == 'Resize'
-        preprocess[1]['size'] = list(preprocess[1].pop('scale'))
-        preprocess = preprocess[:2]
+        for i, transform in enumerate(preprocess):
+            if transform['type'].startswith('mmseg.'):
+                transform['type'] = transform['type'][6:]
+            if transform['type'] == 'Resize':
+                preprocess[i]['size'] = preprocess[i].pop('scale')
+
+        preprocess = [
+            transform for transform in preprocess
+            if 'Load' in transform['type'] or 'Resize' in transform['type']
+        ]
+
         dp = self.model_cfg.model.data_preprocessor
         preprocess.append(
             dict(
                 type='Normalize',
-                mean=dp.mean,
-                std=dp.std,
-                to_rgb=dp.bgr_to_rgb))
-        preprocess.append(dict(type='ImageToTensor', keys=['img']))
+                mean=dp.get('mean', [0, 0, 0]),
+                std=dp.get('std', [1, 1, 1]),
+                to_rgb=coerce_bool(dp.get('bgr_to_rgb', False))))
+
+        pad_cfg = dict(type='Pad')
+        size = dp.get('size', None)
+        if size is not None:
+            # normalize size to json serializable format
+            if isinstance(size, int):
+                size = [size, size]
+            size = list(size)
+            pad_cfg['size'] = size
+        size_divisor = dp.get('size_divisor', 1)
+        if size_divisor != 1:
+            pad_cfg['size_divisor'] = size_divisor
+        if len(pad_cfg) > 1:
+            preprocess.append(pad_cfg)
+
+        preprocess.append(dict(type='DefaultFormatBundle'))
         preprocess.append(
             dict(
                 type='Collect',

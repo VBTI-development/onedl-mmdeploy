@@ -10,7 +10,7 @@ from mmengine.model import BaseDataPreprocessor
 from mmengine.registry import Registry
 
 from mmdeploy.codebase.base import CODEBASE, BaseTask, MMCodebase
-from mmdeploy.utils import Backend, Codebase, Task
+from mmdeploy.utils import Backend, Codebase, Task, coerce_bool
 from mmdeploy.utils.config_utils import (get_backend, get_input_shape,
                                          is_dynamic_shape)
 
@@ -297,7 +297,7 @@ class ObjectDetection(BaseTask):
             -3,
             dict(
                 type='Normalize',
-                to_rgb=data_preprocessor.get('bgr_to_rgb', False),
+                to_rgb=coerce_bool(data_preprocessor.get('bgr_to_rgb'), False),
                 mean=data_preprocessor.get('mean', [0, 0, 0]),
                 std=data_preprocessor.get('std', [1, 1, 1])))
         return transforms

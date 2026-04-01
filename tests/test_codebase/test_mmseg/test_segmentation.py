@@ -161,6 +161,53 @@ def test_get_model_name():
     assert isinstance(name, str)
 
 
+@pytest.mark.parametrize(
+    'dp_override,expect_pad,expect_size_divisor,expect_size',
+    [
+        # size_divisor > 1 → Pad with size_divisor
+        (dict(size_divisor=32), True, 32, None),
+        # size present → Pad with size
+        (dict(size=(512, 512)), True, None, [512, 512]),
+        # size_divisor == 1 → no Pad
+        (dict(size_divisor=1), False, None, None),
+        # neither → no Pad
+        ({}, False, None, None),
+    ])
+def test_get_preprocess_pad(dp_override, expect_pad, expect_size_divisor,
+                            expect_size):
+    """get_preprocess must emit a Pad transform when data_preprocessor
+    specifies size_divisor > 1 or a fixed size, and must omit it otherwise."""
+    cfg = copy.deepcopy(model_cfg)
+    # Start from a clean data_preprocessor without existing pad keys, then
+    # apply the override so each parametrize case is independent.
+    dp = dict(
+        type='SegDataPreProcessor',
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
+        bgr_to_rgb=True,
+    )
+    dp.update(dp_override)
+    cfg.model.data_preprocessor = dp
+
+    _task_processor = build_task_processor(cfg, deploy_cfg, 'cpu')
+    preprocess = _task_processor.get_preprocess()
+
+    pad_steps = [t for t in preprocess if t.get('type') == 'Pad']
+    if expect_pad:
+        assert len(pad_steps) == 1, \
+            f'Expected one Pad step but got {pad_steps}'
+        pad = pad_steps[0]
+        if expect_size_divisor is not None:
+            assert pad.get('size_divisor') == expect_size_divisor, \
+                f'Expected size_divisor={expect_size_divisor}, got {pad}'
+        if expect_size is not None:
+            assert pad.get('size') == expect_size, \
+                f'Expected size={expect_size}, got {pad}'
+    else:
+        assert len(pad_steps) == 0, \
+            f'Expected no Pad step but got {pad_steps}'
+
+
 @pytest.mark.parametrize('annotation_type', [
     'LoadAnnotations',
     'LoadOneDLAnnotations',

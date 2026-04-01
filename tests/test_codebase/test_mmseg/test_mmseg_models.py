@@ -80,7 +80,10 @@ def test_basesegmentor_forward(backend: Backend, with_argmax: bool,
     if rewrite_outputs.shape[1] != 1:
         rewrite_outputs = rewrite_outputs.argmax(dim=1, keepdim=True)
     rewrite_outputs = rewrite_outputs.squeeze(0).to(model_outputs)
-    assert torch.allclose(model_outputs, rewrite_outputs)
+    if with_argmax:
+        assert torch.equal(model_outputs, rewrite_outputs)
+    else:
+        assert torch.allclose(model_outputs, rewrite_outputs)
 
 
 @pytest.mark.parametrize('backend', [Backend.ONNXRUNTIME])

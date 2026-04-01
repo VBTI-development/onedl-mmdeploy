@@ -451,6 +451,38 @@ def get_codebase_external_module(
     return get_codebase_config(deploy_cfg).get('module', [])
 
 
+def coerce_bool(value, default: bool = False) -> bool:
+    """Safely coerce a config value to a Python bool.
+
+    YAML can store booleans as strings (e.g. ``bgr_to_rgb: 'false'``).
+    Using ``bool('false')`` returns ``True`` because every non-empty string is
+    truthy, which silently inverts the intended value.  This helper handles
+    both native bools and string representations.
+
+    Args:
+        value: The raw config value (bool, str, int, or None).
+        default (bool): Fallback when *value* is ``None``.
+
+    Returns:
+        bool: The correctly coerced boolean.
+    """
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lower = value.strip().lower()
+        if lower in ('true', '1', 'yes'):
+            return True
+        if lower in ('false', '0', 'no', ''):
+            return False
+        raise ValueError(
+            f'Cannot coerce config string {value!r} to bool. '
+            'Use a bare YAML boolean (true/false) rather than a quoted string.'
+        )
+    return bool(value)
+
+
 def get_normalization(model_cfg: Union[str, mmengine.Config]):
     """Get the Normalize transform from model config.
 

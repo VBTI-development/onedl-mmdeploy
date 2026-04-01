@@ -1,11 +1,11 @@
 [project]
 name = "onedl-mmdeploy"
-version = "1.4.3"
+version = "1.4.4"
 description = "OneDL Model Deployment"
 readme = "README.md"
 license = "LicenseRef-Apache-2.0"
 authors = [
-    {name = "MMDeploy Contributors"},
+    {name = "OneDL-MMDeploy Contributors"},
     {name = "VBTI Software Team", email = "oss@vbti.nl"}
 ]
 maintainers = [

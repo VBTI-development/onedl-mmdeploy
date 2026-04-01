@@ -11,7 +11,7 @@ from mmengine.dist import cast_data_device
 from mmengine.model import BaseDataPreprocessor
 
 from mmdeploy.codebase.base import BaseTask
-from mmdeploy.utils import Task, get_input_shape
+from mmdeploy.utils import Task, coerce_bool, get_input_shape
 from .mmocr import MMOCR_TASK
 
 
@@ -245,7 +245,7 @@ class TextRecognition(BaseTask):
             -3,
             dict(
                 type='Normalize',
-                to_rgb=data_preprocessor.get('bgr_to_rgb', False),
+                to_rgb=coerce_bool(data_preprocessor.get('bgr_to_rgb'), False),
                 mean=data_preprocessor.get('mean', [0, 0, 0]),
                 std=data_preprocessor.get('std', [1, 1, 1])))
         return transforms
