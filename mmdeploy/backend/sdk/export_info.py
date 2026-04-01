@@ -205,7 +205,8 @@ def get_preprocess(deploy_cfg: mmengine.Config, model_cfg: mmengine.Config,
                 transform['std'] = [1, 1, 1]
     if transforms[0]['type'] != 'Lift':
         assert transforms[0]['type'] == 'LoadImageFromFile', \
-            'The first item type of pipeline should be LoadImageFromFile'
+            'The first item type of pipeline should be LoadImageFromFile,' \
+            f' not {transforms[0]["type"]}'
     return dict(
         type='Task',
         module='Transform',
