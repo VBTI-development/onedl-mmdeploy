@@ -51,11 +51,12 @@ class Normalize : public Transform {
       if (v.is_boolean()) {
         to_rgb_ = v.get<bool>();
       } else if (v.is_string()) {
-        const auto s = v.get<std::string>();
-        if (s == "true" || s == "True" || s == "1") {
+        std::string s = v.get<std::string>();
+        std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+        if (s == "true" || s == "1") {
           to_rgb_ = true;
         } else {
-          to_rgb_ = false;  // "false", "False", "0", or any other string
+          to_rgb_ = false;  // "false", "0", or any other string
         }
         MMDEPLOY_WARN(
             "Normalize transform: 'to_rgb' was stored as a string \"{}\" in "
