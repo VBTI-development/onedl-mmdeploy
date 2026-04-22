@@ -6,11 +6,11 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Install uv and set the python version
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: '3.10'
+          python-version: '3.12'
       - name: Install pre-commit hook
         run: |
           uv pip install pre-commit
@@ -44,12 +44,12 @@ jobs:
   uv-lock:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install uv and set the python version
         uses: astral-sh/setup-uv@v6
         with:
           activate-environment: true
-          python-version: '3.10'
+          python-version: '3.12'
       - name: Check uv.lock file
         run: |
           uv lock --check
