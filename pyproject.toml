@@ -27,7 +27,7 @@ dependencies = [
     "grpcio",
     "matplotlib",
     "multiprocess",
-    "numpy",
+    "numpy>2",
     "onnx>=1.13.0",
     "onnxscript",
     "prettytable",
@@ -41,7 +41,7 @@ build = [
     "setuptools>=61.0",
     "wheel",
     "cython",
-    "numpy",
+    "numpy>2",
     "packaging",
 ]
 tests = [
