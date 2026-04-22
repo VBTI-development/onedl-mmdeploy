@@ -62,7 +62,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
         libglib2.0-0 \
         libopencv-dev \
         libsm6 \
-        libspdlog-dev \
         libssl-dev \
         libxext6 \
         libxrender-dev \
