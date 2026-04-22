@@ -81,7 +81,7 @@ codebases = [
 [project.optional-dependencies]
 backends = [
     "onnxruntime==1.21.0",
-    "openvino-dev; python_version>='3.10' and python_version<'3.12'",
+    "openvino-dev>=2023.1; python_version>='3.10' and python_version<'3.12'",
     "openvino>=2024.2.0; python_version>='3.12'",
 ]
 mminstall =  [

@@ -1299,7 +1299,7 @@ requires-dist = [
     { name = "onnxruntime", marker = "extra == 'backends'", specifier = "==1.21.0" },
     { name = "onnxscript" },
     { name = "openvino", marker = "python_full_version >= '3.12' and extra == 'backends'", specifier = ">=2024.2.0" },
-    { name = "openvino-dev", marker = "python_full_version >= '3.10' and python_full_version < '3.12' and extra == 'backends'" },
+    { name = "openvino-dev", marker = "python_full_version >= '3.10' and python_full_version < '3.12' and extra == 'backends'", specifier = ">=2023.1" },
     { name = "prettytable" },
     { name = "protobuf" },
     { name = "six" },
