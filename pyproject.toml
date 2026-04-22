@@ -48,7 +48,7 @@ tests = [
     "asynctest",
     "coverage",
     "openpyxl==3.0.9",
-    "opencv-python",
+    "opencv-python>=4.9.0",
     "pandas",
     "pytest",
     "pyyaml",
