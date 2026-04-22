@@ -198,7 +198,7 @@ export PPLNN_DIR=$(pwd)
   <tr>
     <td>OpenVINO</td>
     <td>openvino </td>
-    <td>1. Install <a href="https://docs.openvino.ai/2021.4/get_started.html">OpenVINO</a> package
+    <td>1. Install <a href="https://docs.openvino.ai/2024.6/get_started.html">OpenVINO</a> package
 <pre><code>
 pip install openvino-dev
 </code></pre>

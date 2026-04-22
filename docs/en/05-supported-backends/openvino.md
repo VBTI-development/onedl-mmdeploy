@@ -18,7 +18,7 @@ pip install openvino-dev[onnx]==2022.3.0
 ### Download OpenVINO runtime for SDK (Optional)
 
 If you want to use OpenVINO in SDK, you need install OpenVINO with [install_guides](https://docs.openvino.ai/2022.3/openvino_docs_install_guides_installing_openvino_from_archive_linux.html#installing-openvino-runtime).
-Take `openvino==2022.3.0` as example:
+Take `openvino==2024.6.0` as example:
 
 ```bash
 wget https://storage.openvinotoolkit.org/repositories/openvino/packages/2022.3/linux/l_openvino_toolkit_ubuntu20_2022.3.0.9052.9752fafe8eb_x86_64.tgz
@@ -107,13 +107,3 @@ backend_config = dict(
 ```
 
 Information about the possible parameters for the Model Optimizer can be found in the [documentation](https://docs.openvino.ai/latest/openvino_docs_MO_DG_prepare_model_convert_model_Converting_Model.html).
-
-## Troubleshooting
-
-- ImportError: libpython3.7m.so.1.0: cannot open shared object file: No such file or directory
-
-  To resolve missing external dependency on Ubuntu\*, execute the following command:
-
-  ```bash
-  sudo apt-get install libpython3.7
-  ```
