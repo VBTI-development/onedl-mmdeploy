@@ -1,24 +1,24 @@
 {
-    "python-envs.pythonProjects": [],
     "cmake.configureSettings": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "MMDEPLOY_BUILD_SDK": "ON",
+        "MMDEPLOY_BUILD_SDK_PYTHON_API": "ON",
         "MMDEPLOY_BUILD_EXAMPLES": "OFF",
         "CMAKE_CXX_COMPILER": "g++",
         "CMAKE_VERBOSE_MAKEFILE": "ON",
         "pplcv_DIR": "${env:PPLCV_DIR}/cuda-build/install/lib/cmake/ppl",
         "TENSORRT_DIR": "${env:TENSORRT_DIR}",
         "ONNXRUNTIME_DIR": "${env:ONNXRUNTIME_DIR}",
-        "MMDEPLOY_BUILD_SDK_PYTHON_API": "ON",
-        "MMDEPLOY_TARGET_DEVICES": ["cpu", "cuda"],
-        "MMDEPLOY_TARGET_BACKENDS": ["ort", "trt"],
+        "MMDEPLOY_TARGET_DEVICES": ["cpu","cuda"],
+        "MMDEPLOY_TARGET_BACKENDS": ["ort","trt"],
         "MMDEPLOY_CODEBASES": ["mmdet","mmpretrain","mmrotate","mmseg"],
         "MMDEPLOY_BUILD_TEST": "ON",
     },
+    "cmake.generator": "Unix Makefiles",
     "cmake.debugConfig": {
         "cwd": "${workspaceFolder}/build"
     },
-    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
     "files.associations": {
         "any": "cpp",
         "array": "cpp",
@@ -99,5 +99,10 @@
         "valarray": "cpp",
         "variant": "cpp"
     },
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
 
 }

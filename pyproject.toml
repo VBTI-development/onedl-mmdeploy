@@ -17,10 +17,11 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 keywords = ["computer vision", "model deployment"]
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.13"
 dependencies = [
     "aenum",
     "grpcio",
@@ -28,8 +29,9 @@ dependencies = [
     "multiprocess",
     "numpy",
     "onnx>=1.13.0",
+    "onnxscript",
     "prettytable",
-    "protobuf<=3.20.2",
+    "protobuf",
     "six",
     "terminaltables",
 ]
@@ -76,8 +78,8 @@ codebases = [
 
 [project.optional-dependencies]
 backends = [
-    "onnxruntime==1.19.2",
-    "openvino-dev; python_version=='3.10'",
+    "onnxruntime==1.21.0",
+    "openvino-dev; python_version>='3.10'",
 ]
 mminstall =  [
     "onedl-mmengine",

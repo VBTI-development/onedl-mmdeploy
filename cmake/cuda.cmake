@@ -1,8 +1,11 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 
 if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.18.0")
-    # suppress 'CMAKE_CUDA_ARCHITECTURES' warning
-    cmake_policy(SET CMP0104 OLD)
+    # CMP0104: CMAKE_CUDA_ARCHITECTURES must be set. Use "OFF" to indicate
+    # that architectures are managed manually via _NVCC_FLAGS below.
+    if (NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+        set(CMAKE_CUDA_ARCHITECTURES OFF)
+    endif ()
 endif ()
 
 if (MSVC OR (NOT DEFINED CMAKE_CUDA_RUNTIME_LIBRARY))

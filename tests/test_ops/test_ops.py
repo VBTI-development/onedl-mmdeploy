@@ -164,7 +164,8 @@ def test_bicubic_interpolate(backend,
             expected_result=expected_result)
 
 
-@pytest.mark.parametrize('backend', [TEST_TENSORRT, TEST_ONNXRT])
+@pytest.mark.parametrize(
+    'backend', [TEST_TENSORRT, TEST_ONNXRT], ids=['tensorrt', 'onnxrt'])
 @pytest.mark.parametrize(
     'in_channels,out_channels,stride,padding,'
     'dilation,groups,deform_groups,kernel_size', [(3, 64, 1, 0, 1, 1, 1, 3),
