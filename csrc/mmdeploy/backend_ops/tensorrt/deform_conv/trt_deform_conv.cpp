@@ -26,7 +26,8 @@ DeformableConvPluginDynamic::DeformableConvPluginDynamic(const std::string &name
       mPadding(padding),
       mDilation(dilation),
       mDeformableGroup(deformableGroup),
-      mGroup(group) {}
+      mGroup(group),
+      m_cublas_handle(nullptr) {}
 
 DeformableConvPluginDynamic::DeformableConvPluginDynamic(const std::string name, const void *data,
                                                          size_t length)
@@ -36,6 +37,7 @@ DeformableConvPluginDynamic::DeformableConvPluginDynamic(const std::string name,
   deserialize_value(&data, &length, &mDilation);
   deserialize_value(&data, &length, &mDeformableGroup);
   deserialize_value(&data, &length, &mGroup);
+  m_cublas_handle = nullptr;
 }
 DeformableConvPluginDynamic::~DeformableConvPluginDynamic() {}
 
@@ -114,6 +116,11 @@ int DeformableConvPluginDynamic::enqueue(const nvinfer1::PluginTensorDesc *input
                                          const nvinfer1::PluginTensorDesc *outputDesc,
                                          const void *const *inputs, void *const *outputs,
                                          void *workSpace, cudaStream_t stream) TRT_NOEXCEPT {
+  // TRT 10 no longer provides a cuBLAS handle via attachToContext.
+  // Create a local handle and bind it to the inference stream to prevent race conditions.
+  cublasHandle_t cublas_handle;
+  cublasCreate(&cublas_handle);
+  cublasSetStream(cublas_handle, stream);
   int batch = inputDesc[0].dims.d[0];
   int channels = inputDesc[0].dims.d[1];
   int height = inputDesc[0].dims.d[2];
@@ -134,19 +141,21 @@ int DeformableConvPluginDynamic::enqueue(const nvinfer1::PluginTensorDesc *input
       deform_conv<float>((float *)x, (float *)weight, (float *)offset, (float *)output, workSpace,
                          batch, channels, height, width, channels_out, kernel_w, kernel_h,
                          mStride.d[0], mStride.d[1], mPadding.d[0], mPadding.d[1], mDilation.d[0],
-                         mDilation.d[1], mGroup, mDeformableGroup, im2col_step, m_cublas_handle,
+                         mDilation.d[1], mGroup, mDeformableGroup, im2col_step, cublas_handle,
                          stream);
       break;
     case nvinfer1::DataType::kHALF:
       deform_conv<half>((half *)x, (half *)weight, (half *)offset, (half *)output, workSpace, batch,
                         channels, height, width, channels_out, kernel_w, kernel_h, mStride.d[0],
                         mStride.d[1], mPadding.d[0], mPadding.d[1], mDilation.d[0], mDilation.d[1],
-                        mGroup, mDeformableGroup, im2col_step, m_cublas_handle, stream);
+                        mGroup, mDeformableGroup, im2col_step, cublas_handle, stream);
       break;
     default:
+      cublasDestroy(cublas_handle);
       return 1;
   }
 
+  cublasDestroy(cublas_handle);
   return 0;
 }
 

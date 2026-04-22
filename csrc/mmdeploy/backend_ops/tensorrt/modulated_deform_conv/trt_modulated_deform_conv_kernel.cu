@@ -98,6 +98,8 @@ void ModulatedDeformConvForwardCUDAKernelLauncher(
   scalar_t alpha = 1.;
   scalar_t beta = 0.;
 
+  cublasSetStream(cublas_handle, stream);
+
   for (int b = 0; b < batch; b++) {
     const scalar_t* input_start = input + b * input_step;
     const scalar_t* offset_start = offset + b * offset_step;

@@ -129,6 +129,8 @@ void deform_conv(const scalar_t* input, const scalar_t* weight, const scalar_t* 
   scalar_t alpha = 1.f;
   scalar_t beta = 0.f;
 
+  cublasSetStream(cublas_handle, stream);
+
   for (int elt = 0; elt < batchSize / im2col_step; elt++) {
     const scalar_t* input_start = input + elt * input_elt_step;
     const scalar_t* offset_start = offset + elt * offset_elt_step;
