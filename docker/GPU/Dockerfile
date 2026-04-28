@@ -56,9 +56,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
         libxext6 \
         libxrender-dev \
         ninja-build \
-        wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        wget
 
 RUN uv venv ${VIRTUAL_ENV} --python python${PYTHON_VERSION}
 
@@ -72,9 +70,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
         > /etc/apt/sources.list.d/cuda-ubuntu2404-x86_64.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
-        tensorrt-dev=${TENSORRT_VERSION}* \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        tensorrt-dev=${TENSORRT_VERSION}*
 
 ENV TENSORRT_DIR=/usr
 
@@ -157,9 +153,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
         libopencv-imgcodecs-dev \
         libsm6 \
         libxext6 \
-        libxrender1 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        libxrender1
 
 # Copy TensorRT shared libraries from builder (avoids re-adding apt repo at runtime)
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libnvinfer*.so*      /usr/lib/x86_64-linux-gnu/

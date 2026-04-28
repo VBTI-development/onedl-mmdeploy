@@ -66,9 +66,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
         libxext6 \
         libxrender-dev \
         ninja-build \
-        wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        wget
 
 # Create venv with the exact Python version
 RUN uv venv ${VIRTUAL_ENV} --python python${PYTHON_VERSION}
@@ -88,9 +86,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
     && apt-get install -y --no-install-recommends \
         tensorrt-dev=${TENSORRT_VERSION}* \
         python3-libnvinfer=${TENSORRT_VERSION}* \
-        python3-libnvinfer-dev=${TENSORRT_VERSION}* \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        python3-libnvinfer-dev=${TENSORRT_VERSION}*
 
 # Set TensorRT environment variables
 ENV TENSORRT_DIR=/usr
