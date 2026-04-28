@@ -16,15 +16,16 @@ def get_mo_command() -> str:
     """Checks for possible commands to run Model Optimizer. The following
     commands will be tested:
 
+        'ovc' - OpenVINO Model Converter (OpenVINO >= 2023.1).
         'mo.py' - if you installed OpenVINO using the installer.
         'mo' - if you installed OpenVINO with pip.
 
     Returns:
-        str: Command to run Model Optimizer. If it is not available,
+        str: Command to run Model Optimizer/Converter. If it is not available,
             the empty string "" will be returned.
     """
     mo_command = ''
-    mo_commands = ['mo.py', 'mo']
+    mo_commands = ['ovc', 'mo.py', 'mo']
     for command in mo_commands:
         is_available = True
         try:
@@ -37,6 +38,7 @@ def get_mo_command() -> str:
             is_available = False
         if is_available:
             mo_command = command
+            break
     return mo_command
 
 
@@ -83,8 +85,7 @@ def from_onnx(onnx_model: Union[str, onnx.ModelProto],
             additional arguments for the Model Optimizer.
     """
     work_dir = output_file_prefix
-    input_names = ','.join(input_info.keys())
-    input_shapes = ','.join(str(list(elem)) for elem in input_info.values())
+    mmengine.mkdir_or_exist(osp.abspath(work_dir))
     output = ','.join(output_names)
 
     mo_command = get_mo_command()
@@ -99,11 +100,24 @@ def from_onnx(onnx_model: Union[str, onnx.ModelProto],
         onnx_path = tempfile.NamedTemporaryFile(suffix='.onnx').name
         onnx.save(onnx_model, onnx_path)
 
-    mo_args = f'--input_model="{onnx_path}" '\
-              f'--output_dir="{work_dir}" ' \
-              f'--output="{output}" ' \
-              f'--input="{input_names}" ' \
-              f'--input_shape="{input_shapes}" '
+    if mo_command == 'ovc':
+        # ovc uses 'name[shape]' format for --input and --output_model
+        # instead of --output_dir
+        input_str = ','.join(f'{name}{list(shape)}'
+                             for name, shape in input_info.items())
+        mo_args = f'"{onnx_path}" ' \
+                  f'--output_model="{work_dir}" ' \
+                  f'--output="{output}" ' \
+                  f'--input="{input_str}" '
+    else:
+        input_names = ','.join(input_info.keys())
+        input_shapes = ','.join(
+            str(list(elem)) for elem in input_info.values())
+        mo_args = f'--input_model="{onnx_path}" ' \
+                  f'--output_dir="{work_dir}" ' \
+                  f'--output="{output}" ' \
+                  f'--input="{input_names}" ' \
+                  f'--input_shape="{input_shapes}" '
     if mo_options is not None:
         mo_args += mo_options.get_options()
 

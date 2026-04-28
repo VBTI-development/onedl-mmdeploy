@@ -3,7 +3,10 @@
 {
 	"name": "OneDL-MMDeploy - C++/Python",
 	"build": {
-		"dockerfile": "Dockerfile"
+		"dockerfile": "Dockerfile",
+		"args": {
+			"PYTHON_VERSION": "3.12"
+		}
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {
@@ -42,7 +45,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "uv pip install -r pyproject.toml --extra backends --extra optional --group build --group tests && uv pip install -e .",
+	"postCreateCommand": "uv venv --allow-existing $VIRTUAL_ENV && uv pip install -r pyproject.toml --extra backends --extra optional --group build --group tests && uv pip install -e .",
 
 	// Configure tool-specific properties.
 	// Configure tool-specific properties.

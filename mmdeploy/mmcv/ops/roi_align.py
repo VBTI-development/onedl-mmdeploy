@@ -56,13 +56,14 @@ def roi_align_default(g, input: Tensor, rois: Tensor, output_size: List[int],
             mode_s=pool_mode,
             aligned_i=aligned)
     else:
-        from torch.onnx.symbolic_opset9 import _cast_Long
         from torch.onnx.symbolic_opset11 import add, select
         ir_cfg = get_ir_config(ctx.cfg)
         opset_version = ir_cfg.get('opset_version', 11)
+        # INT64 = 7 in ONNX TensorProto DataType
+        _INT64 = 7
         if opset_version < 13:
-            batch_indices = _cast_Long(
-                g,
+            batch_indices = g.op(
+                'Cast',
                 g.op(
                     'Squeeze',
                     select(
@@ -70,12 +71,13 @@ def roi_align_default(g, input: Tensor, rois: Tensor, output_size: List[int],
                         g.op(
                             'Constant',
                             value_t=torch.tensor([0], dtype=torch.long))),
-                    axes_i=[1]), False)
+                    axes_i=[1]),
+                to_i=_INT64)
         else:
             axes = g.op(
                 'Constant', value_t=torch.tensor([1], dtype=torch.long))
-            batch_indices = _cast_Long(
-                g,
+            batch_indices = g.op(
+                'Cast',
                 g.op(
                     'Squeeze',
                     select(
@@ -83,7 +85,8 @@ def roi_align_default(g, input: Tensor, rois: Tensor, output_size: List[int],
                         g.op(
                             'Constant',
                             value_t=torch.tensor([0], dtype=torch.long))),
-                    axes), False)
+                    axes),
+                to_i=_INT64)
         rois = select(
             g, rois, 1,
             g.op(

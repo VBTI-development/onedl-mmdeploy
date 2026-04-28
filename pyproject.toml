@@ -17,19 +17,21 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 keywords = ["computer vision", "model deployment"]
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.13"
 dependencies = [
     "aenum",
     "grpcio",
     "matplotlib",
     "multiprocess",
-    "numpy",
+    "numpy>2",
     "onnx>=1.13.0",
+    "onnxscript",
     "prettytable",
-    "protobuf<=3.20.2",
+    "protobuf",
     "six",
     "terminaltables",
 ]
@@ -39,14 +41,15 @@ build = [
     "setuptools>=61.0",
     "wheel",
     "cython",
-    "numpy",
+    "numpy>2",
     "packaging",
 ]
 tests = [
     "asynctest",
     "coverage",
     "openpyxl==3.0.9",
-    "opencv-python",
+    "opencv-python>=4.9.0",
+    "opencv-python-headless>=4.9.0",
     "pandas",
     "pytest",
     "pyyaml",
@@ -60,6 +63,7 @@ docs=[
     "myst-parser",
     "pytorch_sphinx_theme @ git+https://github.com/VBTI-development/onedl_sphinx_theme.git@master",
     "recommonmark",
+    "roman_numerals",
     "sphinx",
     "sphinx-copybutton",
     "sphinx_markdown_tables>=0.0.16",
@@ -76,8 +80,9 @@ codebases = [
 
 [project.optional-dependencies]
 backends = [
-    "onnxruntime==1.19.2",
-    "openvino-dev; python_version=='3.10'",
+    "onnxruntime==1.21.0",
+    "openvino-dev>=2023.1; python_version>='3.10' and python_version<'3.12'",
+    "openvino>=2024.2.0; python_version>='3.12'",
 ]
 mminstall =  [
     "onedl-mmengine",

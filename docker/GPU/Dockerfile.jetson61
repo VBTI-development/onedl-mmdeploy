@@ -26,9 +26,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
     dpkg -i cuda-keyring_1.1-1_all.deb && apt-get update \
     && apt-get install -y --no-install-recommends \
     git python3-pip libopenmpi-dev libopenblas-dev libomp-dev libcusparselt0 libcusparselt-dev \
-    curl libspdlog-dev vim pkg-config cmake cudss \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    curl libspdlog-dev vim pkg-config cmake cudss
 
 # install torch, torchvision, onnx
 # https://pypi.jetson-ai-lab.dev/

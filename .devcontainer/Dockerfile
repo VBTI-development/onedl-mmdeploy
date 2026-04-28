@@ -1,107 +1,128 @@
-# FROM mcr.microsoft.com/devcontainers/cpp:1-ubuntu-22.04
-FROM nvcr.io/nvidia/tensorrt:24.04-py3
+# syntax=docker/dockerfile:1.7-labs
 
-# C++ dev stuff
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install build-essential cmake cppcheck valgrind clang lldb llvm gdb \
-    # [Optional] Additional packages required for using vcpkg package manager in manifest mode.
-    # [Optional] Please uncomment if the below line in needed.
-    # && apt-get -y install autoconf automake libtool m4 autoconf-archive \
-    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+ARG UV_VERSION=0.11.7
+ARG PYTHON_VERSION=3.12
+ARG CUDA_IMAGE_VERSION=12.9.1
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv
 
-ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE="none"
-ARG ONNXRUNTIME_VERSION=1.19.2
+ARG PYTHON_VERSION=3.12
+ARG CUDA_VERSION=12.9
+ARG CUDA_IMAGE_VERSION=12.9.1
+ARG TORCH_VERSION=2.10.0
+ARG TENSORRT_VERSION=10.16.1
+ARG ONNXRUNTIME_VERSION=1.21.0
 ARG PPLCV_VERSION=0.8.0
-
-ARG PYTHON_VERSION=3.10
-ARG CUDA_VERSION=12.4
-ARG TORCH_VERSION=2.5.1
-ARG ONNXRUNTIME_VERSION=1.19.2
-ARG PPLCV_VERSION=0.8.0
-ENV FORCE_CUDA="1"
-
 ARG MMCV_VERSION=">=2.3.0"
 ARG MMENGINE_VERSION=">=0.10.8"
 
-# and install libs
+FROM nvidia/cuda:${CUDA_IMAGE_VERSION}-cudnn-devel-ubuntu24.04 AS builder
+
+# Redeclare ARGs after FROM so they are available in this stage
+ARG PYTHON_VERSION=3.12
+ARG CUDA_VERSION=12.9
+ARG CUDA_IMAGE_VERSION=12.9.0
+ARG TORCH_VERSION=2.10.0
+ARG TENSORRT_VERSION=10.16.1.11
+ARG ONNXRUNTIME_VERSION=1.21.0
+ARG PPLCV_VERSION=0.8.0
+ARG MMCV_VERSION=">=2.3.0"
+ARG MMENGINE_VERSION=">=0.10.8"
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    FORCE_CUDA="1" \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PYTHON_DOWNLOADS=never \
+    UV_SYSTEM_SITE_PACKAGES=false \
+    VIRTUAL_ENV=/venv \
+    LANG=C.UTF-8
+
+COPY --from=uv /uv /uvx /bin/
+
+# C++ dev tools + Python (provided by apt on the CUDA base image)
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
     --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib \
     apt-get update && \
     apt-get install -y \
+        build-essential \
+        python${PYTHON_VERSION} \
+        python${PYTHON_VERSION}-dev \
+        python${PYTHON_VERSION}-venv \
+        cmake \
+        cppcheck \
+        clang \
+        lldb \
+        llvm \
+        gdb \
         curl \
         ffmpeg \
         git \
         libc6 \
         libgl1 \
-        libgl1-mesa-glx \
         libglib2.0-0 \
         libopencv-dev \
         libsm6 \
-        libspdlog-dev \
         libssl-dev \
         libxext6 \
         libxrender-dev \
         ninja-build \
-        wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        wget
 
-# This directory is not part of official OpenCV releases and is likely leftover
-# from an old install or a third-party package.
-RUN rm -rf /usr/local/lib/python3.10/dist-packages/cv2/typing
+# Create venv with the exact Python version
+RUN uv venv ${VIRTUAL_ENV} --python python${PYTHON_VERSION}
 
-# install necessary python packages
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install pyyaml numpy ipython cython typing typing_extensions mkl mkl-include ninja onedl-mim
+# Set up CUDA network repository (required for TensorRT)
+# Remove any pre-existing CUDA repo entries from the base image to avoid Signed-By conflicts
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib \
+    find /etc/apt/sources.list.d/ -name '*cuda*' -o -name '*nvidia*' | xargs rm -f \
+    && wget -qO- https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/3bf863cc.pub | gpg --dearmor > /usr/share/keyrings/cuda-archive-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/ /" > /etc/apt/sources.list.d/cuda-ubuntu2404-x86_64.list
 
-### get onnxruntime
+# Install TensorRT development packages (official Debian method)
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked,id=apt-lib \
+    apt-get update \
+    && apt-get install -y --no-install-recommends \
+        tensorrt-dev=${TENSORRT_VERSION}* \
+        python3-libnvinfer=${TENSORRT_VERSION}* \
+        python3-libnvinfer-dev=${TENSORRT_VERSION}*
+
+# Set TensorRT environment variables
+ENV TENSORRT_DIR=/usr
+
+# PyTorch
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install torch==${TORCH_VERSION} torchvision \
+        --extra-index-url https://download.pytorch.org/whl/cu$(echo "$CUDA_VERSION" | sed 's/\.//g')
+
+# OnnxRuntime C++ SDK (for cmake -DONNXRUNTIME_DIR)
 WORKDIR /workspace/
-RUN wget https://github.com/microsoft/onnxruntime/releases/download/v${ONNXRUNTIME_VERSION}/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}.tgz \
-    && tar -zxvf onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}.tgz
+RUN wget -q https://github.com/microsoft/onnxruntime/releases/download/v${ONNXRUNTIME_VERSION}/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}.tgz \
+    && tar -zxf onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}.tgz \
+    && rm  onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}.tgz
 ENV ONNXRUNTIME_DIR=/workspace/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}
-ENV TENSORRT_DIR=/workspace/tensorrt
-ENV LD_LIBRARY_PATH=$ONNXRUNTIME_DIR/lib:$BACKUP_LD_LIBRARY_PATH:$TENSORRT_DIR/lib:$LD_LIBRARY_PATH
-# RUN --mount=type=cache,target=/root/.cache/pip \
-#     python3 -m mim install onnxruntime-gpu==${ONNXRUNTIME_VERSION}
 
+# OnnxRuntime GPU Python wheel
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install onnxruntime-gpu==${ONNXRUNTIME_VERSION} tensorrt==${TENSORRT_VERSION}
 
-### build PPL.cv
-WORKDIR /workspace
-RUN git clone https://github.com/VBTI-development/ppl.cv.git &&\
-    cd ppl.cv &&\
-    git checkout tags/v${PPLCV_VERSION} -b v${PPLCV_VERSION} &&\
+# onedl-mmcv + onedl-mmengine
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install onedl-mim && \
+    uv run --no-project mim install --no-cache \
+        "onedl-mmcv${MMCV_VERSION}" \
+        "onedl-mmengine${MMENGINE_VERSION}" \
+        --only-binary=onedl-mmcv
+
+# Build ppl.cv from source (CUDA)
+WORKDIR /workspace/
+RUN git clone -b v${PPLCV_VERSION} --single-branch \
+        https://github.com/VBTI-development/ppl.cv.git && \
+    cd ppl.cv && \
     ./build.sh cuda
-
 ENV PPLCV_DIR=/workspace/ppl.cv
 
-
-# ********************************************************
-# * Anything else you want to do like clean up goes here *
-# ********************************************************
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install torch==${TORCH_VERSION} torchvision --extra-index-url https://download.pytorch.org/whl/cu${CUDA_VERSION/./} && \
-    pip install onedl-mim && \
-    FORCE_CUDA=1 python -m mim install "onedl-mmcv${MMCV_VERSION}" "onedl-mmengine${MMENGINE_VERSION}" --only-binary=onedl-mmcv && \
-    python -m mim install onnxruntime-gpu==${ONNXRUNTIME_VERSION}
-    # pip install onnxruntime==${ONNXRUNTIME_VERSION}
-
-# setup vscode user
-# ARG USERNAME=vscode
-# ARG USER_UID=1000
-# ARG USER_GID=$USER_UID
-
-# # Create the user
-# RUN groupadd --gid $USER_GID $USERNAME \
-#     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-#     #
-#     # [Optional] Add sudo support. Omit if you don't need to install software after connecting.
-#     && apt-get update \
-#     && apt-get install -y sudo \
-#     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-#     && chmod 0440 /etc/sudoers.d/$USERNAME
-# [Optional] Set the default user. Omit if you want to keep the default as root.
-# USER $USERNAME
-
-ENV UV_SYSTEM_PYTHON=true
-# add tensorRT to python path
-# ENV PYTHONPATH="/usr/local/lib/python3.10/dist-packages:$PYTHONPATH"
+ENV TENSORRT_DIR=/usr
+ENV LD_LIBRARY_PATH="${ONNXRUNTIME_DIR}/lib:${TENSORRT_DIR}/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
+ENV UV_SYSTEM_PYTHON=false

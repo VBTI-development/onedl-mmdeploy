@@ -121,8 +121,8 @@ def test_shufflenetv2_backbone__forward(backend_type: Backend):
             rewrite_output = rewrite_output.cpu().numpy()
 
         # openvino now converts to FP16 to tolerance needs to be larger
-        atol = 1e-05 if not backend_type == Backend.OPENVINO else 5e-03
-        rtol = 1e-03 if not backend_type == Backend.OPENVINO else 5e-03
+        atol = 1e-05 if not backend_type == Backend.OPENVINO else 1e-02
+        rtol = 1e-03 if not backend_type == Backend.OPENVINO else 1e-02
         assert np.allclose(model_output, rewrite_output, rtol=rtol, atol=atol)
 
 

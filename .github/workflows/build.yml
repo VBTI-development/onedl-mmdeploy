@@ -26,11 +26,12 @@ jobs:
         torch: [2.5.1]
         python-version: ["3.10"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Install uv and set the python version
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: '${{ matrix.python-version }}'
+          activate-environment: true
+          python-version: ${{ matrix.python-version }}
       - name: Install PyTorch
         run: |
           uv pip install torch==${{ matrix.torch }} torchvision
@@ -81,7 +82,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           submodules: 'recursive'
       - name: update
@@ -118,7 +119,15 @@ jobs:
     runs-on: blacksmith-2vcpu-ubuntu-2404
     strategy:
       matrix:
-        image: ['nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04', 'nvidia/cuda:12.9.1-cudnn-devel-ubuntu22.04']
+        include:
+          - image: 'nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04'
+            python-version: "3.10"
+            torch-version: "2.5.1"
+            torch-backend: "cu118"
+          - image: 'nvidia/cuda:12.9.1-cudnn-devel-ubuntu22.04'
+            python-version: "3.12"
+            torch-version: "2.10.0"
+            torch-backend: "cu129"
     permissions:
       contents: write
     container:
@@ -127,7 +136,7 @@ jobs:
       FORCE_CUDA: 1
       UV_CACHE_DIR: /__w/_uv_cache
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Install system dependencies
         run: |
           apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build libglib2.0-0 libxrender-dev
@@ -137,11 +146,11 @@ jobs:
         uses: astral-sh/setup-uv@v6
         with:
           activate-environment: true
-          python-version: '3.10'
+          python-version: ${{ matrix.python-version }}
           cache-local-path: /__w/_uv_cache
       - name: Install PyTorch
         run: |
-          uv pip install torch==2.5.1 torchvision
+          uv pip install --torch-backend=${{ matrix.torch-backend }} torch==${{ matrix.torch-version }} torchvision
       - name: Check disk space
         continue-on-error: true
         run: |

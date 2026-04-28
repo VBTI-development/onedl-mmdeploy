@@ -24,7 +24,8 @@ ModulatedDeformableConvPluginDynamic::ModulatedDeformableConvPluginDynamic(
       mPadding(padding),
       mDilation(dilation),
       mDeformableGroup(deformableGroup),
-      mGroup(group) {
+      mGroup(group),
+      m_cublas_handle(nullptr) {
   mWithBias = false;
 }
 
@@ -38,6 +39,7 @@ ModulatedDeformableConvPluginDynamic::ModulatedDeformableConvPluginDynamic(const
   deserialize_value(&data, &length, &mDeformableGroup);
   deserialize_value(&data, &length, &mGroup);
   mWithBias = false;
+  m_cublas_handle = nullptr;
 }
 ModulatedDeformableConvPluginDynamic::~ModulatedDeformableConvPluginDynamic() {}
 
@@ -150,6 +152,11 @@ int ModulatedDeformableConvPluginDynamic::enqueue(const nvinfer1::PluginTensorDe
                                                   const void *const *inputs, void *const *outputs,
                                                   void *workSpace,
                                                   cudaStream_t stream) TRT_NOEXCEPT {
+  // TRT 10 no longer provides a cuBLAS handle via attachToContext.
+  // Create a local handle and bind it to the inference stream to prevent race conditions.
+  cublasHandle_t cublas_handle;
+  cublasCreate(&cublas_handle);
+  cublasSetStream(cublas_handle, stream);
   int batch = inputDesc[0].dims.d[0];
   int channels = inputDesc[0].dims.d[1];
   int height = inputDesc[0].dims.d[2];
@@ -174,20 +181,22 @@ int ModulatedDeformableConvPluginDynamic::enqueue(const nvinfer1::PluginTensorDe
           (float *)x, (float *)weight, (float *)bias, (float *)offset, (float *)mask,
           (float *)output, workSpace, batch, channels, height, width, channels_out, kernel_w,
           kernel_h, mStride.d[0], mStride.d[1], mPadding.d[0], mPadding.d[1], mDilation.d[0],
-          mDilation.d[1], mGroup, mDeformableGroup, im2col_step, m_cublas_handle, stream);
+          mDilation.d[1], mGroup, mDeformableGroup, im2col_step, cublas_handle, stream);
       break;
     case nvinfer1::DataType::kHALF:
       ModulatedDeformConvForwardCUDAKernelLauncher<half>(
           (half *)x, (half *)weight, (half *)bias, (half *)offset, (half *)mask, (half *)output,
           workSpace, batch, channels, height, width, channels_out, kernel_w, kernel_h, mStride.d[0],
           mStride.d[1], mPadding.d[0], mPadding.d[1], mDilation.d[0], mDilation.d[1], mGroup,
-          mDeformableGroup, im2col_step, m_cublas_handle, stream);
+          mDeformableGroup, im2col_step, cublas_handle, stream);
       break;
     default:
+      cublasDestroy(cublas_handle);
       return 1;
       break;
   }
 
+  cublasDestroy(cublas_handle);
   return 0;
 }
 
