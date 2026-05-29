@@ -149,9 +149,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - jetpack_version: "60"
-            image_name: onedl-mmdeploy-jetson-jp60
-            dockerfile: ./docker/GPU/Dockerfile.jetson60
           - jetpack_version: "61"
             image_name: onedl-mmdeploy-jetson-jp61
             dockerfile: ./docker/GPU/Dockerfile.jetson61

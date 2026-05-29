@@ -33,9 +33,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
 # TODO: copy to our own servers?
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip \
     python3 -m pip install --upgrade pip; python3 -m pip install --no-cache \
-    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/62a/1beee9f2f1470/torch-2.8.0-cp310-cp310-linux_aarch64.whl#sha256=62a1beee9f2f147076a974d2942c90060c12771c94740830327cae705b2595fc \
-    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/907/c4c1933789645/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl#sha256=907c4c1933789645ebb20dd9181d40f8647978e6bd30086ae7b01febb937d2d1 \
-    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/4eb/e6a8902dc7708/onnxruntime_gpu-1.23.0-cp310-cp310-linux_aarch64.whl#sha256=4ebe6a8902dc7708434b2e1541b3fe629ebf434e16ab5537d1d6a622b42c622b
+    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/46b/b8b13f844b211/torch-2.11.0-cp310-cp310-linux_aarch64.whl#sha256=46bb8b13f844b2111f6f41abc703d01075a7185e0c587cb002e957ede2b8c8a3 \
+    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/d11/6f08d3d62417d/torchvision-0.26.0-cp310-cp310-linux_aarch64.whl#sha256=d116f08d3d62417dc36cbf41923e491b8b49b77399575f0878ae391e6e77a159 \
+    https://pypi.jetson-ai-lab.io/jp6/cu126/+f/d98/0b934b9a29c1a/onnxruntime_gpu-1.24.0-cp310-cp310-linux_aarch64.whl#sha256=d980b934b9a29c1a9d6f39751edd7662b69fadd75556a10ff363773a58ce0950
 
 # install and build pplc.cv
 WORKDIR /workspace
@@ -47,7 +47,7 @@ ENV PPLCV_DIR=/workspace/ppl.cv
 WORKDIR /workspace
 # install onedl-mmcv
 RUN --mount=type=cache,target=/root/.cache/pip,id=pip \
-    python3 -m pip install --no-cache "onedl-mmcv${MMCV_VERSION}" "onedl-mmengine${MMENGINE_VERSION}"  --only-binary=onedl-mmcv -f https://mmwheels.onedl.ai/jetpack61-torch280/simple/onedl-mmcv &&\
+    python3 -m pip install --no-cache "onedl-mmcv${MMCV_VERSION}" "onedl-mmengine${MMENGINE_VERSION}"  --only-binary=onedl-mmcv -f https://mmwheels.onedl.ai/jetpack61-torch2110/simple/onedl-mmcv &&\
     python3 -m pip install onedl-mim
 
 # ### install mmdeploy
