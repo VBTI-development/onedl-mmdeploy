@@ -70,7 +70,13 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=apt-cache \
         > /etc/apt/sources.list.d/cuda-ubuntu2404-x86_64.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
-        tensorrt-dev=${TENSORRT_VERSION}*
+        libnvinfer-dev=${TENSORRT_VERSION}-1+cuda${CUDA_VERSION} \
+        libnvinfer-headers-dev=${TENSORRT_VERSION}-1+cuda${CUDA_VERSION} \
+        libnvinfer-headers-plugin-dev=${TENSORRT_VERSION}-1+cuda${CUDA_VERSION} \
+        libnvinfer-vc-plugin-dev=${TENSORRT_VERSION}-1+cuda${CUDA_VERSION} \
+        libnvonnxparsers-dev=${TENSORRT_VERSION}-1+cuda${CUDA_VERSION} \
+        libnvinfer-headers-python-plugin-dev=${TENSORRT_VERSION}-1+cuda${CUDA_VERSION} \
+        tensorrt-dev=${TENSORRT_VERSION}-1+cuda${CUDA_VERSION}
 
 ENV TENSORRT_DIR=/usr
 
